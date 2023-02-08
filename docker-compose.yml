@@ -5,10 +5,10 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - demo-mysql-data:/var/lib/mysql
+      - mysql-data:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: secret
       MYSQL_DATABASE: demo
 
 volumes:
-  demo-mysql-data:
+  mysql-data:
