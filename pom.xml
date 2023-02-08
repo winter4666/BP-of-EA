@@ -14,7 +14,7 @@
 	<name>BP-of-EA</name>
 	<description>The best practice of enterprise applications</description>
 	<properties>
-		<java.version>1.8</java.version>
+		<java.version>17</java.version>
 	</properties>
 	<dependencies>
 		<dependency>
