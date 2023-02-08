@@ -24,9 +24,9 @@ hs_err_pid*
 replay_pid*
 
 # Maven
-/target
-/.mvn
+target
+.mvn
 
 # IntelliJ IDEA
-/.idea
-/demo.iml
+.idea
+demo.iml
