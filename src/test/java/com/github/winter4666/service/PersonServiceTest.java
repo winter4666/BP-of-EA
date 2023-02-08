@@ -4,7 +4,6 @@ import com.github.javafaker.Faker;
 import com.github.winter4666.model.Person;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -14,6 +13,7 @@ import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -32,7 +32,7 @@ class PersonServiceTest {
 
         personService.addPerson(name);
 
-        verify(personDao).insert(ArgumentMatchers.argThat(person -> name.equals(person.getName())));
+        verify(personDao).insert(argThat(p -> name.equals(p.getName())));
     }
 
     @Test
