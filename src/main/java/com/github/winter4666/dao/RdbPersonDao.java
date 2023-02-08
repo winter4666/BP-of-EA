@@ -1,7 +1,7 @@
-package com.example.demo.dao;
+package com.github.winter4666.dao;
 
-import com.example.demo.model.Person;
-import com.example.demo.service.PersonDao;
+import com.github.winter4666.model.Person;
+import com.github.winter4666.service.PersonDao;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 

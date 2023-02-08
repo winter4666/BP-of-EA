@@ -1,6 +1,6 @@
-package com.example.demo.service;
+package com.github.winter4666.service;
 
-import com.example.demo.model.Person;
+import com.github.winter4666.model.Person;
 
 import java.util.List;
 

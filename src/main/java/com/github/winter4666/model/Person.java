@@ -1,4 +1,4 @@
-package com.example.demo.model;
+package com.github.winter4666.model;
 
 public class Person {
 

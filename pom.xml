@@ -8,11 +8,11 @@
 		<version>2.7.3</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.example</groupId>
-	<artifactId>demo</artifactId>
+	<groupId>com.github.winter4666</groupId>
+	<artifactId>BP-of-EA</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>demo</name>
-	<description>Demo project for Spring Boot</description>
+	<name>BP-of-EA</name>
+	<description>The best practice of enterprise applications</description>
 	<properties>
 		<java.version>1.8</java.version>
 	</properties>

@@ -1,7 +1,7 @@
-package com.example.demo.controller;
+package com.github.winter4666.controller;
 
-import com.example.demo.model.Person;
-import com.example.demo.service.PersonService;
+import com.github.winter4666.model.Person;
+import com.github.winter4666.service.PersonService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
