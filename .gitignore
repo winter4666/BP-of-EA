@@ -30,3 +30,6 @@ target
 # IntelliJ IDEA
 .idea
 demo.iml
+
+# MacOS
+.DS_Store
