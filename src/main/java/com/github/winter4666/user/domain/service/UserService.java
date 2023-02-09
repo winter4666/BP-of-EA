@@ -14,13 +14,13 @@ public class UserService {
         this.userDao = userDao;
     }
 
-    public void addPerson(String name) {
+    public void addUser(String name) {
         User user = new User();
         user.setName(name);
         userDao.insert(user);
     }
 
-    public List<User> getPersons() {
-        return userDao.getPersons();
+    public List<User> getUsers() {
+        return userDao.getUsers();
     }
 }

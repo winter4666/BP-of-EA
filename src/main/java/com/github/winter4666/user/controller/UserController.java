@@ -21,12 +21,12 @@ public class UserController {
 
     @GetMapping("/users")
     public List<User> getPersons() {
-        return userService.getPersons();
+        return userService.getUsers();
     }
 
     @PostMapping("/users")
     public ResponseEntity<?> addPerson(String name) {
-        userService.addPerson(name);
+        userService.addUser(name);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 

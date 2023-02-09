@@ -56,11 +56,11 @@ class RdbUserDaoTest {
     }
 
     @Test
-    void should_get_persons_successfully() {
+    void should_get_users_successfully() {
         String name = new Faker().name().fullName();
         jdbcTemplate.update("INSERT INTO user (name) VALUES (?)", name);
 
-        List<User> users = rdbUserDao.getPersons();
+        List<User> users = rdbUserDao.getUsers();
 
         assertThat(users.size(), equalTo(1));
         assertThat(users.get(0).getName(), equalTo(name));

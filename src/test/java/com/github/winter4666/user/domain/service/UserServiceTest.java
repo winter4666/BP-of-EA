@@ -27,20 +27,20 @@ class UserServiceTest {
     private UserService userService;
 
     @Test
-    void should_add_person_successfully() {
+    void should_add_user_successfully() {
         String name = new Faker().name().fullName();
 
-        userService.addPerson(name);
+        userService.addUser(name);
 
         verify(userDao).insert(argThat(p -> name.equals(p.getName())));
     }
 
     @Test
-    void should_get_persons_successfully() {
+    void should_get_users_successfully() {
         List<User> users = new ArrayList<>();
-        when(userDao.getPersons()).thenReturn(users);
+        when(userDao.getUsers()).thenReturn(users);
 
-        List<User> actualUsers = userService.getPersons();
+        List<User> actualUsers = userService.getUsers();
 
         assertThat(actualUsers, equalTo(users));
     }

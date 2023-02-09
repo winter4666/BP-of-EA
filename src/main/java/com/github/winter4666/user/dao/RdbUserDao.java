@@ -22,7 +22,7 @@ public class RdbUserDao implements UserDao {
     }
 
     @Override
-    public List<User> getPersons() {
+    public List<User> getUsers() {
         return jdbcTemplate.query("select * from user", (rs, n) -> new User(rs.getInt("id"), rs.getString("name")));
     }
 }
