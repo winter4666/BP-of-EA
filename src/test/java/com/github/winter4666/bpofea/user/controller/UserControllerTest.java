@@ -1,8 +1,8 @@
-package com.github.winter4666.user.controller;
+package com.github.winter4666.bpofea.user.controller;
 
 import com.github.javafaker.Faker;
-import com.github.winter4666.user.domain.model.User;
-import com.github.winter4666.user.domain.service.UserService;
+import com.github.winter4666.bpofea.user.domain.model.User;
+import com.github.winter4666.bpofea.user.domain.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;

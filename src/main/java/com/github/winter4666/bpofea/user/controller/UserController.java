@@ -1,7 +1,7 @@
-package com.github.winter4666.user.controller;
+package com.github.winter4666.bpofea.user.controller;
 
-import com.github.winter4666.user.domain.model.User;
-import com.github.winter4666.user.domain.service.UserService;
+import com.github.winter4666.bpofea.user.domain.model.User;
+import com.github.winter4666.bpofea.user.domain.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

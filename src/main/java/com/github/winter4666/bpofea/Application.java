@@ -1,4 +1,4 @@
-package com.github.winter4666;
+package com.github.winter4666.bpofea;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

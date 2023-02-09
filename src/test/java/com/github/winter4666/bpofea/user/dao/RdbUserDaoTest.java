@@ -1,7 +1,7 @@
-package com.github.winter4666.user.dao;
+package com.github.winter4666.bpofea.user.dao;
 
 import com.github.javafaker.Faker;
-import com.github.winter4666.user.domain.model.User;
+import com.github.winter4666.bpofea.user.domain.model.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;

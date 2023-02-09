@@ -1,7 +1,7 @@
-package com.github.winter4666.user.dao;
+package com.github.winter4666.bpofea.user.dao;
 
-import com.github.winter4666.user.domain.model.User;
-import com.github.winter4666.user.domain.service.UserDao;
+import com.github.winter4666.bpofea.user.domain.model.User;
+import com.github.winter4666.bpofea.user.domain.service.UserDao;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
