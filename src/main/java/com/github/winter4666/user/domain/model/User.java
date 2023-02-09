@@ -1,16 +1,16 @@
-package com.github.winter4666.model;
+package com.github.winter4666.user.domain.model;
 
-public class Person {
+public class User {
 
     private Integer id;
 
     private String name;
 
-    public Person() {
+    public User() {
 
     }
 
-    public Person(Integer id, String name) {
+    public User(Integer id, String name) {
         this.id = id;
         this.name = name;
     }

@@ -1,7 +1,7 @@
-package com.github.winter4666.dao;
+package com.github.winter4666.user.dao;
 
 import com.github.javafaker.Faker;
-import com.github.winter4666.model.Person;
+import com.github.winter4666.user.domain.model.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,13 +24,13 @@ import static org.hamcrest.Matchers.equalTo;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @Transactional
 @Testcontainers
-class RdbPersonDaoTest {
+class RdbUserDaoTest {
 
     @Container
     private static final MySQLContainer<?> MY_SQL_CONTAINER = new MySQLContainer<>("mysql:8.0.30");
 
     @Autowired
-    private RdbPersonDao rdbPersonDao;
+    private RdbUserDao rdbUserDao;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -44,25 +44,25 @@ class RdbPersonDaoTest {
 
     @Test
     void should_insert_successfully() {
-        Person person = new Person();
-        person.setName(new Faker().name().fullName());
+        User user = new User();
+        user.setName(new Faker().name().fullName());
 
-        int count = rdbPersonDao.insert(person);
+        int count = rdbUserDao.insert(user);
 
         assertThat(count, equalTo(1));
-        List<Person> persons = jdbcTemplate.query("select * from person", (rs, n) -> new Person(rs.getInt("id"), rs.getString("name")));
-        assertThat(persons.size(), equalTo(1));
-        assertThat(persons.get(0).getName(), equalTo(person.getName()));
+        List<User> users = jdbcTemplate.query("select * from user", (rs, n) -> new User(rs.getInt("id"), rs.getString("name")));
+        assertThat(users.size(), equalTo(1));
+        assertThat(users.get(0).getName(), equalTo(user.getName()));
     }
 
     @Test
     void should_get_persons_successfully() {
         String name = new Faker().name().fullName();
-        jdbcTemplate.update("INSERT INTO person (name) VALUES (?)", name);
+        jdbcTemplate.update("INSERT INTO user (name) VALUES (?)", name);
 
-        List<Person> persons = rdbPersonDao.getPersons();
+        List<User> users = rdbUserDao.getPersons();
 
-        assertThat(persons.size(), equalTo(1));
-        assertThat(persons.get(0).getName(), equalTo(name));
+        assertThat(users.size(), equalTo(1));
+        assertThat(users.get(0).getName(), equalTo(name));
     }
 }

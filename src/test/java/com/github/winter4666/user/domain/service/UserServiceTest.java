@@ -1,7 +1,7 @@
-package com.github.winter4666.service;
+package com.github.winter4666.user.domain.service;
 
 import com.github.javafaker.Faker;
-import com.github.winter4666.model.Person;
+import com.github.winter4666.user.domain.model.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -18,30 +18,30 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class PersonServiceTest {
+class UserServiceTest {
 
     @Mock
-    private PersonDao personDao;
+    private UserDao userDao;
 
     @InjectMocks
-    private PersonService personService;
+    private UserService userService;
 
     @Test
     void should_add_person_successfully() {
         String name = new Faker().name().fullName();
 
-        personService.addPerson(name);
+        userService.addPerson(name);
 
-        verify(personDao).insert(argThat(p -> name.equals(p.getName())));
+        verify(userDao).insert(argThat(p -> name.equals(p.getName())));
     }
 
     @Test
     void should_get_persons_successfully() {
-        List<Person> persons = new ArrayList<>();
-        when(personDao.getPersons()).thenReturn(persons);
+        List<User> users = new ArrayList<>();
+        when(userDao.getPersons()).thenReturn(users);
 
-        List<Person> actualPersons = personService.getPersons();
+        List<User> actualUsers = userService.getPersons();
 
-        assertThat(actualPersons, equalTo(persons));
+        assertThat(actualUsers, equalTo(users));
     }
 }
