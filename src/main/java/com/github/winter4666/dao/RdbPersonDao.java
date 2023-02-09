@@ -17,8 +17,8 @@ public class RdbPersonDao implements PersonDao {
     }
 
     @Override
-    public void insert(Person person) {
-        jdbcTemplate.update("INSERT INTO person (name) VALUES (?)", person.getName());
+    public int insert(Person person) {
+        return jdbcTemplate.update("INSERT INTO person (name) VALUES (?)", person.getName());
     }
 
     @Override

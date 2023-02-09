@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface PersonDao {
 
-    void insert(Person person);
+    int insert(Person person);
 
     List<Person> getPersons();
 
