@@ -2,14 +2,10 @@ package com.github.winter4666.bpofea.common;
 
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.containers.MySQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
-@Testcontainers
+import static com.github.winter4666.bpofea.common.MySQLContainerHolder.MY_SQL_CONTAINER;
+
 public interface MySQLContainerEnabled {
-    @Container
-    MySQLContainer<?> MY_SQL_CONTAINER = new MySQLContainer<>("mysql:8.0.30");
 
     @DynamicPropertySource
     static void mysqlProperties(DynamicPropertyRegistry registry) {
