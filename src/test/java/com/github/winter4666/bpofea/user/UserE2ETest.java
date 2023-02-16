@@ -1,7 +1,7 @@
 package com.github.winter4666.bpofea.user;
 
 import com.github.javafaker.Faker;
-import com.github.winter4666.bpofea.common.RdbDaoTest;
+import com.github.winter4666.bpofea.testbase.RdbDaoTest;
 import com.github.winter4666.bpofea.user.domain.model.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-public class UserTest extends RdbDaoTest {
+public class UserE2ETest extends RdbDaoTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;

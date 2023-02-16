@@ -1,9 +1,9 @@
-package com.github.winter4666.bpofea.common;
+package com.github.winter4666.bpofea.testbase;
 
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 
-import static com.github.winter4666.bpofea.common.MySQLContainerHolder.MY_SQL_CONTAINER;
+import static com.github.winter4666.bpofea.testbase.MySQLContainerHolder.MY_SQL_CONTAINER;
 
 public interface MySQLContainerEnabled {
 
