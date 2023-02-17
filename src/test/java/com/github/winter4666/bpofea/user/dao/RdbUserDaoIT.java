@@ -12,7 +12,7 @@ import java.util.List;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
-class RdbUserDaoTest extends RdbDaoTest {
+class RdbUserDaoIT extends RdbDaoTest {
 
     @Autowired
     private RdbUserDao rdbUserDao;

@@ -17,7 +17,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-public class UserE2ETest extends RdbDaoTest {
+public class UserE2EIT extends RdbDaoTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
