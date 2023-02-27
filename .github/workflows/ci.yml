@@ -20,17 +20,11 @@ jobs:
       - name: Generate test reports
         run: mvn surefire-report:report-only surefire-report:failsafe-report-only
 
-      - name: Archive unit test report
+      - name: Archive test reports
         uses: actions/upload-artifact@v3
         with:
           name: unit-test-report
-          path: target/site/surefire-report.html
-
-      - name: Archive integration test report
-        uses: actions/upload-artifact@v3
-        with:
-          name: integration-test-report
-          path: target/site/failsafe-report.html
+          path: target/site
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
