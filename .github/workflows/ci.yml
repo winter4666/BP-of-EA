@@ -23,7 +23,7 @@ jobs:
       - name: Archive test reports
         uses: actions/upload-artifact@v3
         with:
-          name: unit-test-report
+          name: test-reports
           path: target/site
 
       - name: Upload coverage reports to Codecov
