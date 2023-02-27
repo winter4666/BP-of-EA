@@ -36,12 +36,12 @@ public class UserE2EIT extends RdbDaoTest {
     @Test
     void should_add_user_successfully() {
         String name = new Faker().name().fullName();
+
         given().formParam("name", name)
                 .when().post("/users")
                 .then().statusCode(HttpStatus.CREATED.value());
 
         List<Map<String, Object>> users = jdbcTemplate.queryForList("select * from user");
-
         assertThat(users.size(), equalTo(1));
         assertThat(users.get(0).get("name"), equalTo(name));
 
