@@ -3,4 +3,3 @@ spring:
       url: jdbc:mysql://bb-entrypoint.default.svc.cluster.local/demo
       username: root
       password: secret
-      driver-class-name: com.mysql.jdbc.Driver

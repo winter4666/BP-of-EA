@@ -3,4 +3,3 @@ spring:
       url: jdbc:mysql://localhost/demo
       username: root
       password: secret
-      driver-class-name: com.mysql.jdbc.Driver
