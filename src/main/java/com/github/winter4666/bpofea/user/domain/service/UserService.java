@@ -17,10 +17,10 @@ public class UserService {
     public void addUser(String name) {
         User user = new User();
         user.setName(name);
-        userDao.insert(user);
+        userDao.save(user);
     }
 
     public List<User> getUsers() {
-        return userDao.getUsers();
+        return userDao.findAll();
     }
 }

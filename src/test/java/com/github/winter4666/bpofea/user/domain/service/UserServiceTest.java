@@ -32,13 +32,13 @@ class UserServiceTest {
 
         userService.addUser(name);
 
-        verify(userDao).insert(argThat(p -> name.equals(p.getName())));
+        verify(userDao).save(argThat(p -> name.equals(p.getName())));
     }
 
     @Test
     void should_get_users_successfully() {
         List<User> users = new ArrayList<>();
-        when(userDao.getUsers()).thenReturn(users);
+        when(userDao.findAll()).thenReturn(users);
 
         List<User> actualUsers = userService.getUsers();
 
