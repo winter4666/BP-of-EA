@@ -1,23 +1,19 @@
 package com.github.winter4666.bpofea.user.domain.service;
 
 import com.github.winter4666.bpofea.user.domain.model.User;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
 
     private final UserDao userDao;
 
-    public UserService(UserDao userDao) {
-        this.userDao = userDao;
-    }
-
     public void addUser(String name) {
-        User user = new User();
-        user.setName(name);
-        userDao.save(user);
+        userDao.save(new User(name));
     }
 
     public List<User> getUsers() {

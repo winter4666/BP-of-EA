@@ -32,8 +32,7 @@ class UserControllerIT {
 
     @Test
     void should_get_users_successfully() throws Exception {
-        User user = new User();
-        user.setName(new Faker().name().fullName());
+        User user = new User(new Faker().name().fullName());
         when(userService.getUsers()).thenReturn(List.of(user));
 
         mvc.perform(get("/users"))

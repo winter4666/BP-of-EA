@@ -23,12 +23,11 @@ class UserRepositoryIT extends RdbDaoTest {
 
     @Test
     void should_insert_successfully() {
-        User user = new User();
-        user.setName(new Faker().name().fullName());
+        User user = new User(new Faker().name().fullName());
 
         userDao.save(user);
 
-        List<User> users = jdbcTemplate.query("select * from user", (rs, n) -> new User(rs.getLong("id"), rs.getString("name")));
+        List<User> users = jdbcTemplate.query("select * from user", (rs, n) -> new User(rs.getString("name")));
         assertThat(users.size(), equalTo(1));
         assertThat(users.get(0).getName(), equalTo(user.getName()));
     }
