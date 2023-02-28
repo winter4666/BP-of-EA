@@ -3,3 +3,6 @@ spring:
       url: jdbc:mysql://localhost/demo
       username: root
       password: secret
+
+   flyway:
+      cleanDisabled: false
