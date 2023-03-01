@@ -1,3 +1,9 @@
 spring:
    profiles:
       active: ${APP_ENVIRONMENT:local}
+
+   jpa:
+      properties:
+         hibernate:
+            type:
+               json_format_mapper: com.github.winter4666.bpofea.common.CustomJacksonJsonFormatMapper

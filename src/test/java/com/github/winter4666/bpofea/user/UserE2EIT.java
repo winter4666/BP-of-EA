@@ -15,6 +15,7 @@ import static io.restassured.RestAssured.get;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.notNullValue;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public class UserE2EIT extends RdbDaoTest {
@@ -30,6 +31,7 @@ public class UserE2EIT extends RdbDaoTest {
         get("/users")
                 .then()
                 .statusCode(HttpStatus.OK.value())
+                .body("first().id", notNullValue())
                 .body("first().name", equalTo(name));
     }
 
