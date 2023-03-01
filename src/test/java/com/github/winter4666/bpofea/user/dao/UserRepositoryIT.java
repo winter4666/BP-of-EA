@@ -7,7 +7,9 @@ import com.github.winter4666.bpofea.user.domain.service.UserDao;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
+import java.util.HashMap;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -35,7 +37,10 @@ class UserRepositoryIT extends RdbDaoTest {
     @Test
     void should_get_users_successfully() {
         String name = new Faker().name().fullName();
-        jdbcTemplate.update("INSERT INTO user (name) VALUES (?)", name);
+        new SimpleJdbcInsert(jdbcTemplate).withTableName("user")
+                        .execute(new HashMap<>(){
+                            {put("name", name);}
+                        });
 
         List<User> users = userDao.findAll();
 

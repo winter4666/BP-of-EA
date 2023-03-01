@@ -11,13 +11,11 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
 import java.time.DayOfWeek;
 import java.time.LocalTime;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.jayway.jsonpath.matchers.JsonPathMatchers.isJson;
 import static com.jayway.jsonpath.matchers.JsonPathMatchers.withJsonPath;
@@ -64,8 +62,13 @@ class CourseRepositoryTest extends RdbDaoTest {
         Course course = new Course(faker.educator().course(),
                 new Date(), DateUtils.addMonths(new Date(), 6),
                 List.of(new ClassTime(DayOfWeek.MONDAY, LocalTime.of(9,0),LocalTime.of(10, 0))));
-        jdbcTemplate.update("INSERT INTO course (name, start_date, stop_date, class_times) VALUES (?, ?, ?, ?)",
-                course.getName(), course.getStartDate(), course.getStopDate(), HibernateObjectMapperHolder.get().writeValueAsString(course.getClassTimes()));
+        new SimpleJdbcInsert(jdbcTemplate).withTableName("course")
+                .execute(new HashMap<>(){
+                    {put("name", course.getName());}
+                    {put("start_date", course.getStartDate());}
+                    {put("stop_date", course.getStopDate());}
+                    {put("class_times", HibernateObjectMapperHolder.get().writeValueAsString(course.getClassTimes()));}
+                });
 
         List<Course> courses = courseDao.findAll();
 

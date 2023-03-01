@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -26,7 +28,10 @@ public class UserE2EIT extends RdbDaoTest {
     @Test
     void should_get_users_successfully() {
         String name = new Faker().name().fullName();
-        jdbcTemplate.update("INSERT INTO user (name) VALUES (?)", name);
+        new SimpleJdbcInsert(jdbcTemplate).withTableName("user")
+                .execute(new HashMap<>(){
+                    {put("name", name);}
+                });
 
         get("/users")
                 .then()
