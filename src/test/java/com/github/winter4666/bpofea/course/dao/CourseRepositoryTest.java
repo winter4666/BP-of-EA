@@ -34,9 +34,12 @@ class CourseRepositoryTest extends RdbDaoTest {
     @Test
     void should_insert_successfully() {
         Faker faker = new Faker();
-        Course course = new Course(faker.educator().course(),
-                new Date(), DateUtils.addMonths(new Date(), 6),
-                List.of(new ClassTime(DayOfWeek.MONDAY, LocalTime.of(9,0),LocalTime.of(10, 0))));
+        Course course = Course.builder()
+                .name(faker.educator().course())
+                .startDate(new Date())
+                .stopDate(DateUtils.addMonths(new Date(), 6))
+                .classTimes(List.of(new ClassTime(DayOfWeek.MONDAY, LocalTime.of(9,0),LocalTime.of(10, 0))))
+                .build();
 
         courseDao.save(course);
 
@@ -59,9 +62,12 @@ class CourseRepositoryTest extends RdbDaoTest {
     @Test
     void should_get_courses_successfully() throws JsonProcessingException {
         Faker faker = new Faker();
-        Course course = new Course(faker.educator().course(),
-                new Date(), DateUtils.addMonths(new Date(), 6),
-                List.of(new ClassTime(DayOfWeek.MONDAY, LocalTime.of(9,0),LocalTime.of(10, 0))));
+        Course course = Course.builder()
+                .name(faker.educator().course())
+                .startDate(new Date())
+                .stopDate(DateUtils.addMonths(new Date(), 6))
+                .classTimes(List.of(new ClassTime(DayOfWeek.MONDAY, LocalTime.of(9,0),LocalTime.of(10, 0))))
+                .build();
         new SimpleJdbcInsert(jdbcTemplate).withTableName("course")
                 .execute(new HashMap<>(){
                     {put("name", course.getName());}
