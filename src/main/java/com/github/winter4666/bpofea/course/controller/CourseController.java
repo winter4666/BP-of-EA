@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -34,7 +34,7 @@ public class CourseController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    public record CreateCourseRequest(String name, Date startDate, Date stopDate, List<ClassTime> classTimes) {
+    public record CreateCourseRequest(String name, LocalDate startDate, LocalDate stopDate, List<ClassTime> classTimes) {
 
         public record ClassTime(DayOfWeek dayOfWeek, LocalTime startTime, LocalTime stopTime){
 

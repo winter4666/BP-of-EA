@@ -5,7 +5,6 @@ import com.github.javafaker.Faker;
 import com.github.winter4666.bpofea.course.domain.model.ClassTime;
 import com.github.winter4666.bpofea.course.domain.model.Course;
 import com.github.winter4666.bpofea.course.domain.service.CourseService;
-import org.apache.commons.lang3.time.DateUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -15,9 +14,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,8 +49,8 @@ class CourseControllerTest {
         Course course = Course.builder()
                 .id(faker.random().nextLong())
                 .name(faker.educator().course())
-                .startDate(new Date())
-                .stopDate(DateUtils.addMonths(new Date(), 6))
+                .startDate(LocalDate.of(2023, 1, 1))
+                .stopDate(LocalDate.of(2023, 5, 1))
                 .classTimes(List.of(new ClassTime(DayOfWeek.MONDAY, LocalTime.of(9,0),LocalTime.of(10, 0))))
                 .build();
         when(courseService.getCourses()).thenReturn(List.of(course));
@@ -60,6 +59,8 @@ class CourseControllerTest {
                 .andExpectAll(status().isOk(),
                         jsonPath("$[0].id").value(course.getId()),
                         jsonPath("$[0].name").value(course.getName()),
+                        jsonPath("$[0].startDate").value(course.getStartDate().toString()),
+                        jsonPath("$[0].stopDate").value(course.getStopDate().toString()),
                         jsonPath("$[0].classTimes[0].dayOfWeek").value(course.getClassTimes().get(0).getDayOfWeek().toString()),
                         jsonPath("$[0].classTimes[0].startTime").value(course.getClassTimes().get(0).getStartTime().format(DateTimeFormatter.ISO_TIME)),
                         jsonPath("$[0].classTimes[0].stopTime").value(course.getClassTimes().get(0).getStopTime().format(DateTimeFormatter.ISO_TIME)));
@@ -77,8 +78,8 @@ class CourseControllerTest {
         Map<String, Object> course = new HashMap<>(){
             {
                 put("name", new Faker().educator().course());
-                put("startDate", new Date());
-                put("stopDate", DateUtils.addMonths(new Date(), 6));
+                put("startDate", LocalDate.of(2023, 1, 1));
+                put("stopDate", LocalDate.of(2023, 5, 1));
                 put("classTimes", List.of(classTime));
             }
         };

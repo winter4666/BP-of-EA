@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -26,9 +26,9 @@ public class Course {
 
     private String name;
 
-    private Date startDate;
+    private LocalDate startDate;
 
-    private Date stopDate;
+    private LocalDate stopDate;
 
     @JdbcTypeCode(SqlTypes.JSON)
     private List<ClassTime> classTimes;
