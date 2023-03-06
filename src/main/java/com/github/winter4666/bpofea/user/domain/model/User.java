@@ -1,15 +1,15 @@
 package com.github.winter4666.bpofea.user.domain.model;
 
-import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
-@Entity
+@MappedSuperclass
 @Getter
-@NoArgsConstructor
+@SuperBuilder
 public class User {
 
     @Id
@@ -18,7 +18,4 @@ public class User {
 
     private String name;
 
-    public User(String name) {
-        this.name = name;
-    }
 }

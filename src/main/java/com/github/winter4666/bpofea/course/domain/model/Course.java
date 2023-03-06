@@ -1,9 +1,7 @@
 package com.github.winter4666.bpofea.course.domain.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.github.winter4666.bpofea.user.domain.model.Teacher;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,6 +27,9 @@ public class Course {
     private LocalDate startDate;
 
     private LocalDate stopDate;
+
+    @ManyToOne
+    private Teacher teacher;
 
     @JdbcTypeCode(SqlTypes.JSON)
     private List<ClassTime> classTimes;
