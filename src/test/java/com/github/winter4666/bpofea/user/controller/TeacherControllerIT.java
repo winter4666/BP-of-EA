@@ -2,6 +2,7 @@ package com.github.winter4666.bpofea.user.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
+import com.github.winter4666.bpofea.user.domain.model.Teacher;
 import com.github.winter4666.bpofea.user.domain.service.TeacherService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +19,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(TeacherController.class)
@@ -38,19 +42,20 @@ class TeacherControllerIT {
     private ObjectMapper objectMapper;
 
     @Test
-    void should_add_user_successfully() throws Exception {
+    void should_add_teacher_successfully() throws Exception {
         Faker faker = new Faker();
-        Map<String, Object> teacher = new HashMap<>() {
-            {
-                put("name", faker.name().fullName());
-                put("jobNumber", String.valueOf(faker.number().randomNumber()));
-            }
-        };
+        Teacher teacher = Teacher.builder()
+                .id(faker.number().randomNumber())
+                .name(faker.name().fullName())
+                .jobNumber(String.valueOf(faker.number().randomNumber()))
+                .build();
+        when(teacherService.addTeacher(teacher.getName(), teacher.getJobNumber())).thenReturn(teacher);
 
         mvc.perform(post("/teachers").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(teacher)))
-                .andExpect(status().isCreated());
-
-        verify(teacherService).addTeacher((String)teacher.get("name"), (String)teacher.get("jobNumber"));
+                .andExpectAll(status().isCreated(),
+                        jsonPath("$.id", equalTo(teacher.getId()), Long.class),
+                        jsonPath("$.name", equalTo(teacher.getName())),
+                        jsonPath("$.jobNumber", equalTo(teacher.getJobNumber())));
     }
 
     @Test

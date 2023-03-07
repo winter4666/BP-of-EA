@@ -17,7 +17,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class TeacherServiceTest {
@@ -31,21 +31,25 @@ class TeacherServiceTest {
     @Test
     void should_add_teacher_successfully() {
         Faker faker = new Faker();
-        String name = faker.name().fullName();
-        String jobNumber = String.valueOf(faker.number().randomNumber());
+        Teacher teacher = Teacher.builder()
+                .id(faker.number().randomNumber())
+                .name(faker.name().fullName())
+                .jobNumber(String.valueOf(faker.number().randomNumber()))
+                .build();
+        when(teacherDao.save(argThat(t -> teacher.getName().equals(t.getName())
+                && teacher.getJobNumber().equals(t.getJobNumber())))).thenReturn(teacher);
 
-        teacherService.addTeacher(name, jobNumber);
+        Teacher returnedTeacher = teacherService.addTeacher(teacher.getName(), teacher.getJobNumber());
 
-        verify(teacherDao).save(argThat(t -> name.equals(t.getName())
-                && jobNumber.equals(t.getJobNumber())));
+        assertThat(returnedTeacher, equalTo(teacher));
     }
 
     @Test
     void should_start_course_successfully() {
         Faker faker = new Faker();
         long teacherId = faker.number().randomNumber();
-        Course course = Mockito.mock(Course.class);
-        Teacher teacher = Mockito.mock(Teacher.class);
+        Course course = mock(Course.class);
+        Teacher teacher = mock(Teacher.class);
         Mockito.when(teacherDao.findById(teacherId)).thenReturn(Optional.of(teacher));
 
         teacherService.startCourse(teacherId, course);
@@ -57,7 +61,7 @@ class TeacherServiceTest {
     void should_throw_exception_when_start_course_given_teacher_not_found() {
         Faker faker = new Faker();
         long teacherId = faker.number().randomNumber();
-        Course course = Mockito.mock(Course.class);
+        Course course = mock(Course.class);
         Mockito.when(teacherDao.findById(teacherId)).thenReturn(Optional.empty());
 
         BusinessException exception = assertThrows(BusinessException.class, () -> teacherService.startCourse(teacherId, course));

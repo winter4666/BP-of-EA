@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
 import com.github.winter4666.bpofea.testbase.RdbDaoTest;
 import io.restassured.http.ContentType;
+import io.restassured.response.Response;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,11 +49,15 @@ public class TeacherE2EIT extends RdbDaoTest {
             }
         };
 
-        given().contentType(ContentType.JSON).body(objectMapper.writeValueAsString(teacher))
+        Response response = given().contentType(ContentType.JSON).body(objectMapper.writeValueAsString(teacher))
                 .when().post("/teachers")
-                .then().statusCode(HttpStatus.CREATED.value());
+                .then()
+                .statusCode(HttpStatus.CREATED.value())
+                .body("name", equalTo(teacher.get("name")))
+                .body("jobNumber", equalTo(teacher.get("jobNumber")))
+                .extract().response();
 
-        List<Map<String, Object>> teachers = jdbcTemplate.queryForList("select * from teacher");
+        List<Map<String, Object>> teachers = jdbcTemplate.queryForList("select * from teacher where id = ?", response.jsonPath().getLong("id"));
         assertAll(
                 () -> assertThat(teachers.size(), equalTo(1)),
                 () -> assertThat(teachers.get(0).get("name"), equalTo(teacher.get("name"))),

@@ -24,8 +24,7 @@ public class TeacherController {
 
     @PostMapping("/teachers")
     public ResponseEntity<?> addTeacher(@RequestBody CreateTeacherRequest createTeacherRequest) {
-        teacherService.addTeacher(createTeacherRequest.name(), createTeacherRequest.jobNumber());
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>(teacherService.addTeacher(createTeacherRequest.name(), createTeacherRequest.jobNumber()), HttpStatus.CREATED);
     }
 
     @PostMapping("/teachers/{teacherId}/courses")
