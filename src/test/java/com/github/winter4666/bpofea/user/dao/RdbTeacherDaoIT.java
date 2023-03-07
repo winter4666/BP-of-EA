@@ -3,7 +3,6 @@ package com.github.winter4666.bpofea.user.dao;
 import com.github.javafaker.Faker;
 import com.github.winter4666.bpofea.testbase.RdbDaoTest;
 import com.github.winter4666.bpofea.user.domain.model.Teacher;
-import com.github.winter4666.bpofea.user.domain.service.TeacherDao;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -18,10 +17,10 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-class TeacherRepositoryIT extends RdbDaoTest {
+class RdbTeacherDaoIT extends RdbDaoTest {
 
     @Autowired
-    private TeacherDao teacherDao;
+    private RdbTeacherDao teacherDao;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;

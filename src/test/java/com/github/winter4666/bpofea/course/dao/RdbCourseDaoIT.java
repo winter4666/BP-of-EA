@@ -5,7 +5,6 @@ import com.github.javafaker.Faker;
 import com.github.winter4666.bpofea.common.HibernateObjectMapperHolder;
 import com.github.winter4666.bpofea.course.domain.model.ClassTime;
 import com.github.winter4666.bpofea.course.domain.model.Course;
-import com.github.winter4666.bpofea.course.domain.service.CourseDao;
 import com.github.winter4666.bpofea.testbase.RdbDaoTest;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.junit.jupiter.api.Test;
@@ -27,10 +26,10 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-class CourseRepositoryIT extends RdbDaoTest {
+class RdbCourseDaoIT extends RdbDaoTest {
 
     @Autowired
-    private CourseDao courseDao;
+    private RdbCourseDao courseDao;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
