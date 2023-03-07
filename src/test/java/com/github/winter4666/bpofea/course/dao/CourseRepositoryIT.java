@@ -27,7 +27,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-class CourseRepositoryTest extends RdbDaoTest {
+class CourseRepositoryIT extends RdbDaoTest {
 
     @Autowired
     private CourseDao courseDao;

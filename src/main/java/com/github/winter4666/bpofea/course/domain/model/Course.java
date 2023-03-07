@@ -34,4 +34,8 @@ public class Course {
     @JdbcTypeCode(SqlTypes.JSON)
     private List<ClassTime> classTimes;
 
+    public void onStarted(Teacher teacher) {
+        this.teacher = teacher;
+    }
+
 }

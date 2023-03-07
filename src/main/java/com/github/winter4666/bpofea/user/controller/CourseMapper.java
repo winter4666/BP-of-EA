@@ -1,4 +1,4 @@
-package com.github.winter4666.bpofea.course.controller;
+package com.github.winter4666.bpofea.user.controller;
 
 import com.github.winter4666.bpofea.course.domain.model.ClassTime;
 import com.github.winter4666.bpofea.course.domain.model.Course;
@@ -10,8 +10,8 @@ import org.mapstruct.MappingConstants;
 public interface CourseMapper {
 
     @Mapping(target = "id", ignore = true)
-    Course createCourseRequestToCourse(CourseController.CreateCourseRequest createCourseRequest);
+    Course createCourseRequestToCourse(TeacherController.CreateCourseRequest createCourseRequest);
 
-    ClassTime classTimeInRequestToClassTime(CourseController.CreateCourseRequest.ClassTime classTime);
+    ClassTime classTimeInRequestToClassTime(TeacherController.CreateCourseRequest.ClassTime classTime);
 
 }
