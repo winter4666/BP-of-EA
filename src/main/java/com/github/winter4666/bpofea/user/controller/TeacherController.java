@@ -4,17 +4,15 @@ import com.github.winter4666.bpofea.user.domain.service.TeacherService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
-@RestController
+@RestController()
+@RequestMapping("/teachers")
 @RequiredArgsConstructor
 public class TeacherController {
 
@@ -22,12 +20,12 @@ public class TeacherController {
 
     private final CourseMapper courseMapper;
 
-    @PostMapping("/teachers")
+    @PostMapping()
     public ResponseEntity<?> addTeacher(@RequestBody CreateTeacherRequest createTeacherRequest) {
         return new ResponseEntity<>(teacherService.addTeacher(createTeacherRequest.name(), createTeacherRequest.jobNumber()), HttpStatus.CREATED);
     }
 
-    @PostMapping("/teachers/{teacherId}/courses")
+    @PostMapping("/{teacherId}/courses")
     public ResponseEntity<?> startCourse(@PathVariable Long teacherId, @RequestBody CreateCourseRequest createCourseRequest) {
         teacherService.startCourse(teacherId, courseMapper.createCourseRequestToCourse(createCourseRequest));
         return new ResponseEntity<>(HttpStatus.CREATED);
