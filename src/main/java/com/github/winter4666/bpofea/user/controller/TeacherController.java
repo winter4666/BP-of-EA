@@ -1,9 +1,9 @@
 package com.github.winter4666.bpofea.user.controller;
 
+import com.github.winter4666.bpofea.user.domain.model.Teacher;
 import com.github.winter4666.bpofea.user.domain.service.TeacherService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.DayOfWeek;
@@ -21,14 +21,15 @@ public class TeacherController {
     private final CourseMapper courseMapper;
 
     @PostMapping()
-    public ResponseEntity<?> addTeacher(@RequestBody CreateTeacherRequest createTeacherRequest) {
-        return new ResponseEntity<>(teacherService.addTeacher(createTeacherRequest.name(), createTeacherRequest.jobNumber()), HttpStatus.CREATED);
+    @ResponseStatus(HttpStatus.CREATED)
+    public Teacher addTeacher(@RequestBody CreateTeacherRequest createTeacherRequest) {
+        return teacherService.addTeacher(createTeacherRequest.name(), createTeacherRequest.jobNumber());
     }
 
     @PostMapping("/{teacherId}/courses")
-    public ResponseEntity<?> startCourse(@PathVariable Long teacherId, @RequestBody CreateCourseRequest createCourseRequest) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public void startCourse(@PathVariable Long teacherId, @RequestBody CreateCourseRequest createCourseRequest) {
         teacherService.startCourse(teacherId, courseMapper.createCourseRequestToCourse(createCourseRequest));
-        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     public record CreateTeacherRequest(String name, String jobNumber) {
