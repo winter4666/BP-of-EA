@@ -20,6 +20,8 @@ public class TeacherController {
 
     private final CourseMapper courseMapper;
 
+    private final CourseResponseMapper courseResponseMapper;
+
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     public Teacher addTeacher(@RequestBody CreateTeacherRequest createTeacherRequest) {
@@ -28,8 +30,8 @@ public class TeacherController {
 
     @PostMapping("/{teacherId}/courses")
     @ResponseStatus(HttpStatus.CREATED)
-    public void startCourse(@PathVariable Long teacherId, @RequestBody CreateCourseRequest createCourseRequest) {
-        teacherService.startCourse(teacherId, courseMapper.createCourseRequestToCourse(createCourseRequest));
+    public CourseResponse startCourse(@PathVariable Long teacherId, @RequestBody CreateCourseRequest createCourseRequest) {
+        return courseResponseMapper.courseToCourseResponse(teacherService.startCourse(teacherId, courseMapper.createCourseRequestToCourse(createCourseRequest)));
     }
 
     public record CreateTeacherRequest(String name, String jobNumber) {
@@ -37,9 +39,13 @@ public class TeacherController {
 
     public record CreateCourseRequest(String name, LocalDate startDate, LocalDate stopDate, List<ClassTime> classTimes) {
 
-        public record ClassTime(DayOfWeek dayOfWeek, LocalTime startTime, LocalTime stopTime){
+    }
 
-        }
+    public record CourseResponse(Long id, String name, LocalDate startDate, LocalDate stopDate, List<ClassTime> classTimes) {
+
+    }
+
+    public record ClassTime(DayOfWeek dayOfWeek, LocalTime startTime, LocalTime stopTime){
 
     }
 

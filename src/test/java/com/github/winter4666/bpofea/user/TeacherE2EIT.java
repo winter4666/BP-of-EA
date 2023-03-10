@@ -91,11 +91,12 @@ public class TeacherE2EIT extends RdbDaoTest {
             }
         };
 
-        given().contentType(ContentType.JSON).body(objectMapper.writeValueAsString(course))
+        Response response = given().contentType(ContentType.JSON).body(objectMapper.writeValueAsString(course))
                 .when().post("/teachers/{teacherId}/courses", teacherId)
-                .then().statusCode(HttpStatus.CREATED.value());
+                .then().statusCode(HttpStatus.CREATED.value())
+                .extract().response();
 
-        List<Map<String, Object>> courses = jdbcTemplate.queryForList("select * from course");
+        List<Map<String, Object>> courses = jdbcTemplate.queryForList("select * from course where id = ?", response.jsonPath().getLong("id"));
         assertAll(
                 () -> assertThat(courses.size(), equalTo(1)),
                 () -> assertThat(courses.get(0).get("name"), equalTo(course.get("name"))),

@@ -52,9 +52,10 @@ class TeacherServiceTest {
         Teacher teacher = mock(Teacher.class);
         Mockito.when(teacherDao.findById(teacherId)).thenReturn(Optional.of(teacher));
 
-        teacherService.startCourse(teacherId, course);
+        Course returnedCourse = teacherService.startCourse(teacherId, course);
 
         verify(teacher).startCourse(course);
+        assertThat(returnedCourse, equalTo(course));
     }
 
     @Test

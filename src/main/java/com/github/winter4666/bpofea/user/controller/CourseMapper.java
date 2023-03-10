@@ -10,8 +10,9 @@ import org.mapstruct.MappingConstants;
 public interface CourseMapper {
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "teacher", ignore = true)
     Course createCourseRequestToCourse(TeacherController.CreateCourseRequest createCourseRequest);
 
-    ClassTime classTimeInRequestToClassTime(TeacherController.CreateCourseRequest.ClassTime classTime);
+    ClassTime classTimeRecordToClassTime(TeacherController.ClassTime classTime);
 
 }

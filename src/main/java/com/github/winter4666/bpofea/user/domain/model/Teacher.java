@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -18,8 +19,8 @@ public class Teacher extends User {
 
     private String jobNumber;
 
-    @OneToMany(mappedBy = "teacher", cascade = {CascadeType.MERGE})
-    private List<Course> courses;
+    @OneToMany(mappedBy = "teacher", cascade = {CascadeType.PERSIST})
+    private List<Course> courses = new ArrayList<>();
 
     public void startCourse(Course course) {
         course.onStarted(this);
