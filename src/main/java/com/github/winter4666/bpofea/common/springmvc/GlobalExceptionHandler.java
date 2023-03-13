@@ -18,7 +18,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleUnknownException(Exception ex, WebRequest request, HttpServletRequest httpRequest) {
-        log.error("error occurred while api {} {} is called", httpRequest.getMethod(), httpRequest.getRequestURI(), ex);
+        log.error("Error occurred while api {} {} is called", httpRequest.getMethod(), httpRequest.getRequestURI(), ex);
         return this.handleExceptionInternal(ex, null, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
     }
 
