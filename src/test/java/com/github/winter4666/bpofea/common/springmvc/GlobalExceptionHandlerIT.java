@@ -3,9 +3,9 @@ package com.github.winter4666.bpofea.common.springmvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
 import com.github.winter4666.bpofea.common.domain.exception.DataNotFoundException;
-import com.github.winter4666.bpofea.user.controller.TeacherController;
-import com.github.winter4666.bpofea.user.domain.model.Teacher;
-import com.github.winter4666.bpofea.user.domain.service.TeacherService;
+import com.github.winter4666.bpofea.mockmodule.controller.MockModelController;
+import com.github.winter4666.bpofea.mockmodule.domain.model.MockModel;
+import com.github.winter4666.bpofea.mockmodule.domain.service.MockModelService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,18 +21,19 @@ import org.springframework.test.web.servlet.MvcResult;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(TeacherController.class)
-@ComponentScan("com.github.winter4666.bpofea.user.controller")
+@WebMvcTest(MockModelController.class)
+@ComponentScan("com.github.winter4666.bpofea.mockmodule.controller")
 class GlobalExceptionHandlerIT {
 
     @Autowired
     private MockMvc mvc;
 
     @MockBean
-    private TeacherService teacherService;
+    private MockModelService mockModelService;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -40,33 +41,23 @@ class GlobalExceptionHandlerIT {
     @ExtendWith(OutputCaptureExtension.class)
     @Test
     void should_return_500_status_code_and_log_exception_when_call_restful_api_given_exception_occurred(CapturedOutput output) throws Exception {
-        Faker faker = new Faker();
-        Teacher teacher = Teacher.builder()
-                .id(faker.number().randomNumber())
-                .name(faker.name().fullName())
-                .jobNumber(String.valueOf(faker.number().randomNumber()))
-                .build();
         String errorMessage = "Some exception occurred";
-        when(teacherService.addTeacher(teacher.getName(), teacher.getJobNumber())).thenThrow(new RuntimeException(errorMessage));
+        MockModel mockModel = MockModel.builder().name(new Faker().name().fullName()).build();
+        when(mockModelService.addMockModel(mockModel.getName())).thenThrow(new RuntimeException(errorMessage));
 
-        mvc.perform(post("/teachers").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(teacher)))
+        mvc.perform(post("/mock_models").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(mockModel)))
                 .andExpectAll(status().isInternalServerError());
-        assertThat(output.getOut(), allOf(containsString("Error occurred while api POST /teachers is called"),
+        assertThat(output.getOut(), allOf(containsString("Error occurred while api POST /mock_models is called"),
                 containsString(errorMessage)));
     }
 
     @Test
     void should_return_404_status_code_and_error_message_when_call_restful_api_given_data_not_found_exception_occurred() throws Exception {
-        Faker faker = new Faker();
-        Teacher teacher = Teacher.builder()
-                .id(faker.number().randomNumber())
-                .name(faker.name().fullName())
-                .jobNumber(String.valueOf(faker.number().randomNumber()))
-                .build();
+        long mockModelId = new Faker().number().randomNumber();
         String errorMessage = "Something not found";
-        when(teacherService.addTeacher(teacher.getName(), teacher.getJobNumber())).thenThrow(new DataNotFoundException(errorMessage));
+        when(mockModelService.getMockModel(mockModelId)).thenThrow(new DataNotFoundException(errorMessage));
 
-        MvcResult mvcResult = mvc.perform(post("/teachers").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(teacher)))
+        MvcResult mvcResult = mvc.perform(get("/mock_models/{mockModelId}", mockModelId))
                 .andExpectAll(status().isNotFound()).andReturn();
 
         assertThat(mvcResult.getResponse().getContentAsString(), equalTo(errorMessage));
