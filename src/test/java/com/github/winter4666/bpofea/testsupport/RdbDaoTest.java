@@ -1,4 +1,4 @@
-package com.github.winter4666.bpofea.testbase;
+package com.github.winter4666.bpofea.testsupport;
 
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeEach;

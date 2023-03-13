@@ -1,7 +1,7 @@
 package com.github.winter4666.bpofea.user.dao;
 
 import com.github.javafaker.Faker;
-import com.github.winter4666.bpofea.testbase.RdbDaoTest;
+import com.github.winter4666.bpofea.testsupport.RdbDaoTest;
 import com.github.winter4666.bpofea.user.domain.model.Teacher;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

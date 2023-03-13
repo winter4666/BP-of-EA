@@ -1,7 +1,7 @@
 package com.github.winter4666.bpofea.user.domain.service;
 
 import com.github.javafaker.Faker;
-import com.github.winter4666.bpofea.common.domain.BusinessException;
+import com.github.winter4666.bpofea.common.domain.exception.DataNotFoundException;
 import com.github.winter4666.bpofea.course.domain.model.Course;
 import com.github.winter4666.bpofea.user.domain.model.Teacher;
 import org.junit.jupiter.api.Test;
@@ -65,8 +65,8 @@ class TeacherServiceTest {
         Course course = mock(Course.class);
         Mockito.when(teacherDao.findById(teacherId)).thenReturn(Optional.empty());
 
-        BusinessException exception = assertThrows(BusinessException.class, () -> teacherService.startCourse(teacherId, course));
+        DataNotFoundException exception = assertThrows(DataNotFoundException.class, () -> teacherService.startCourse(teacherId, course));
 
-        assertThat(exception.getMessage(), equalTo("teacher not found"));
+        assertThat(exception.getMessage(), equalTo("Teacher cannot be found by teacher id " + teacherId));
     }
 }

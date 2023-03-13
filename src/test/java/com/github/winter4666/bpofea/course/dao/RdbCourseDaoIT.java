@@ -5,7 +5,7 @@ import com.github.javafaker.Faker;
 import com.github.winter4666.bpofea.common.HibernateObjectMapperHolder;
 import com.github.winter4666.bpofea.course.domain.model.ClassTime;
 import com.github.winter4666.bpofea.course.domain.model.Course;
-import com.github.winter4666.bpofea.testbase.RdbDaoTest;
+import com.github.winter4666.bpofea.testsupport.RdbDaoTest;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
