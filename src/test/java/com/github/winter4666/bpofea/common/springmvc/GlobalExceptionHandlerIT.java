@@ -7,16 +7,19 @@ import com.github.winter4666.bpofea.user.controller.TeacherController;
 import com.github.winter4666.bpofea.user.domain.model.Teacher;
 import com.github.winter4666.bpofea.user.domain.service.TeacherService;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.system.CapturedOutput;
+import org.springframework.boot.test.system.OutputCaptureExtension;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -34,18 +37,22 @@ class GlobalExceptionHandlerIT {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @ExtendWith(OutputCaptureExtension.class)
     @Test
-    void should_return_500_status_code_when_call_restful_api_given_exception_occurred() throws Exception {
+    void should_return_500_status_code_and_log_exception_when_call_restful_api_given_exception_occurred(CapturedOutput output) throws Exception {
         Faker faker = new Faker();
         Teacher teacher = Teacher.builder()
                 .id(faker.number().randomNumber())
                 .name(faker.name().fullName())
                 .jobNumber(String.valueOf(faker.number().randomNumber()))
                 .build();
-        when(teacherService.addTeacher(teacher.getName(), teacher.getJobNumber())).thenThrow(new RuntimeException("Some exception occurred"));
+        String errorMessage = "Some exception occurred";
+        when(teacherService.addTeacher(teacher.getName(), teacher.getJobNumber())).thenThrow(new RuntimeException(errorMessage));
 
         mvc.perform(post("/teachers").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(teacher)))
                 .andExpectAll(status().isInternalServerError());
+        assertThat(output.getOut(), allOf(containsString("Error occurred while api POST /teachers is called"),
+                containsString(errorMessage)));
     }
 
     @Test
