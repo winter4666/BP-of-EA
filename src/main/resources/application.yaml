@@ -3,6 +3,7 @@ spring:
       active: ${APP_ENVIRONMENT:local}
 
    jpa:
+      open-in-view: false
       properties:
          hibernate:
             type:
