@@ -1,6 +1,5 @@
 package com.github.winter4666.bpofea.common.springmvc;
 
-import com.github.winter4666.bpofea.common.domain.exception.BusinessException;
 import com.github.winter4666.bpofea.common.domain.exception.DataNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -20,11 +19,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleUnknownException(Exception ex, WebRequest request, HttpServletRequest httpRequest) {
         log.error("Error occurred while api {} {} is called", httpRequest.getMethod(), httpRequest.getRequestURI(), ex);
         return this.handleExceptionInternal(ex, null, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
-    }
-
-    @ExceptionHandler(BusinessException.class)
-    public ResponseEntity<Object> handleBusinessException(BusinessException ex, WebRequest request) {
-        return this.handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
     }
 
     @ExceptionHandler(DataNotFoundException.class)

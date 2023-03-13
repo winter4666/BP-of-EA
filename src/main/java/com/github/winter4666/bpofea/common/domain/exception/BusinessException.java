@@ -2,7 +2,7 @@ package com.github.winter4666.bpofea.common.domain.exception;
 
 import org.slf4j.helpers.MessageFormatter;
 
-public class BusinessException extends RuntimeException {
+public abstract class BusinessException extends RuntimeException {
 
     public BusinessException(String messagePattern, Object...args) {
         super(getMessage(messagePattern, args));

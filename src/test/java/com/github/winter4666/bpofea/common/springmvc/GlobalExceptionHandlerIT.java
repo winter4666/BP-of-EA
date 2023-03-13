@@ -2,7 +2,6 @@ package com.github.winter4666.bpofea.common.springmvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
-import com.github.winter4666.bpofea.common.domain.exception.BusinessException;
 import com.github.winter4666.bpofea.common.domain.exception.DataNotFoundException;
 import com.github.winter4666.bpofea.user.controller.TeacherController;
 import com.github.winter4666.bpofea.user.domain.model.Teacher;
@@ -47,23 +46,6 @@ class GlobalExceptionHandlerIT {
 
         mvc.perform(post("/teachers").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(teacher)))
                 .andExpectAll(status().isInternalServerError());
-    }
-
-    @Test
-    void should_return_500_status_code_and_error_message_when_call_restful_api_given_business_exception_exception_occurred() throws Exception {
-        Faker faker = new Faker();
-        Teacher teacher = Teacher.builder()
-                .id(faker.number().randomNumber())
-                .name(faker.name().fullName())
-                .jobNumber(String.valueOf(faker.number().randomNumber()))
-                .build();
-        String errorMessage = "Some business error occurred";
-        when(teacherService.addTeacher(teacher.getName(), teacher.getJobNumber())).thenThrow(new BusinessException(errorMessage));
-
-        MvcResult mvcResult = mvc.perform(post("/teachers").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(teacher)))
-                .andExpectAll(status().isInternalServerError()).andReturn();
-
-        assertThat(mvcResult.getResponse().getContentAsString(), equalTo(errorMessage));
     }
 
     @Test
