@@ -4,6 +4,7 @@ import com.github.winter4666.bpofea.course.domain.model.Course;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -19,6 +20,7 @@ public class Teacher extends User {
 
     private String jobNumber;
 
+    @Builder.Default
     @OneToMany(mappedBy = "teacher", cascade = {CascadeType.PERSIST})
     private List<Course> courses = new ArrayList<>();
 
