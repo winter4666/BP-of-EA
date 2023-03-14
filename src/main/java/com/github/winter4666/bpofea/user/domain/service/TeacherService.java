@@ -4,16 +4,20 @@ import com.github.winter4666.bpofea.common.domain.exception.DataNotFoundExceptio
 import com.github.winter4666.bpofea.course.domain.model.Course;
 import com.github.winter4666.bpofea.user.domain.model.Teacher;
 import jakarta.transaction.Transactional;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 @Service
+@Validated
 @RequiredArgsConstructor
 public class TeacherService {
 
     private final TeacherDao teacherDao;
 
-    public Teacher addTeacher(String name, String jobNumber) {
+    public Teacher addTeacher(@NotBlank String name, @NotNull String jobNumber) {
         Teacher teacher = Teacher.builder().name(name).jobNumber(jobNumber).build();;
         return teacherDao.save(teacher);
     }

@@ -6,6 +6,7 @@ import com.github.winter4666.bpofea.common.domain.exception.DataNotFoundExceptio
 import com.github.winter4666.bpofea.mockmodule.controller.MockModelController;
 import com.github.winter4666.bpofea.mockmodule.domain.model.MockModel;
 import com.github.winter4666.bpofea.mockmodule.domain.service.MockModelService;
+import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,16 @@ class GlobalExceptionHandlerIT {
                 .andExpectAll(status().isInternalServerError());
         assertThat(output.getOut(), allOf(containsString("Error occurred while api POST /mock_models is called"),
                 containsString(errorMessage)));
+    }
+
+    @Test
+    void should_return_422_status_code_and_error_message_when_call_restful_api_given_constraint_violation_exception_occurred() throws Exception {
+        String errorMessage = "Some constraint is violated";
+        MockModel mockModel = MockModel.builder().name(new Faker().name().fullName()).build();
+        when(mockModelService.addMockModel(mockModel.getName())).thenThrow(new ConstraintViolationException(errorMessage, null));
+
+        mvc.perform(post("/mock_models").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(mockModel)))
+                .andExpectAll(status().isUnprocessableEntity());
     }
 
     @Test
