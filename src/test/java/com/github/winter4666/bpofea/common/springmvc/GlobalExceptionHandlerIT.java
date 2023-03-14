@@ -56,8 +56,10 @@ class GlobalExceptionHandlerIT {
         MockModel mockModel = MockModel.builder().name(new Faker().name().fullName()).build();
         when(mockModelService.addMockModel(mockModel.getName())).thenThrow(new ConstraintViolationException(errorMessage, null));
 
-        mvc.perform(post("/mock_models").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(mockModel)))
-                .andExpectAll(status().isUnprocessableEntity());
+        MvcResult mvcResult =  mvc.perform(post("/mock_models").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(mockModel)))
+                .andExpectAll(status().isUnprocessableEntity()).andReturn();
+
+        assertThat(mvcResult.getResponse().getContentAsString(), equalTo(errorMessage));
     }
 
     @Test
