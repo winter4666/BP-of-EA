@@ -1,9 +1,8 @@
 package com.github.winter4666.bpofea.course.dao;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.github.javafaker.Faker;
 import com.github.winter4666.bpofea.common.HibernateObjectMapperHolder;
-import com.github.winter4666.bpofea.course.domain.model.ClassTime;
+import com.github.winter4666.bpofea.course.datafaker.CourseBuilder;
 import com.github.winter4666.bpofea.course.domain.model.Course;
 import com.github.winter4666.bpofea.testsupport.RdbDaoTest;
 import org.apache.commons.lang3.time.DateFormatUtils;
@@ -12,9 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -23,7 +19,8 @@ import java.util.Map;
 import static com.jayway.jsonpath.matchers.JsonPathMatchers.isJson;
 import static com.jayway.jsonpath.matchers.JsonPathMatchers.withJsonPath;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 class RdbCourseDaoIT extends RdbDaoTest {
@@ -36,13 +33,7 @@ class RdbCourseDaoIT extends RdbDaoTest {
 
     @Test
     void should_insert_successfully() {
-        Faker faker = new Faker();
-        Course course = Course.builder()
-                .name(faker.educator().course())
-                .startDate(LocalDate.of(2023, 1, 1))
-                .stopDate(LocalDate.of(2023, 5, 1))
-                .classTimes(List.of(new ClassTime(DayOfWeek.MONDAY, LocalTime.of(9,0),LocalTime.of(10, 0))))
-                .build();
+        Course course = new CourseBuilder().build();
 
         courseDao.save(course);
 
@@ -64,26 +55,20 @@ class RdbCourseDaoIT extends RdbDaoTest {
 
     @Test
     void should_get_courses_successfully() throws JsonProcessingException {
-        Faker faker = new Faker();
-        Course course = Course.builder()
-                .name(faker.educator().course())
-                .startDate(LocalDate.of(2023, 1, 1))
-                .stopDate(LocalDate.of(2023, 5, 1))
-                .classTimes(List.of(new ClassTime(DayOfWeek.MONDAY, LocalTime.of(9,0),LocalTime.of(10, 0))))
-                .build();
-        new SimpleJdbcInsert(jdbcTemplate).withTableName("course")
-                .execute(new HashMap<>(){
+        Course course = new CourseBuilder().build();
+        long courseId = new SimpleJdbcInsert(jdbcTemplate).withTableName("course").usingGeneratedKeyColumns("id")
+                .executeAndReturnKey(new HashMap<>(){
                     {put("name", course.getName());}
                     {put("start_date", course.getStartDate());}
                     {put("stop_date", course.getStopDate());}
                     {put("class_times", HibernateObjectMapperHolder.get().writeValueAsString(course.getClassTimes()));}
-                });
+                }).longValue();
 
         List<Course> courses = courseDao.findAll();
 
         assertAll(
                 () -> assertThat(courses.size(), equalTo(1)),
-                () -> assertThat(courses.get(0).getId(), notNullValue()),
+                () -> assertThat(courses.get(0).getId(), equalTo(courseId)),
                 () -> assertThat(courses.get(0).getName(), equalTo(course.getName())),
                 () -> assertThat(courses.get(0).getStartDate(), equalTo(course.getStartDate())),
                 () -> assertThat(courses.get(0).getStopDate(), equalTo(course.getStopDate())),

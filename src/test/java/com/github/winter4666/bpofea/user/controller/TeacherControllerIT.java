@@ -2,7 +2,7 @@ package com.github.winter4666.bpofea.user.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
-import com.github.winter4666.bpofea.course.domain.model.ClassTime;
+import com.github.winter4666.bpofea.course.datafaker.CourseBuilder;
 import com.github.winter4666.bpofea.course.domain.model.Course;
 import com.github.winter4666.bpofea.user.domain.model.Teacher;
 import com.github.winter4666.bpofea.user.domain.service.TeacherService;
@@ -14,11 +14,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.ArgumentMatchers.argThat;
@@ -62,13 +58,7 @@ class TeacherControllerIT {
     void should_start_course_successfully() throws Exception {
         Faker faker = new Faker();
         long teacherId = faker.number().randomNumber();
-        Course course = Course.builder()
-                .id(faker.number().randomNumber())
-                .name(faker.educator().course())
-                .startDate(LocalDate.of(2023, 1, 1))
-                .stopDate(LocalDate.of(2023, 5, 1))
-                .classTimes(List.of(new ClassTime(DayOfWeek.MONDAY, LocalTime.of(9,0),LocalTime.of(10, 0))))
-                .build();
+        Course course = new CourseBuilder().id(new Faker().random().nextLong()).build();
 
         when(teacherService.startCourse(eq(teacherId), argThat(c -> course.getName().equals(c.getName())
                 && course.getStartDate().equals(c.getStartDate())

@@ -2,7 +2,7 @@ package com.github.winter4666.bpofea.course.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
-import com.github.winter4666.bpofea.course.domain.model.ClassTime;
+import com.github.winter4666.bpofea.course.datafaker.CourseBuilder;
 import com.github.winter4666.bpofea.course.domain.model.Course;
 import com.github.winter4666.bpofea.course.domain.service.CourseService;
 import org.junit.jupiter.api.Test;
@@ -11,9 +11,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -37,14 +34,7 @@ class CourseControllerIT {
 
     @Test
     void should_get_courses_successfully() throws Exception {
-        Faker faker = new Faker();
-        Course course = Course.builder()
-                .id(faker.random().nextLong())
-                .name(faker.educator().course())
-                .startDate(LocalDate.of(2023, 1, 1))
-                .stopDate(LocalDate.of(2023, 5, 1))
-                .classTimes(List.of(new ClassTime(DayOfWeek.MONDAY, LocalTime.of(9,0),LocalTime.of(10, 0))))
-                .build();
+        Course course = new CourseBuilder().id(new Faker().random().nextLong()).build();
         when(courseService.getCourses()).thenReturn(List.of(course));
 
         mvc.perform(get("/courses"))

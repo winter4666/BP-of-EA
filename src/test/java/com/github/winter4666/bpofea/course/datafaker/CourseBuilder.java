@@ -11,17 +11,22 @@ import java.util.List;
 
 public class CourseBuilder {
 
-    private static final Faker faker = new Faker();
+    private static final Faker FAKER = new Faker();
 
-    private Long id = faker.number().randomNumber();
+    private Long id;
 
-    private String name = faker.educator().course();
+    private String name = FAKER.educator().course();
 
     private LocalDate startDate = LocalDate.of(2023, 1, 1);
 
     private LocalDate stopDate = LocalDate.of(2023, 5, 1);
 
     private List<ClassTimeBuilder> classTimeBuilders = List.of(new ClassTimeBuilder());
+
+    public CourseBuilder id(Long id) {
+        this.id = id;
+        return this;
+    }
 
     public CourseBuilder name(String name) {
         this.name = name;
