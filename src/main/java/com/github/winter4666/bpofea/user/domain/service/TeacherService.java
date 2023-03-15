@@ -4,6 +4,7 @@ import com.github.winter4666.bpofea.common.domain.exception.DataNotFoundExceptio
 import com.github.winter4666.bpofea.course.domain.model.Course;
 import com.github.winter4666.bpofea.user.domain.model.Teacher;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +24,7 @@ public class TeacherService {
     }
 
     @Transactional
-    public Course startCourse(Long teacherId, Course course) {
+    public Course startCourse(Long teacherId, @Valid Course course) {
         Teacher teacher = teacherDao.findById(teacherId).orElseThrow(() -> new DataNotFoundException("Teacher cannot be found by teacher id {}", teacherId));
         teacher.startCourse(course);
         return course;
