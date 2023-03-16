@@ -1,6 +1,5 @@
 package com.github.winter4666.bpofea.course.domain.model;
 
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -15,16 +14,24 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 class ClassTimeTest {
 
-    @Test
-    void should_return_false_when_invoke_collide_with_given_no_collision() {
-        ClassTime classTime1 = new ClassTime(DayOfWeek.MONDAY, LocalTime.of(9,0), LocalTime.of(10,0));
-        ClassTime classTime2 = new ClassTime(DayOfWeek.TUESDAY, LocalTime.of(9,0), LocalTime.of(10,0));
+    @ParameterizedTest
+    @MethodSource("classTimePairWithoutCollisionProvider")
+    void should_return_false_when_invoke_collide_with_given_no_collision(ClassTime classTime1, ClassTime classTime2) {
         assertThat(classTime1.collideWith(classTime2), equalTo(false));
+    }
+
+    static Stream<Arguments> classTimePairWithoutCollisionProvider() {
+        return Stream.of(
+                arguments(new ClassTime(DayOfWeek.MONDAY, LocalTime.of(9,0), LocalTime.of(10,0)),
+                        new ClassTime(DayOfWeek.TUESDAY, LocalTime.of(9,0), LocalTime.of(10,0))),
+                arguments(new ClassTime(DayOfWeek.MONDAY, LocalTime.of(9,0), LocalTime.of(10,0)),
+                        new ClassTime(DayOfWeek.MONDAY, LocalTime.of(10,0), LocalTime.of(11,0)))
+        );
     }
 
     @ParameterizedTest
     @MethodSource("collidedClassTimePairProvider")
-    void should_return_true_when_invoke_collide_with_given_collision_existed(ClassTime classTime1, ClassTime classTime2 ) {
+    void should_return_true_when_invoke_collide_with_given_collision_existed(ClassTime classTime1, ClassTime classTime2) {
         assertThat(classTime1.collideWith(classTime2), equalTo(true));
     }
 

@@ -48,7 +48,10 @@ public class Course {
     }
 
     public boolean collideWith(Course course) {
-        if(!stopDate.isAfter(course.startDate) || !startDate.isBefore(course.stopDate)) {
+        if(startDate.isBefore(course.startDate) && !stopDate.isAfter(course.startDate)) {
+            return false;
+        }
+        if(!startDate.isBefore(course.startDate) && !course.stopDate.isAfter(startDate)) {
             return false;
         }
         for(ClassTime classTime : classTimes) {
