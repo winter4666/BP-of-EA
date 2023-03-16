@@ -24,4 +24,8 @@ public class ClassTime {
     @NotNull
     private LocalTime stopTime;
 
+    public boolean collideWith(ClassTime classTime) {
+        return dayOfWeek == classTime.dayOfWeek && (startTime.isBefore(classTime.stopTime) || stopTime.isAfter(classTime.startTime));
+    }
+
 }

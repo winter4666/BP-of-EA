@@ -1,5 +1,6 @@
 package com.github.winter4666.bpofea.common.springmvc;
 
+import com.github.winter4666.bpofea.common.domain.exception.DataCollisionException;
 import com.github.winter4666.bpofea.common.domain.exception.DataNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
@@ -25,6 +26,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(DataNotFoundException.class)
     public ResponseEntity<Object> handleDataNotFoundException(DataNotFoundException ex, WebRequest request) {
         return this.handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+    }
+
+    @ExceptionHandler(DataCollisionException.class)
+    public ResponseEntity<Object> handleDataCollisionException(DataCollisionException ex, WebRequest request) {
+        return this.handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.CONFLICT, request);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)

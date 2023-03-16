@@ -34,18 +34,18 @@ public class TeacherController {
         return courseResponseMapper.courseToCourseResponse(teacherService.startCourse(teacherId, courseMapper.createCourseRequestToCourse(createCourseRequest)));
     }
 
-    public record CreateTeacherRequest(String name, String jobNumber) {
+    record CreateTeacherRequest(String name, String jobNumber) {
     }
 
-    public record CreateCourseRequest(String name, LocalDate startDate, LocalDate stopDate, List<ClassTime> classTimes) {
-
-    }
-
-    public record CourseResponse(Long id, String name, LocalDate startDate, LocalDate stopDate, List<ClassTime> classTimes) {
+    record CreateCourseRequest(String name, LocalDate startDate, LocalDate stopDate, List<ClassTime> classTimes) {
 
     }
 
-    public record ClassTime(DayOfWeek dayOfWeek, LocalTime startTime, LocalTime stopTime){
+    record CourseResponse(Long id, String name, LocalDate startDate, LocalDate stopDate, List<ClassTime> classTimes) {
+
+    }
+
+    record ClassTime(DayOfWeek dayOfWeek, LocalTime startTime, LocalTime stopTime){
 
     }
 

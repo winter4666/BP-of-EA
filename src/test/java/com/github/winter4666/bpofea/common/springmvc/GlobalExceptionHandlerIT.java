@@ -2,6 +2,7 @@ package com.github.winter4666.bpofea.common.springmvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
+import com.github.winter4666.bpofea.common.domain.exception.DataCollisionException;
 import com.github.winter4666.bpofea.common.domain.exception.DataNotFoundException;
 import com.github.winter4666.bpofea.mockmodule.controller.MockModelController;
 import com.github.winter4666.bpofea.mockmodule.domain.model.MockModel;
@@ -70,6 +71,18 @@ class GlobalExceptionHandlerIT {
 
         MvcResult mvcResult = mvc.perform(get("/mock_models/{mockModelId}", mockModelId))
                 .andExpectAll(status().isNotFound()).andReturn();
+
+        assertThat(mvcResult.getResponse().getContentAsString(), equalTo(errorMessage));
+    }
+
+    @Test
+    void should_return_409_status_code_and_error_message_when_call_restful_api_given_data_collision_exception_occurred() throws Exception {
+        String errorMessage = "data collided";
+        MockModel mockModel = MockModel.builder().name(new Faker().name().fullName()).build();
+        when(mockModelService.addMockModel(mockModel.getName())).thenThrow(new DataCollisionException(errorMessage));
+
+        MvcResult mvcResult =  mvc.perform(post("/mock_models").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(mockModel)))
+                .andExpectAll(status().isConflict()).andReturn();
 
         assertThat(mvcResult.getResponse().getContentAsString(), equalTo(errorMessage));
     }

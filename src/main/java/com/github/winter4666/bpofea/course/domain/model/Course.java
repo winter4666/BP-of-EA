@@ -47,4 +47,16 @@ public class Course {
         this.teacher = teacher;
     }
 
+    public boolean collideWith(Course course) {
+        if(!stopDate.isAfter(course.startDate) || !startDate.isBefore(course.stopDate)) {
+            return false;
+        }
+        for(ClassTime classTime : classTimes) {
+            if(course.classTimes.stream().anyMatch(t -> t.collideWith(classTime))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }
