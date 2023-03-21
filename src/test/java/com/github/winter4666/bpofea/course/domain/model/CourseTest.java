@@ -73,7 +73,7 @@ class CourseTest {
     }
 
     @Test
-    void should_return_false_when_invoke_collide_with_given_collision_existed() {
+    void should_return_true_when_invoke_collide_with_given_collision_existed() {
         Course course1 = new CourseBuilder().build();
         Course course2 = new CourseBuilder().build();
         assertThat(course1.collideWith(course2), equalTo(true));
