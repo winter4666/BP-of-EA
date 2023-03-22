@@ -68,6 +68,18 @@ class CourseTest {
                                 .stopDate(LocalDate.of(2023, 5, 1))
                                 .classTimes(List.of(new CourseBuilder.ClassTimeBuilder().dayOfWeek(DayOfWeek.TUESDAY)))
                                 .build()
+                ),
+                arguments(
+                        new CourseBuilder()
+                                .startDate(LocalDate.of(2023, 1, 1))
+                                .stopDate(LocalDate.of(2023, 5, 1))
+                                .classTimes(List.of(new CourseBuilder.ClassTimeBuilder().dayOfWeek(DayOfWeek.MONDAY)))
+                                .build(),
+                        new CourseBuilder()
+                                .startDate(LocalDate.of(2023, 3, 1))
+                                .stopDate(LocalDate.of(2023, 5, 1))
+                                .classTimes(List.of(new CourseBuilder.ClassTimeBuilder().dayOfWeek(DayOfWeek.TUESDAY)))
+                                .build()
                 )
         );
     }

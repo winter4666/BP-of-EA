@@ -48,11 +48,14 @@ public class Course {
     }
 
     public boolean collideWith(Course course) {
-        if(startDate.isBefore(course.startDate) && !stopDate.isAfter(course.startDate)) {
-            return false;
-        }
-        if(!startDate.isBefore(course.startDate) && !course.stopDate.isAfter(startDate)) {
-            return false;
+        if(startDate.isBefore(course.startDate)) {
+            if(stopDate.isBefore(course.startDate)) {
+                return false;
+            }
+        } else {
+            if(course.stopDate.isBefore(startDate)) {
+                return false;
+            }
         }
         for(ClassTime classTime : classTimes) {
             if(course.classTimes.stream().anyMatch(t -> t.collideWith(classTime))) {
