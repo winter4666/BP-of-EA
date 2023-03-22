@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -21,5 +22,10 @@ public class RdbCourseDao implements CourseDao {
     @Override
     public Course save(Course course) {
         return courseRepository.save(course);
+    }
+
+    @Override
+    public Optional<Course> findById(Long courseId) {
+        return courseRepository.findById(courseId);
     }
 }

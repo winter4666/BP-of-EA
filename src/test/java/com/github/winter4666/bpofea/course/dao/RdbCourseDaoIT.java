@@ -19,8 +19,7 @@ import java.util.Map;
 import static com.jayway.jsonpath.matchers.JsonPathMatchers.isJson;
 import static com.jayway.jsonpath.matchers.JsonPathMatchers.withJsonPath;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 class RdbCourseDaoIT extends RdbDaoTest {
@@ -75,5 +74,29 @@ class RdbCourseDaoIT extends RdbDaoTest {
                 () -> assertThat(courses.get(0).getClassTimes().get(0).getDayOfWeek(), equalTo(course.getClassTimes().get(0).getDayOfWeek())),
                 () -> assertThat(courses.get(0).getClassTimes().get(0).getStartTime(), equalTo(course.getClassTimes().get(0).getStartTime())),
                 () -> assertThat(courses.get(0).getClassTimes().get(0).getStopTime(), equalTo(course.getClassTimes().get(0).getStopTime())));
+    }
+
+    @Test
+    void should_get_course_by_id_successfully() throws JsonProcessingException {
+        Course course = new CourseBuilder().build();
+        long courseId = new SimpleJdbcInsert(jdbcTemplate).withTableName("course").usingGeneratedKeyColumns("id")
+                .executeAndReturnKey(new HashMap<>(){
+                    {put("name", course.getName());}
+                    {put("start_date", course.getStartDate());}
+                    {put("stop_date", course.getStopDate());}
+                    {put("class_times", HibernateObjectMapperHolder.get().writeValueAsString(course.getClassTimes()));}
+                }).longValue();
+
+        Course courseInDb = courseDao.findById(courseId).orElse(null);
+
+        assertAll(
+                () -> assertThat(courseInDb, notNullValue()),
+                () -> assertThat(courseInDb.getId(), equalTo(courseId)),
+                () -> assertThat(courseInDb.getName(), equalTo(course.getName())),
+                () -> assertThat(courseInDb.getStartDate(), equalTo(course.getStartDate())),
+                () -> assertThat(courseInDb.getStopDate(), equalTo(course.getStopDate())),
+                () -> assertThat(courseInDb.getClassTimes().get(0).getDayOfWeek(), equalTo(course.getClassTimes().get(0).getDayOfWeek())),
+                () -> assertThat(courseInDb.getClassTimes().get(0).getStartTime(), equalTo(course.getClassTimes().get(0).getStartTime())),
+                () -> assertThat(courseInDb.getClassTimes().get(0).getStopTime(), equalTo(course.getClassTimes().get(0).getStopTime())));
     }
 }
