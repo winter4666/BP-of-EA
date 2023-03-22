@@ -35,7 +35,7 @@ public class Course {
     @NotNull
     private LocalDate stopDate;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Teacher teacher;
 
     @Valid
