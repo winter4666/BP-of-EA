@@ -32,8 +32,4 @@ public class Teacher extends User {
         course.onStarted(this);
         courses.add(course);
     }
-
-    public boolean haveAnyCourseCollidingWith(Course course) {
-        return courses.stream().anyMatch(c -> c.collideWith(course));
-    }
 }
