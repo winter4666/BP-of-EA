@@ -61,6 +61,7 @@ class RdbCourseDaoIT extends RdbDaoTest {
                     {put("start_date", course.getStartDate());}
                     {put("stop_date", course.getStopDate());}
                     {put("class_times", HibernateObjectMapperHolder.get().writeValueAsString(course.getClassTimes()));}
+                    {put("teacher_id", course.getTeacher().getId());}
                 }).longValue();
 
         List<Course> courses = courseDao.findAll();
@@ -85,6 +86,7 @@ class RdbCourseDaoIT extends RdbDaoTest {
                     {put("start_date", course.getStartDate());}
                     {put("stop_date", course.getStopDate());}
                     {put("class_times", HibernateObjectMapperHolder.get().writeValueAsString(course.getClassTimes()));}
+                    {put("teacher_id", course.getTeacher().getId());}
                 }).longValue();
 
         Course courseInDb = courseDao.findById(courseId).orElse(null);

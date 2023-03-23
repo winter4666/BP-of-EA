@@ -3,6 +3,7 @@ package com.github.winter4666.bpofea.course.datafaker;
 import com.github.javafaker.Faker;
 import com.github.winter4666.bpofea.course.domain.model.ClassTime;
 import com.github.winter4666.bpofea.course.domain.model.Course;
+import com.github.winter4666.bpofea.user.domain.model.Teacher;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -22,6 +23,8 @@ public class CourseBuilder {
     private LocalDate stopDate = LocalDate.of(2023, 5, 1);
 
     private List<ClassTimeBuilder> classTimeBuilders = List.of(new ClassTimeBuilder());
+
+    private Teacher teacher = Teacher.builder().id(FAKER.number().randomNumber()).build();
 
     public CourseBuilder id(Long id) {
         this.id = id;
@@ -48,6 +51,11 @@ public class CourseBuilder {
         return this;
     }
 
+    public CourseBuilder teacher(Teacher teacher) {
+        this.teacher = teacher;
+        return this;
+    }
+
     public Course build() {
         return Course.builder()
                 .id(id)
@@ -55,6 +63,7 @@ public class CourseBuilder {
                 .startDate(startDate)
                 .stopDate(stopDate)
                 .classTimes(classTimeBuilders == null ? null : classTimeBuilders.stream().map(ClassTimeBuilder::build).toList())
+                .teacher(teacher)
                 .build();
     }
 

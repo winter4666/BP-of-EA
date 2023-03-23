@@ -4,6 +4,6 @@ create table course (
     start_date DATE not null,
     stop_date DATE not null,
     class_times JSON not null,
-    teacher_id int unsigned,
+    teacher_id int unsigned not null,
     PRIMARY KEY (id)
 );

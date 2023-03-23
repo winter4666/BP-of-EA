@@ -55,6 +55,7 @@ public class StudentE2EIT extends RdbDaoTest {
                 put("start_date", LocalDate.of(2023, 1, 1));
                 put("stop_date", LocalDate.of(2023, 5, 1));
                 put("class_times", HibernateObjectMapperHolder.get().writeValueAsString(List.of(classTime)));
+                put("teacher_id", faker.number().randomNumber());
             }
         };
         long courseId = new SimpleJdbcInsert(jdbcTemplate).withTableName("course")
