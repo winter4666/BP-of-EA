@@ -3,6 +3,7 @@ package com.github.winter4666.bpofea.common.springmvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
 import com.github.winter4666.bpofea.common.domain.exception.DataCollisionException;
+import com.github.winter4666.bpofea.common.domain.exception.DataInvalidException;
 import com.github.winter4666.bpofea.common.domain.exception.DataNotFoundException;
 import com.github.winter4666.bpofea.mockmodule.controller.MockModelController;
 import com.github.winter4666.bpofea.mockmodule.domain.model.MockModel;
@@ -56,6 +57,18 @@ class GlobalExceptionHandlerIT {
         String errorMessage = "Some constraint is violated";
         MockModel mockModel = MockModel.builder().name(new Faker().name().fullName()).build();
         when(mockModelService.addMockModel(mockModel.getName())).thenThrow(new ConstraintViolationException(errorMessage, null));
+
+        MvcResult mvcResult =  mvc.perform(post("/mock_models").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(mockModel)))
+                .andExpectAll(status().isUnprocessableEntity()).andReturn();
+
+        assertThat(mvcResult.getResponse().getContentAsString(), equalTo(errorMessage));
+    }
+
+    @Test
+    void should_return_422_status_code_and_error_message_when_call_restful_api_given_data_invalid_exception_occurred() throws Exception {
+        String errorMessage = "Data is invalid";
+        MockModel mockModel = MockModel.builder().name(new Faker().name().fullName()).build();
+        when(mockModelService.addMockModel(mockModel.getName())).thenThrow(new DataInvalidException(errorMessage));
 
         MvcResult mvcResult =  mvc.perform(post("/mock_models").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(mockModel)))
                 .andExpectAll(status().isUnprocessableEntity()).andReturn();
