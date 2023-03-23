@@ -1,5 +1,6 @@
 package com.github.winter4666.bpofea.user.domain.model;
 
+import com.github.winter4666.bpofea.common.domain.exception.DataCollisionException;
 import com.github.winter4666.bpofea.course.domain.model.Course;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -29,6 +30,9 @@ public class Student extends User {
     private Set<Course> courses = new HashSet<>();
 
     public void chooseCourse(Course course) {
+        if(haveAnyCourseCollidingWith(course)) {
+            throw new DataCollisionException("The student has chosen some course colliding with the new course. Student id = {} ", getId());
+        }
         courses.add(course);
     }
 }
