@@ -1,7 +1,9 @@
 package com.github.winter4666.bpofea.user.domain.service;
 
 import com.github.javafaker.Faker;
+import com.github.winter4666.bpofea.common.domain.exception.DataInvalidException;
 import com.github.winter4666.bpofea.common.domain.exception.DataNotFoundException;
+import com.github.winter4666.bpofea.course.datafaker.CourseBuilder;
 import com.github.winter4666.bpofea.course.domain.model.Course;
 import com.github.winter4666.bpofea.user.domain.model.Teacher;
 import org.junit.jupiter.api.Test;
@@ -11,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -48,7 +51,7 @@ class TeacherServiceTest {
     void should_start_course_successfully() {
         Faker faker = new Faker();
         long teacherId = faker.number().randomNumber();
-        Course course = mock(Course.class);
+        Course course = new CourseBuilder().build();
         Teacher teacher = mock(Teacher.class);
         Mockito.when(teacherDao.findById(teacherId)).thenReturn(Optional.of(teacher));
 
@@ -62,11 +65,22 @@ class TeacherServiceTest {
     void should_throw_exception_when_start_course_given_teacher_not_found() {
         Faker faker = new Faker();
         long teacherId = faker.number().randomNumber();
-        Course course = mock(Course.class);
+        Course course = new CourseBuilder().build();
         Mockito.when(teacherDao.findById(teacherId)).thenReturn(Optional.empty());
 
         DataNotFoundException exception = assertThrows(DataNotFoundException.class, () -> teacherService.startCourse(teacherId, course));
 
         assertThat(exception.getMessage(), equalTo("Teacher cannot be found by teacher id " + teacherId));
+    }
+
+    @Test
+    void should_throw_exception_when_start_course_given_stop_date_is_before_start_date() {
+        Faker faker = new Faker();
+        long teacherId = faker.number().randomNumber();
+        Course course = new CourseBuilder().startDate(LocalDate.of(2023, 5, 1)).stopDate(LocalDate.of(2023, 1, 1)).build();
+
+        DataInvalidException exception = assertThrows(DataInvalidException.class, () -> teacherService.startCourse(teacherId, course));
+
+        assertThat(exception.getMessage(), equalTo("Stop data should be later than start data in a course"));
     }
 }
