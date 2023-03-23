@@ -15,6 +15,7 @@ import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @NoArgsConstructor
@@ -65,4 +66,16 @@ public class Course {
         return false;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Course course = (Course) o;
+        return name.equals(course.name) && teacher.getId().equals(course.teacher.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, teacher.getId());
+    }
 }

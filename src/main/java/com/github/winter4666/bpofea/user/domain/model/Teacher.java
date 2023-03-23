@@ -10,8 +10,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @SuperBuilder
@@ -23,7 +23,7 @@ public class Teacher extends User {
 
     @Builder.Default
     @OneToMany(mappedBy = "teacher", cascade = {CascadeType.PERSIST})
-    private List<Course> courses = new ArrayList<>();
+    private Set<Course> courses = new HashSet<>();
 
     public void startCourse(Course course) {
         if(haveAnyCourseCollidingWith(course)) {

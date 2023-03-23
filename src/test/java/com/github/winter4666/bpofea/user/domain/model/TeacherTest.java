@@ -4,7 +4,7 @@ import com.github.winter4666.bpofea.common.domain.exception.DataCollisionExcepti
 import com.github.winter4666.bpofea.course.domain.model.Course;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
+import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -20,7 +20,7 @@ class TeacherTest {
 
         teacher.startCourse(course);
 
-        assertThat(teacher.getCourses().get(0), equalTo(course));
+        assertThat(teacher.getCourses().iterator().next(), equalTo(course));
         verify(course).onStarted(teacher);
     }
 
@@ -37,7 +37,7 @@ class TeacherTest {
     void should_return_ture_when_invoke_have_any_course_colliding_with_given_collision_existed() {
         Course course1 = mock(Course.class);
         Course course2 = new Course();
-        Teacher teacher = Teacher.builder().courses(List.of(course1)).build();
+        Teacher teacher = Teacher.builder().courses(Set.of(course1)).build();
         when(course1.collideWith(course2)).thenReturn(true);
 
         boolean result = teacher.haveAnyCourseCollidingWith(course2);

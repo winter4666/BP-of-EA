@@ -14,6 +14,6 @@ class StudentTest {
         Student student = new Student();
         Course course = mock(Course.class);
         student.chooseCourse(course);
-        assertThat(student.getCourses().get(0), equalTo(course));
+        assertThat(student.getCourses().iterator().next(), equalTo(course));
     }
 }
