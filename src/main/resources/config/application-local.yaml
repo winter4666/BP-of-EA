@@ -8,5 +8,7 @@ spring:
 
 logging:
    level:
-      org.hibernate.orm.jdbc.bind: trace
       org.hibernate.SQL: debug
+      org.hibernate.type: trace
+      org.hibernate.orm.jdbc.bind: trace
+      org.hibernate.orm.jdbc.extract: trace
