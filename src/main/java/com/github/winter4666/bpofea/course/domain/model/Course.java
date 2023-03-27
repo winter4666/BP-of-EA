@@ -66,6 +66,27 @@ public class Course {
         return false;
     }
 
+    public void setStartDateIfNotNull(LocalDate startDate) {
+        if(startDate == null) {
+            return;
+        }
+        this.startDate = startDate;
+    }
+
+    public void setStopDateIfNotNull(LocalDate stopDate) {
+        if(stopDate == null) {
+            return;
+        }
+        this.stopDate = stopDate;
+    }
+
+    public void setClassTimesIfNotNull(List<ClassTime> classTimes) {
+        if(classTimes == null) {
+            return;
+        }
+        this.classTimes = classTimes;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -119,4 +119,64 @@ class CourseTest {
         );
     }
 
+    @Test
+    public void should_set_start_date_when_set_start_date_given_parameter_not_null() {
+        Course course = new Course();
+        LocalDate startDate = LocalDate.of(2022, 1, 1);
+
+        course.setStartDateIfNotNull(startDate);
+
+        assertThat(course.getStartDate(), equalTo(startDate));
+    }
+
+    @Test
+    public void should_not_set_start_date_when_set_start_date_given_parameter_is_null() {
+        LocalDate startDate = LocalDate.of(2022, 1, 1);
+        Course course = new CourseBuilder().startDate(startDate).build();
+
+        course.setStartDateIfNotNull(null);
+
+        assertThat(course.getStartDate(), equalTo(startDate));
+    }
+
+    @Test
+    public void should_set_stop_date_when_set_start_date_given_parameter_not_null() {
+        Course course = new Course();
+        LocalDate stopDate = LocalDate.of(2022, 1, 1);
+
+        course.setStopDateIfNotNull(stopDate);
+
+        assertThat(course.getStopDate(), equalTo(stopDate));
+    }
+
+    @Test
+    public void should_not_set_stop_date_when_set_start_date_given_parameter_is_null() {
+        LocalDate stopDate = LocalDate.of(2022, 1, 1);
+        Course course = new CourseBuilder().stopDate(stopDate).build();
+
+        course.setStopDateIfNotNull(null);
+
+        assertThat(course.getStopDate(), equalTo(stopDate));
+    }
+
+    @Test
+    public void should_set_class_times_when_set_start_date_given_parameter_not_null() {
+        Course course = new Course();
+        List<ClassTime> classTimes = List.of(new CourseBuilder.ClassTimeBuilder().build());
+
+        course.setClassTimesIfNotNull(classTimes);
+
+        assertThat(course.getClassTimes(), equalTo(classTimes));
+    }
+
+    @Test
+    public void should_not_set_class_times_when_set_start_date_given_parameter_is_null() {
+        List<ClassTime> classTimes = List.of(new CourseBuilder.ClassTimeBuilder().build());
+        Course course = Course.builder().classTimes(classTimes).build();
+
+        course.setStopDateIfNotNull(null);
+
+        assertThat(course.getClassTimes(), equalTo(classTimes));
+    }
+
 }

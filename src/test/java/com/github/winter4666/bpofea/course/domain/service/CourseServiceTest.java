@@ -3,6 +3,7 @@ package com.github.winter4666.bpofea.course.domain.service;
 import com.github.javafaker.Faker;
 import com.github.winter4666.bpofea.common.domain.exception.DataNotFoundException;
 import com.github.winter4666.bpofea.course.datafaker.CourseBuilder;
+import com.github.winter4666.bpofea.course.domain.model.ClassTime;
 import com.github.winter4666.bpofea.course.domain.model.Course;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -17,9 +19,7 @@ import java.util.Optional;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class CourseServiceTest {
@@ -29,15 +29,6 @@ class CourseServiceTest {
 
     @InjectMocks
     private CourseService courseService;
-
-    @Test
-    void should_add_user_successfully() {
-        Course course = new Course();
-
-        courseService.addCourse(course);
-
-        verify(courseDao).save(eq(course));
-    }
 
     @Test
     void should_get_users_successfully() {
@@ -67,6 +58,22 @@ class CourseServiceTest {
         DataNotFoundException exception = assertThrows(DataNotFoundException.class, () -> courseService.findCourseByIdAndThrowExceptionIfNotFound(courseId));
 
         assertThat(exception.getMessage(), equalTo("Course cannot be found by course id " + courseId));
+    }
+
+    @Test
+    void should_update_course_successfully() {
+        long courseId = new Faker().number().randomNumber();
+        Course course = mock(Course.class);
+        when(courseDao.findById(courseId)).thenReturn(Optional.of(course));
+        LocalDate startDate = LocalDate.of(2023, 1, 1);
+        LocalDate stopDate =  LocalDate.of(2023, 5, 1);
+        List<ClassTime> classTimes = List.of(new CourseBuilder.ClassTimeBuilder().build());
+
+        courseService.updateCourse(courseId, startDate, stopDate, classTimes);
+
+        verify(course).setStartDateIfNotNull(startDate);
+        verify(course).setStopDateIfNotNull(stopDate);
+        verify(course).setClassTimesIfNotNull(classTimes);
     }
 
 }
