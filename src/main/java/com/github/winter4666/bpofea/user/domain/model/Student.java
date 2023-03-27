@@ -35,4 +35,8 @@ public class Student extends User {
         }
         courses.add(course);
     }
+
+    public void revokeChoice(Course course) {
+        getCourses().remove(course);
+    }
 }

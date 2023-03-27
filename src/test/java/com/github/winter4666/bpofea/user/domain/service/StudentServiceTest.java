@@ -70,4 +70,19 @@ class StudentServiceTest {
         assertThat(exception.getMessage(), equalTo("Course cannot be found by course id " + courseId));
     }
 
+    @Test
+    void should_revoke_choice_successfully() {
+        Faker faker = new Faker();
+        Student student = mock(Student.class);
+        Course course = mock(Course.class);
+        long studentId = faker.number().randomNumber();
+        long courseId = faker.number().randomNumber();
+        when(studentDao.findById(studentId)).thenReturn(Optional.of(student));
+        when(courseDao.findById(courseId)).thenReturn(Optional.of(course));
+
+        studentService.revokeChoice(studentId, courseId);
+
+        verify(student).revokeChoice(course);
+    }
+
 }
