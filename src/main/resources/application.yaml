@@ -7,4 +7,4 @@ spring:
       properties:
          hibernate:
             type:
-               json_format_mapper: com.github.winter4666.bpofea.common.CustomJacksonJsonFormatMapper
+               json_format_mapper: com.github.winter4666.bpofea.common.dao.CustomJacksonJsonFormatMapper

@@ -3,7 +3,7 @@ package com.github.winter4666.bpofea.user;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
-import com.github.winter4666.bpofea.common.HibernateObjectMapperHolder;
+import com.github.winter4666.bpofea.common.dao.HibernateObjectMapperHolder;
 import com.github.winter4666.bpofea.testsupport.RdbDaoTest;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.Test;

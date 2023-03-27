@@ -2,6 +2,7 @@ package com.github.winter4666.bpofea.course.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
+import com.github.winter4666.bpofea.common.domain.model.Page;
 import com.github.winter4666.bpofea.course.datafaker.CourseBuilder;
 import com.github.winter4666.bpofea.course.domain.model.Course;
 import com.github.winter4666.bpofea.course.domain.service.CourseService;
@@ -43,18 +44,23 @@ class CourseControllerIT {
 
     @Test
     void should_get_courses_successfully() throws Exception {
-        Course course = new CourseBuilder().id(new Faker().random().nextLong()).build();
-        when(courseService.getCourses()).thenReturn(List.of(course));
+        Faker faker = new Faker();
+        int perPage = (int)faker.number().randomNumber();
+        int page = (int)faker.number().randomNumber();
+        Course course = new CourseBuilder().id(faker.random().nextLong()).build();
+        long totalElements = faker.number().randomNumber();
+        when(courseService.getCourses(perPage, page)).thenReturn(new Page<>(List.of(course), totalElements));
 
-        mvc.perform(get("/courses"))
+        mvc.perform(get("/courses").queryParam("perPage", String.valueOf(perPage)).queryParam("page", String.valueOf(page)))
                 .andExpectAll(status().isOk(),
-                        jsonPath("$[0].id").value(course.getId()),
-                        jsonPath("$[0].name").value(course.getName()),
-                        jsonPath("$[0].startDate").value(course.getStartDate().toString()),
-                        jsonPath("$[0].stopDate").value(course.getStopDate().toString()),
-                        jsonPath("$[0].classTimes[0].dayOfWeek").value(course.getClassTimes().get(0).getDayOfWeek().toString()),
-                        jsonPath("$[0].classTimes[0].startTime").value(course.getClassTimes().get(0).getStartTime().format(DateTimeFormatter.ISO_TIME)),
-                        jsonPath("$[0].classTimes[0].stopTime").value(course.getClassTimes().get(0).getStopTime().format(DateTimeFormatter.ISO_TIME)));
+                        jsonPath("$.totalElements").value(totalElements),
+                        jsonPath("$.content[0].id").value(course.getId()),
+                        jsonPath("$.content[0].name").value(course.getName()),
+                        jsonPath("$.content[0].startDate").value(course.getStartDate().toString()),
+                        jsonPath("$.content[0].stopDate").value(course.getStopDate().toString()),
+                        jsonPath("$.content[0].classTimes[0].dayOfWeek").value(course.getClassTimes().get(0).getDayOfWeek().toString()),
+                        jsonPath("$.content[0].classTimes[0].startTime").value(course.getClassTimes().get(0).getStartTime().format(DateTimeFormatter.ISO_TIME)),
+                        jsonPath("$.content[0].classTimes[0].stopTime").value(course.getClassTimes().get(0).getStopTime().format(DateTimeFormatter.ISO_TIME)));
     }
 
     @Test

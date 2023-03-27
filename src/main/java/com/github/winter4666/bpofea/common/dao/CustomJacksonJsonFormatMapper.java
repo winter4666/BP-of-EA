@@ -1,4 +1,4 @@
-package com.github.winter4666.bpofea.common;
+package com.github.winter4666.bpofea.common.dao;
 
 import org.hibernate.type.FormatMapper;
 import org.hibernate.type.descriptor.WrapperOptions;

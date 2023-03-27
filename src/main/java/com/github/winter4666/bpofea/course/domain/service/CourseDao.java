@@ -1,12 +1,12 @@
 package com.github.winter4666.bpofea.course.domain.service;
 
+import com.github.winter4666.bpofea.common.domain.model.Page;
 import com.github.winter4666.bpofea.course.domain.model.Course;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface CourseDao {
-    List<Course> findAll();
+    Page<Course> findAll(int perPage, int page);
 
     Course save(Course course);
 

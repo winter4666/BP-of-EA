@@ -1,4 +1,4 @@
-package com.github.winter4666.bpofea.common;
+package com.github.winter4666.bpofea.common.dao;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;

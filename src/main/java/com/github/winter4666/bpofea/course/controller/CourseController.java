@@ -1,5 +1,6 @@
 package com.github.winter4666.bpofea.course.controller;
 
+import com.github.winter4666.bpofea.common.domain.model.Page;
 import com.github.winter4666.bpofea.course.domain.model.Course;
 import com.github.winter4666.bpofea.course.domain.service.CourseService;
 import lombok.RequiredArgsConstructor;
@@ -20,8 +21,8 @@ public class CourseController {
     private final CourseMapper courseMapper;
 
     @GetMapping()
-    public List<Course> getCourses() {
-        return courseService.getCourses();
+    public Page<Course> getCourses(@RequestParam int perPage, @RequestParam int page) {
+        return courseService.getCourses(perPage, page);
     }
 
     @PatchMapping("/{courseId}")

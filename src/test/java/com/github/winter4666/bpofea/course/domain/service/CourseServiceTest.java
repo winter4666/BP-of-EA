@@ -2,6 +2,7 @@ package com.github.winter4666.bpofea.course.domain.service;
 
 import com.github.javafaker.Faker;
 import com.github.winter4666.bpofea.common.domain.exception.DataNotFoundException;
+import com.github.winter4666.bpofea.common.domain.model.Page;
 import com.github.winter4666.bpofea.course.datafaker.CourseBuilder;
 import com.github.winter4666.bpofea.course.domain.model.ClassTime;
 import com.github.winter4666.bpofea.course.domain.model.Course;
@@ -32,10 +33,13 @@ class CourseServiceTest {
 
     @Test
     void should_get_users_successfully() {
-        List<Course> courses = new ArrayList<>();
-        when(courseDao.findAll()).thenReturn(courses);
+        Faker faker = new Faker();
+        Page<Course> courses = new Page<>(new ArrayList<>(), faker.number().randomNumber());
+        int perPage = (int)faker.number().randomNumber();
+        int page = (int)faker.number().randomNumber();
+        when(courseDao.findAll(perPage, page)).thenReturn(courses);
 
-        List<Course> actualCourses = courseService.getCourses();
+        Page<Course> actualCourses = courseService.getCourses(perPage, page);
 
         assertThat(actualCourses, equalTo(courses));
     }
