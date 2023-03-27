@@ -26,8 +26,8 @@ public class CourseController {
 
     @PatchMapping("/{courseId}")
     public CourseResponse updateCourse(@PathVariable long courseId, @RequestBody UpdateCourseRequest updateCourseRequest) {
-        return courseResponseMapper.courseToCourseResponse(courseService.updateCourse(courseId, updateCourseRequest.startDate, updateCourseRequest.stopDate,
-                courseMapper.classTimeDtoListToClassTimeList(updateCourseRequest.classTimes)));
+        return courseResponseMapper.courseToCourseResponse(courseService.updateCourse(courseId, updateCourseRequest.startDate(), updateCourseRequest.stopDate(),
+                courseMapper.classTimeDtoListToClassTimeList(updateCourseRequest.classTimes())));
     }
 
     record UpdateCourseRequest(LocalDate startDate, LocalDate stopDate, List<ClassTimeDto> classTimes) {
