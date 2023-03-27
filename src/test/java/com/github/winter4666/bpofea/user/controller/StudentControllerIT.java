@@ -13,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -29,7 +30,7 @@ class StudentControllerIT {
     private ObjectMapper objectMapper;
 
     @Test
-    void should_start_course_successfully() throws Exception {
+    void should_choose_course_successfully() throws Exception {
         Faker faker = new Faker();
         long studentId = faker.number().randomNumber();
         Course course = new CourseBuilder().id(new Faker().random().nextLong()).build();
@@ -38,5 +39,17 @@ class StudentControllerIT {
                 .andExpectAll(status().isCreated());
 
         verify(studentService).chooseCourse(studentId, course.getId());
+    }
+
+    @Test
+    void should_revoke_choice_successfully() throws Exception {
+        Faker faker = new Faker();
+        long studentId = faker.number().randomNumber();
+        long courseId = faker.number().randomNumber();
+
+        mvc.perform(delete("/students/{studentId}/courses/{courseId}", studentId, courseId))
+                .andExpectAll(status().isNoContent());
+
+        verify(studentService).revokeChoice(studentId, courseId);
     }
 }
