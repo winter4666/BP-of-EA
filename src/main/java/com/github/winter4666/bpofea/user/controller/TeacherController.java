@@ -1,14 +1,16 @@
 package com.github.winter4666.bpofea.user.controller;
 
+import com.github.winter4666.bpofea.course.controller.ClassTimeDto;
+import com.github.winter4666.bpofea.course.controller.CourseMapper;
+import com.github.winter4666.bpofea.course.controller.CourseResponse;
+import com.github.winter4666.bpofea.course.controller.CourseResponseMapper;
 import com.github.winter4666.bpofea.user.domain.model.Teacher;
 import com.github.winter4666.bpofea.user.domain.service.TeacherService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 
 @RestController
@@ -28,24 +30,17 @@ public class TeacherController {
         return teacherService.addTeacher(createTeacherRequest.name(), createTeacherRequest.jobNumber());
     }
 
+    record CreateTeacherRequest(String name, String jobNumber) {
+    }
+
+
     @PostMapping("/{teacherId}/courses")
     @ResponseStatus(HttpStatus.CREATED)
     public CourseResponse startCourse(@PathVariable Long teacherId, @RequestBody CreateCourseRequest createCourseRequest) {
         return courseResponseMapper.courseToCourseResponse(teacherService.startCourse(teacherId, courseMapper.createCourseRequestToCourse(createCourseRequest)));
     }
 
-    record CreateTeacherRequest(String name, String jobNumber) {
-    }
-
-    record CreateCourseRequest(String name, LocalDate startDate, LocalDate stopDate, List<ClassTime> classTimes) {
-
-    }
-
-    record CourseResponse(Long id, String name, LocalDate startDate, LocalDate stopDate, List<ClassTime> classTimes) {
-
-    }
-
-    record ClassTime(DayOfWeek dayOfWeek, LocalTime startTime, LocalTime stopTime){
+    public record CreateCourseRequest(String name, LocalDate startDate, LocalDate stopDate, List<ClassTimeDto> classTimes) {
 
     }
 
