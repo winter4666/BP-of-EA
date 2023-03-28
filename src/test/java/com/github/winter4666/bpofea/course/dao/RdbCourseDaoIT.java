@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.javafaker.Faker;
 import com.github.winter4666.bpofea.common.dao.HibernateObjectMapperHolder;
 import com.github.winter4666.bpofea.common.domain.model.Page;
+import com.github.winter4666.bpofea.common.domain.model.PageOptions;
 import com.github.winter4666.bpofea.course.datafaker.CourseBuilder;
 import com.github.winter4666.bpofea.course.domain.model.Course;
 import com.github.winter4666.bpofea.testsupport.RdbDaoTest;
@@ -77,7 +78,7 @@ class RdbCourseDaoIT extends RdbDaoTest {
         }
         int perPage = 10;
 
-        Page<Course> actualCourses = courseDao.findAll(prefixes.iterator().next().toString(), perPage , 1);
+        Page<Course> actualCourses = courseDao.findAll(prefixes.iterator().next().toString(), new PageOptions(perPage, 1));
 
         assertAll(
                 () -> assertThat(actualCourses.totalElements(), equalTo(totalElements)),

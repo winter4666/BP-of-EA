@@ -3,6 +3,7 @@ package com.github.winter4666.bpofea.course.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
 import com.github.winter4666.bpofea.common.domain.model.Page;
+import com.github.winter4666.bpofea.common.domain.model.PageOptions;
 import com.github.winter4666.bpofea.course.datafaker.CourseBuilder;
 import com.github.winter4666.bpofea.course.domain.model.Course;
 import com.github.winter4666.bpofea.course.domain.service.CourseService;
@@ -49,7 +50,7 @@ class CourseControllerIT {
         int page = (int)faker.number().randomNumber();
         Course course = new CourseBuilder().id(faker.random().nextLong()).build();
         long totalElements = faker.number().randomNumber();
-        when(courseService.getCourses(course.getName(), perPage, page)).thenReturn(new Page<>(List.of(course), totalElements));
+        when(courseService.getCourses(course.getName(), new PageOptions(perPage, page))).thenReturn(new Page<>(List.of(course), totalElements));
 
         mvc.perform(get("/courses")
                         .queryParam("perPage", String.valueOf(perPage))

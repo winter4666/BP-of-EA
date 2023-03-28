@@ -1,9 +1,9 @@
 package com.github.winter4666.bpofea.user.controller;
 
-import com.github.winter4666.bpofea.course.controller.ClassTimeDto;
-import com.github.winter4666.bpofea.course.controller.CourseMapper;
-import com.github.winter4666.bpofea.course.controller.CourseResponse;
-import com.github.winter4666.bpofea.course.controller.CourseResponseMapper;
+import com.github.winter4666.bpofea.course.controller.dto.ClassTimeDto;
+import com.github.winter4666.bpofea.course.controller.dto.CourseMapper;
+import com.github.winter4666.bpofea.course.controller.dto.CourseResponse;
+import com.github.winter4666.bpofea.course.controller.dto.CourseResponseMapper;
 import com.github.winter4666.bpofea.user.domain.model.Teacher;
 import com.github.winter4666.bpofea.user.domain.service.TeacherService;
 import lombok.RequiredArgsConstructor;

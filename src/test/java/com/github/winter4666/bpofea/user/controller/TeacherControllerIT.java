@@ -2,8 +2,8 @@ package com.github.winter4666.bpofea.user.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
-import com.github.winter4666.bpofea.course.controller.CourseMapperImpl;
-import com.github.winter4666.bpofea.course.controller.CourseResponseMapperImpl;
+import com.github.winter4666.bpofea.course.controller.dto.CourseMapperImpl;
+import com.github.winter4666.bpofea.course.controller.dto.CourseResponseMapperImpl;
 import com.github.winter4666.bpofea.course.datafaker.CourseBuilder;
 import com.github.winter4666.bpofea.course.domain.model.Course;
 import com.github.winter4666.bpofea.user.domain.model.Teacher;

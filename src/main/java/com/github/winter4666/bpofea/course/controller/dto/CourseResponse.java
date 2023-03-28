@@ -1,4 +1,4 @@
-package com.github.winter4666.bpofea.course.controller;
+package com.github.winter4666.bpofea.course.controller.dto;
 
 import java.time.LocalDate;
 import java.util.List;

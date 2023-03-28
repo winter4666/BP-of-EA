@@ -2,6 +2,7 @@ package com.github.winter4666.bpofea.course.domain.service;
 
 import com.github.winter4666.bpofea.common.domain.exception.DataNotFoundException;
 import com.github.winter4666.bpofea.common.domain.model.Page;
+import com.github.winter4666.bpofea.common.domain.model.PageOptions;
 import com.github.winter4666.bpofea.course.domain.model.ClassTime;
 import com.github.winter4666.bpofea.course.domain.model.Course;
 import jakarta.transaction.Transactional;
@@ -17,8 +18,8 @@ public class CourseService {
 
     private final CourseDao courseDao;
 
-    public Page<Course> getCourses(String name, int perPage, int page) {
-        return courseDao.findAll(name, perPage, page);
+    public Page<Course> getCourses(String name, PageOptions pageOptions) {
+        return courseDao.findAll(name, pageOptions);
     }
 
     public Course findCourseByIdAndThrowExceptionIfNotFound(long courseId) {
