@@ -21,8 +21,8 @@ public class CourseController {
     private final CourseMapper courseMapper;
 
     @GetMapping()
-    public Page<Course> getCourses(@RequestParam int perPage, @RequestParam int page) {
-        return courseService.getCourses(perPage, page);
+    public Page<Course> getCourses(String name, @RequestParam int perPage, @RequestParam int page) {
+        return courseService.getCourses(name, perPage, page);
     }
 
     @PatchMapping("/{courseId}")

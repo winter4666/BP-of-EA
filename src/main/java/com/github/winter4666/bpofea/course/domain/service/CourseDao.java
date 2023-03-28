@@ -6,7 +6,7 @@ import com.github.winter4666.bpofea.course.domain.model.Course;
 import java.util.Optional;
 
 public interface CourseDao {
-    Page<Course> findAll(int perPage, int page);
+    Page<Course> findAll(String name, int perPage, int page);
 
     Course save(Course course);
 

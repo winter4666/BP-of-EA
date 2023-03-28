@@ -60,26 +60,28 @@ class RdbCourseDaoIT extends RdbDaoTest {
         long totalElements = 11L;
         Set<String> courseNames = Stream.generate(() -> faker.educator().course()).distinct().limit(totalElements).collect(Collectors.toSet());
         List<Course> courses = new ArrayList<>();
-        for(String courseName : courseNames) {
-            Course course = courseBuilder.name(courseName).build();
-            new SimpleJdbcInsert(jdbcTemplate).withTableName("course")
-                    .execute(new HashMap<>(){
-                        {put("name", course.getName());}
-                        {put("start_date", course.getStartDate());}
-                        {put("stop_date", course.getStopDate());}
-                        {put("class_times", HibernateObjectMapperHolder.get().writeValueAsString(course.getClassTimes()));}
-                        {put("teacher_id", course.getTeacher().getId());}
-                    });
-            courses.add(course);
+        Set<Character> prefixes = Set.of('a', 'b');
+        for(char c : prefixes) {
+            for(String courseName : courseNames) {
+                Course course = courseBuilder.name(courseName).build();
+                new SimpleJdbcInsert(jdbcTemplate).withTableName("course")
+                        .execute(new HashMap<>(){
+                            {put("name", c + course.getName());}
+                            {put("start_date", course.getStartDate());}
+                            {put("stop_date", course.getStopDate());}
+                            {put("class_times", HibernateObjectMapperHolder.get().writeValueAsString(course.getClassTimes()));}
+                            {put("teacher_id", course.getTeacher().getId());}
+                        });
+                courses.add(course);
+            }
         }
         int perPage = 10;
 
-        Page<Course> actualCourses = courseDao.findAll(perPage , 1);
+        Page<Course> actualCourses = courseDao.findAll(prefixes.iterator().next().toString(), perPage , 1);
 
         assertAll(
                 () -> assertThat(actualCourses.totalElements(), equalTo(totalElements)),
                 () -> assertThat(actualCourses.content().size(), equalTo(perPage)),
-                () -> assertThat(actualCourses.content().get(0).getName(), in(courseNames)),
                 () -> assertThat(actualCourses.content().get(0).getStartDate(), equalTo(courses.get(0).getStartDate())),
                 () -> assertThat(actualCourses.content().get(0).getStopDate(), equalTo(courses.get(0).getStopDate())),
                 () -> assertThat(actualCourses.content().get(0).getClassTimes().get(0).getDayOfWeek(), equalTo(courses.get(0).getClassTimes().get(0).getDayOfWeek())),

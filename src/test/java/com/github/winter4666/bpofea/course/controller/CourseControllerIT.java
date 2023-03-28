@@ -49,9 +49,12 @@ class CourseControllerIT {
         int page = (int)faker.number().randomNumber();
         Course course = new CourseBuilder().id(faker.random().nextLong()).build();
         long totalElements = faker.number().randomNumber();
-        when(courseService.getCourses(perPage, page)).thenReturn(new Page<>(List.of(course), totalElements));
+        when(courseService.getCourses(course.getName(), perPage, page)).thenReturn(new Page<>(List.of(course), totalElements));
 
-        mvc.perform(get("/courses").queryParam("perPage", String.valueOf(perPage)).queryParam("page", String.valueOf(page)))
+        mvc.perform(get("/courses")
+                        .queryParam("perPage", String.valueOf(perPage))
+                        .queryParam("page", String.valueOf(page))
+                        .queryParam("name", course.getName()))
                 .andExpectAll(status().isOk(),
                         jsonPath("$.totalElements").value(totalElements),
                         jsonPath("$.content[0].id").value(course.getId()),

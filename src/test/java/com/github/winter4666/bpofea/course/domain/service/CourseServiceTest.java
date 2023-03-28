@@ -37,9 +37,10 @@ class CourseServiceTest {
         Page<Course> courses = new Page<>(new ArrayList<>(), faker.number().randomNumber());
         int perPage = (int)faker.number().randomNumber();
         int page = (int)faker.number().randomNumber();
-        when(courseDao.findAll(perPage, page)).thenReturn(courses);
+        String name = faker.educator().course();
+        when(courseDao.findAll(name, perPage, page)).thenReturn(courses);
 
-        Page<Course> actualCourses = courseService.getCourses(perPage, page);
+        Page<Course> actualCourses = courseService.getCourses(name, perPage, page);
 
         assertThat(actualCourses, equalTo(courses));
     }
