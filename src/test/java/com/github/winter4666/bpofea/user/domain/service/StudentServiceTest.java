@@ -3,6 +3,7 @@ package com.github.winter4666.bpofea.user.domain.service;
 import com.github.javafaker.Faker;
 import com.github.winter4666.bpofea.common.domain.exception.DataNotFoundException;
 import com.github.winter4666.bpofea.course.domain.model.Course;
+import com.github.winter4666.bpofea.course.domain.service.CourseDao;
 import com.github.winter4666.bpofea.course.domain.service.CourseService;
 import com.github.winter4666.bpofea.user.domain.model.Student;
 import org.junit.jupiter.api.Test;
@@ -23,6 +24,9 @@ class StudentServiceTest {
 
     @Mock
     private StudentDao studentDao;
+
+    @Mock
+    private CourseDao courseDao;
 
     @Mock
     private CourseService courseService;
@@ -64,7 +68,7 @@ class StudentServiceTest {
         long studentId = faker.number().randomNumber();
         long courseId = faker.number().randomNumber();
         when(studentDao.findById(studentId)).thenReturn(Optional.of(student));
-        when(courseService.findCourseByIdAndThrowExceptionIfNotFound(courseId)).thenReturn(course);
+        when(courseDao.getById(courseId)).thenReturn(course);
 
         studentService.revokeChoice(studentId, courseId);
 

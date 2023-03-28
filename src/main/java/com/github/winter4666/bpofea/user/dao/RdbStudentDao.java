@@ -14,7 +14,8 @@ public class RdbStudentDao implements StudentDao {
     private final StudentRepository studentRepository;
 
     @Override
-    public Optional<Student> findById(Long id) {
+    public Optional<Student> findById(long id) {
         return studentRepository.findById(id);
     }
+
 }

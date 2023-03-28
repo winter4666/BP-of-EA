@@ -6,6 +6,6 @@ import java.util.Optional;
 
 public interface StudentDao {
 
-    Optional<Student> findById(Long id);
+    Optional<Student> findById(long id);
 
 }

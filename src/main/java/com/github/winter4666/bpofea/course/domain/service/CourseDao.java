@@ -12,4 +12,6 @@ public interface CourseDao {
     Course save(Course course);
 
     Optional<Course> findById(Long courseId);
+
+    Course getById(Long courseId);
 }

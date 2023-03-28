@@ -38,4 +38,9 @@ public class RdbCourseDao implements CourseDao {
     public Optional<Course> findById(Long courseId) {
         return courseRepository.findById(courseId);
     }
+
+    @Override
+    public Course getById(Long courseId) {
+        return courseRepository.getReferenceById(courseId);
+    }
 }

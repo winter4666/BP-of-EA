@@ -8,11 +8,13 @@ import com.github.winter4666.bpofea.common.domain.model.PageOptions;
 import com.github.winter4666.bpofea.course.datafaker.CourseBuilder;
 import com.github.winter4666.bpofea.course.domain.model.Course;
 import com.github.winter4666.bpofea.testsupport.RdbDaoTest;
+import jakarta.transaction.Transactional;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -31,6 +33,9 @@ class RdbCourseDaoIT extends RdbDaoTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private TransactionTemplate transactionTemplate;
 
     @Test
     void should_insert_successfully() {
@@ -91,7 +96,7 @@ class RdbCourseDaoIT extends RdbDaoTest {
     }
 
     @Test
-    void should_get_course_by_id_successfully() throws JsonProcessingException {
+    void should_find_course_by_id_successfully() throws JsonProcessingException {
         Course course = new CourseBuilder().build();
         long courseId = new SimpleJdbcInsert(jdbcTemplate).withTableName("course").usingGeneratedKeyColumns("id")
                 .executeAndReturnKey(new HashMap<>(){
@@ -106,6 +111,31 @@ class RdbCourseDaoIT extends RdbDaoTest {
 
         assertAll(
                 () -> assertThat(courseInDb, notNullValue()),
+                () -> assertThat(courseInDb.getId(), equalTo(courseId)),
+                () -> assertThat(courseInDb.getName(), equalTo(course.getName())),
+                () -> assertThat(courseInDb.getStartDate(), equalTo(course.getStartDate())),
+                () -> assertThat(courseInDb.getStopDate(), equalTo(course.getStopDate())),
+                () -> assertThat(courseInDb.getClassTimes().get(0).getDayOfWeek(), equalTo(course.getClassTimes().get(0).getDayOfWeek())),
+                () -> assertThat(courseInDb.getClassTimes().get(0).getStartTime(), equalTo(course.getClassTimes().get(0).getStartTime())),
+                () -> assertThat(courseInDb.getClassTimes().get(0).getStopTime(), equalTo(course.getClassTimes().get(0).getStopTime())));
+    }
+
+    @Test
+    @Transactional
+    void should_get_course_by_id_successfully() throws JsonProcessingException {
+        Course course = new CourseBuilder().build();
+        long courseId = new SimpleJdbcInsert(jdbcTemplate).withTableName("course").usingGeneratedKeyColumns("id")
+                .executeAndReturnKey(new HashMap<>(){
+                    {put("name", course.getName());}
+                    {put("start_date", course.getStartDate());}
+                    {put("stop_date", course.getStopDate());}
+                    {put("class_times", HibernateObjectMapperHolder.get().writeValueAsString(course.getClassTimes()));}
+                    {put("teacher_id", course.getTeacher().getId());}
+                }).longValue();
+
+        Course courseInDb = courseDao.getById(courseId);
+
+        assertAll(
                 () -> assertThat(courseInDb.getId(), equalTo(courseId)),
                 () -> assertThat(courseInDb.getName(), equalTo(course.getName())),
                 () -> assertThat(courseInDb.getStartDate(), equalTo(course.getStartDate())),
