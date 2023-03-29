@@ -67,7 +67,7 @@ public class TeacherE2EIT extends RdbDaoTest {
     }
 
     @Test
-    void should_add_course_successfully() throws JsonProcessingException {
+    void should_create_course_successfully() throws JsonProcessingException {
         Faker faker = new Faker();
         Map<String, Object> args = new HashMap<>(){
             {put("name", faker.educator().course());}

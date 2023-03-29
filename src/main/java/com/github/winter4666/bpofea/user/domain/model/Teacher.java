@@ -25,11 +25,11 @@ public class Teacher extends User {
     @OneToMany(orphanRemoval = true, mappedBy = "teacher", cascade = {CascadeType.PERSIST})
     private Set<Course> courses = new HashSet<>();
 
-    public void startCourse(Course course) {
+    public void createCourse(Course course) {
         if(haveAnyCourseCollidingWith(course)) {
             throw new DataCollisionException("The teacher has some course colliding with the new course. Teacher id = {} ", getId());
         }
-        course.onStarted(this);
+        course.onCreated(this);
         courses.add(course);
     }
 

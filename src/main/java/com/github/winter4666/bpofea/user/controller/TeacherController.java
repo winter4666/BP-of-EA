@@ -36,8 +36,8 @@ public class TeacherController {
 
     @PostMapping("/{teacherId}/courses")
     @ResponseStatus(HttpStatus.CREATED)
-    public CourseResponse startCourse(@PathVariable Long teacherId, @RequestBody CreateCourseRequest createCourseRequest) {
-        return courseResponseMapper.courseToCourseResponse(teacherService.startCourse(teacherId, courseMapper.createCourseRequestToCourse(createCourseRequest)));
+    public CourseResponse createCourse(@PathVariable Long teacherId, @RequestBody CreateCourseRequest createCourseRequest) {
+        return courseResponseMapper.courseToCourseResponse(teacherService.createCourse(teacherId, courseMapper.createCourseRequestToCourse(createCourseRequest)));
     }
 
     public record CreateCourseRequest(String name, LocalDate startDate, LocalDate stopDate, List<ClassTimeDto> classTimes) {

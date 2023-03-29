@@ -28,12 +28,12 @@ public class TeacherService {
     }
 
     @Transactional
-    public Course startCourse(long teacherId, @Valid Course course) {
+    public Course createCourse(long teacherId, @Valid Course course) {
         if(!course.getStartDate().isBefore(course.getStopDate())) {
             throw new DataInvalidException("Stop data should be later than start data in a course");
         }
         Teacher teacher = findTeacherByIdAndThrowExceptionIfNotFound(teacherId);
-        teacher.startCourse(course);
+        teacher.createCourse(course);
         return course;
     }
 

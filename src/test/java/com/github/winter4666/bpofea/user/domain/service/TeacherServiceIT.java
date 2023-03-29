@@ -41,7 +41,7 @@ public class TeacherServiceIT extends RdbDaoTest {
     @ParameterizedTest
     @MethodSource("courseProvider")
     void should_throw_exception_when_start_course_given_invalid_course(Course course) {
-        assertThrows(ConstraintViolationException.class, () -> teacherService.startCourse(new Faker().number().randomNumber(), course));
+        assertThrows(ConstraintViolationException.class, () -> teacherService.createCourse(new Faker().number().randomNumber(), course));
     }
 
     static Stream<Course> courseProvider() {

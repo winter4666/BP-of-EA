@@ -52,16 +52,16 @@ class TeacherServiceTest {
     }
 
     @Test
-    void should_start_course_successfully() {
+    void should_create_course_successfully() {
         Faker faker = new Faker();
         long teacherId = faker.number().randomNumber();
         Course course = new CourseBuilder().build();
         Teacher teacher = mock(Teacher.class);
         when(teacherDao.findById(teacherId)).thenReturn(Optional.of(teacher));
 
-        Course returnedCourse = teacherService.startCourse(teacherId, course);
+        Course returnedCourse = teacherService.createCourse(teacherId, course);
 
-        verify(teacher).startCourse(course);
+        verify(teacher).createCourse(course);
         assertThat(returnedCourse, equalTo(course));
     }
 
@@ -81,24 +81,24 @@ class TeacherServiceTest {
     }
 
     @Test
-    void should_throw_exception_when_start_course_given_teacher_not_found() {
+    void should_throw_exception_when_create_course_given_teacher_not_found() {
         Faker faker = new Faker();
         long teacherId = faker.number().randomNumber();
         Course course = new CourseBuilder().build();
         Mockito.when(teacherDao.findById(teacherId)).thenReturn(Optional.empty());
 
-        DataNotFoundException exception = assertThrows(DataNotFoundException.class, () -> teacherService.startCourse(teacherId, course));
+        DataNotFoundException exception = assertThrows(DataNotFoundException.class, () -> teacherService.createCourse(teacherId, course));
 
         assertThat(exception.getMessage(), equalTo("Teacher cannot be found by teacher id " + teacherId));
     }
 
     @Test
-    void should_throw_exception_when_start_course_given_stop_date_is_before_start_date() {
+    void should_throw_exception_when_create_course_given_stop_date_is_before_start_date() {
         Faker faker = new Faker();
         long teacherId = faker.number().randomNumber();
         Course course = new CourseBuilder().startDate(LocalDate.of(2023, 5, 1)).stopDate(LocalDate.of(2023, 1, 1)).build();
 
-        DataInvalidException exception = assertThrows(DataInvalidException.class, () -> teacherService.startCourse(teacherId, course));
+        DataInvalidException exception = assertThrows(DataInvalidException.class, () -> teacherService.createCourse(teacherId, course));
 
         assertThat(exception.getMessage(), equalTo("Stop data should be later than start data in a course"));
     }

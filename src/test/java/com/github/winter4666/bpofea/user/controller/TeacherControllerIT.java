@@ -59,12 +59,12 @@ class TeacherControllerIT {
     }
 
     @Test
-    void should_start_course_successfully() throws Exception {
+    void should_create_course_successfully() throws Exception {
         Faker faker = new Faker();
         long teacherId = faker.number().randomNumber();
         Course course = new CourseBuilder().id(new Faker().random().nextLong()).build();
 
-        when(teacherService.startCourse(eq(teacherId), argThat(c -> course.getName().equals(c.getName())
+        when(teacherService.createCourse(eq(teacherId), argThat(c -> course.getName().equals(c.getName())
                 && course.getStartDate().equals(c.getStartDate())
                 && course.getStopDate().equals(c.getStopDate())
                 && course.getClassTimes().get(0).getDayOfWeek().equals(c.getClassTimes().get(0).getDayOfWeek())

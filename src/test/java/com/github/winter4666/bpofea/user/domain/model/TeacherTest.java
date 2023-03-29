@@ -15,14 +15,14 @@ import static org.mockito.Mockito.*;
 class TeacherTest {
 
     @Test
-    void should_start_course_successfully_given_no_collision() {
+    void should_create_course_successfully_given_no_collision() {
         Teacher teacher = new Teacher();
         Course course = mock(Course.class);
 
-        teacher.startCourse(course);
+        teacher.createCourse(course);
 
         assertThat(teacher.getCourses().iterator().next(), equalTo(course));
-        verify(course).onStarted(teacher);
+        verify(course).onCreated(teacher);
     }
 
     @Test
@@ -36,12 +36,12 @@ class TeacherTest {
     }
 
     @Test
-    void should_throw_exception_when_start_course_given_collision_existed() {
+    void should_throw_exception_when_create_course_given_collision_existed() {
         Teacher teacher = spy(Teacher.class);
         Course course = mock(Course.class);
         doReturn(true).when(teacher).haveAnyCourseCollidingWith(course);
 
-        assertThrows(DataCollisionException.class, () -> teacher.startCourse(course));
+        assertThrows(DataCollisionException.class, () -> teacher.createCourse(course));
     }
 
     @Test

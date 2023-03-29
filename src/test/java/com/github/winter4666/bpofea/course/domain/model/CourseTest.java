@@ -21,11 +21,11 @@ import static org.mockito.Mockito.mock;
 class CourseTest {
 
     @Test
-    void should_react_correctly_on_started() {
+    void should_react_correctly_on_created() {
         Teacher teacher = mock(Teacher.class);
         Course course = new Course();
 
-        course.onStarted(teacher);
+        course.onCreated(teacher);
 
         assertThat(course.getTeacher(), equalTo(teacher));
     }
