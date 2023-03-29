@@ -5,6 +5,7 @@ import com.github.winter4666.bpofea.common.domain.exception.DataInvalidException
 import com.github.winter4666.bpofea.common.domain.exception.DataNotFoundException;
 import com.github.winter4666.bpofea.course.datafaker.CourseBuilder;
 import com.github.winter4666.bpofea.course.domain.model.Course;
+import com.github.winter4666.bpofea.course.domain.service.CourseService;
 import com.github.winter4666.bpofea.user.domain.model.Teacher;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,6 +28,9 @@ class TeacherServiceTest {
 
     @Mock
     private TeacherDao teacherDao;
+
+    @Mock
+    private CourseService courseService;
 
     @InjectMocks
     private TeacherService teacherService;
@@ -53,12 +57,27 @@ class TeacherServiceTest {
         long teacherId = faker.number().randomNumber();
         Course course = new CourseBuilder().build();
         Teacher teacher = mock(Teacher.class);
-        Mockito.when(teacherDao.findById(teacherId)).thenReturn(Optional.of(teacher));
+        when(teacherDao.findById(teacherId)).thenReturn(Optional.of(teacher));
 
         Course returnedCourse = teacherService.startCourse(teacherId, course);
 
         verify(teacher).startCourse(course);
         assertThat(returnedCourse, equalTo(course));
+    }
+
+    @Test
+    void should_remove_course_successfully() {
+        Faker faker = new Faker();
+        long teacherId = faker.number().randomNumber();
+        long courseId = faker.number().randomNumber();
+        Course course = new CourseBuilder().build();
+        Teacher teacher = mock(Teacher.class);
+        when(teacherDao.findById(teacherId)).thenReturn(Optional.of(teacher));
+        when(courseService.findCourseByIdAndThrowExceptionIfNotFound(courseId)).thenReturn(course);
+
+        teacherService.removeCourse(teacherId, courseId);
+
+        verify(teacher).removeCourse(course);
     }
 
     @Test

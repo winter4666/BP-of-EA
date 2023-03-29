@@ -4,10 +4,11 @@ import com.github.winter4666.bpofea.common.domain.exception.DataCollisionExcepti
 import com.github.winter4666.bpofea.course.domain.model.Course;
 import org.junit.jupiter.api.Test;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
@@ -22,6 +23,16 @@ class TeacherTest {
 
         assertThat(teacher.getCourses().iterator().next(), equalTo(course));
         verify(course).onStarted(teacher);
+    }
+
+    @Test
+    void should_remove_course_successfully() {
+        Course course = mock(Course.class);
+        Teacher teacher = Teacher.builder().courses(new HashSet<>(){{add(course);}}).build();
+
+        teacher.removeCourse(course);
+
+        assertThat(teacher.getCourses(), is(empty()));
     }
 
     @Test

@@ -3,6 +3,7 @@ package com.github.winter4666.bpofea.user.domain.service;
 import com.github.winter4666.bpofea.common.domain.exception.DataInvalidException;
 import com.github.winter4666.bpofea.common.domain.exception.DataNotFoundException;
 import com.github.winter4666.bpofea.course.domain.model.Course;
+import com.github.winter4666.bpofea.course.domain.service.CourseService;
 import com.github.winter4666.bpofea.user.domain.model.Teacher;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -19,18 +20,31 @@ public class TeacherService {
 
     private final TeacherDao teacherDao;
 
+    private final CourseService courseService;
+
     public Teacher addTeacher(@NotBlank String name, @NotNull String jobNumber) {
         Teacher teacher = Teacher.builder().name(name).jobNumber(jobNumber).build();;
         return teacherDao.save(teacher);
     }
 
     @Transactional
-    public Course startCourse(Long teacherId, @Valid Course course) {
+    public Course startCourse(long teacherId, @Valid Course course) {
         if(!course.getStartDate().isBefore(course.getStopDate())) {
             throw new DataInvalidException("Stop data should be later than start data in a course");
         }
-        Teacher teacher = teacherDao.findById(teacherId).orElseThrow(() -> new DataNotFoundException("Teacher cannot be found by teacher id {}", teacherId));
+        Teacher teacher = findTeacherByIdAndThrowExceptionIfNotFound(teacherId);
         teacher.startCourse(course);
         return course;
+    }
+
+    @Transactional
+    public void removeCourse(long teacherId, long courseId) {
+        Teacher teacher = findTeacherByIdAndThrowExceptionIfNotFound(teacherId);
+        Course course = courseService.findCourseByIdAndThrowExceptionIfNotFound(courseId);
+        teacher.removeCourse(course);
+    }
+
+    private Teacher findTeacherByIdAndThrowExceptionIfNotFound(long teacherId) {
+        return teacherDao.findById(teacherId).orElseThrow(() -> new DataNotFoundException("Teacher cannot be found by teacher id {}", teacherId));
     }
 }

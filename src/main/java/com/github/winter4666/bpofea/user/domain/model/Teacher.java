@@ -32,4 +32,8 @@ public class Teacher extends User {
         course.onStarted(this);
         courses.add(course);
     }
+
+    public void removeCourse(Course course) {
+        courses.remove(course);
+    }
 }
