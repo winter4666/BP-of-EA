@@ -1,5 +1,6 @@
 package com.github.winter4666.bpofea.course.domain.model;
 
+import com.github.winter4666.bpofea.common.domain.exception.DataInvalidException;
 import com.github.winter4666.bpofea.user.domain.model.Teacher;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
@@ -15,6 +16,7 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -44,9 +46,15 @@ public class Course {
     @Valid
     @NotEmpty
     @JdbcTypeCode(SqlTypes.JSON)
-    private List<ClassTime> classTimes;
+    private List<ClassTime> classTimes = new ArrayList<>();
 
     public void onCreated(Teacher teacher) {
+        if(!startDate.isBefore(stopDate)) {
+            throw new DataInvalidException("Stop data should be later than start data in a course");
+        }
+        if(classTimes.stream().distinct().count() < classTimes.size()) {
+            throw new DataInvalidException("Duplicated class times existed");
+        }
         this.teacher = teacher;
     }
 
