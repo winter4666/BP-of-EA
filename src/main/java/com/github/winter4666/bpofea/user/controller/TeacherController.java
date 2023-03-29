@@ -44,4 +44,12 @@ public class TeacherController {
 
     }
 
+
+    @DeleteMapping("/{teacherId}/courses/{courseId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void removeCourse(@PathVariable long teacherId, @PathVariable long courseId) {
+        teacherService.removeCourse(teacherId, courseId);
+    }
+
+
 }

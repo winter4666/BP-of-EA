@@ -3,7 +3,7 @@ package com.github.winter4666.bpofea.user.domain.service;
 import com.github.winter4666.bpofea.common.domain.exception.DataInvalidException;
 import com.github.winter4666.bpofea.common.domain.exception.DataNotFoundException;
 import com.github.winter4666.bpofea.course.domain.model.Course;
-import com.github.winter4666.bpofea.course.domain.service.CourseService;
+import com.github.winter4666.bpofea.course.domain.service.CourseDao;
 import com.github.winter4666.bpofea.user.domain.model.Teacher;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -20,7 +20,7 @@ public class TeacherService {
 
     private final TeacherDao teacherDao;
 
-    private final CourseService courseService;
+    private final CourseDao courseDao;
 
     public Teacher addTeacher(@NotBlank String name, @NotNull String jobNumber) {
         Teacher teacher = Teacher.builder().name(name).jobNumber(jobNumber).build();;
@@ -40,7 +40,7 @@ public class TeacherService {
     @Transactional
     public void removeCourse(long teacherId, long courseId) {
         Teacher teacher = findTeacherByIdAndThrowExceptionIfNotFound(teacherId);
-        Course course = courseService.findCourseByIdAndThrowExceptionIfNotFound(courseId);
+        Course course = courseDao.getById(courseId);
         teacher.removeCourse(course);
     }
 

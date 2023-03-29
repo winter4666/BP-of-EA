@@ -21,7 +21,9 @@ import java.time.format.DateTimeFormatter;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -79,5 +81,17 @@ class TeacherControllerIT {
                         jsonPath("$.classTimes[0].dayOfWeek", equalTo(course.getClassTimes().get(0).getDayOfWeek().toString())),
                         jsonPath("$.classTimes[0].startTime", equalTo(course.getClassTimes().get(0).getStartTime().format(DateTimeFormatter.ISO_TIME))),
                         jsonPath("$.classTimes[0].stopTime", equalTo(course.getClassTimes().get(0).getStopTime().format(DateTimeFormatter.ISO_TIME))));
+    }
+
+    @Test
+    void should_remove_course_successfully() throws Exception {
+        Faker faker = new Faker();
+        long teacherId = faker.number().randomNumber();
+        long courseId = faker.number().randomNumber();
+
+        mvc.perform(delete("/teachers/{teacherId}/courses/{courseId}", teacherId, courseId))
+                .andExpectAll(status().isNoContent());
+
+        verify(teacherService).removeCourse(teacherId, courseId);
     }
 }

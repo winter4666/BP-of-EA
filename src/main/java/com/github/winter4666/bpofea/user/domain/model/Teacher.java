@@ -22,7 +22,7 @@ public class Teacher extends User {
     private String jobNumber;
 
     @Builder.Default
-    @OneToMany(mappedBy = "teacher", cascade = {CascadeType.PERSIST})
+    @OneToMany(orphanRemoval = true, mappedBy = "teacher", cascade = {CascadeType.PERSIST})
     private Set<Course> courses = new HashSet<>();
 
     public void startCourse(Course course) {

@@ -3,6 +3,7 @@ package com.github.winter4666.bpofea.user;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
+import com.github.winter4666.bpofea.common.dao.HibernateObjectMapperHolder;
 import com.github.winter4666.bpofea.testsupport.RdbDaoTest;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
@@ -25,9 +26,9 @@ import java.util.Map;
 import static com.jayway.jsonpath.matchers.JsonPathMatchers.isJson;
 import static com.jayway.jsonpath.matchers.JsonPathMatchers.withJsonPath;
 import static io.restassured.RestAssured.given;
+import static io.restassured.RestAssured.when;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -111,6 +112,41 @@ public class TeacherE2EIT extends RdbDaoTest {
                                 withJsonPath("$[0].stopTime[1]", equalTo(((LocalTime) classTime.get("stopTime")).getMinute()))
                         )
                 )));
+    }
+
+    @Test
+    void should_remove_course_successfully() throws JsonProcessingException {
+        Faker faker = new Faker();
+        long teacherId = new SimpleJdbcInsert(jdbcTemplate).withTableName("teacher")
+                .usingGeneratedKeyColumns("id")
+                .executeAndReturnKey(new HashMap<>(){
+                    {put("name", faker.educator().course());}
+                    {put("job_number", String.valueOf(faker.number().randomNumber()));}
+                }).longValue();
+        Map<String, Object> classTime = new HashMap<>() {
+            {
+                put("dayOfWeek", DayOfWeek.MONDAY);
+                put("startTime", LocalTime.of(9, 0));
+                put("stopTime", LocalTime.of(10, 0));
+            }
+        };
+        long courseId = new SimpleJdbcInsert(jdbcTemplate).withTableName("course")
+                .usingGeneratedKeyColumns("id")
+                .executeAndReturnKey(new HashMap<>(){
+                    {
+                        put("name", faker.educator().course());
+                        put("start_date", LocalDate.of(2023, 1, 1));
+                        put("stop_date", LocalDate.of(2023, 5, 1));
+                        put("class_times", HibernateObjectMapperHolder.get().writeValueAsString(List.of(classTime)));
+                        put("teacher_id", teacherId);
+                    }
+                }).longValue();
+
+
+        when().delete("/teachers/{teacherId}/courses/{courseId}", teacherId, courseId).then().statusCode(HttpStatus.NO_CONTENT.value());
+
+        List<Map<String, Object>> courses = jdbcTemplate.queryForList("select * from course where id = ?", courseId);
+        assertThat(courses, is(empty()));
     }
 
 }

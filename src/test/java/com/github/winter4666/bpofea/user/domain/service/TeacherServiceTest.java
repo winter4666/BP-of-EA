@@ -5,7 +5,7 @@ import com.github.winter4666.bpofea.common.domain.exception.DataInvalidException
 import com.github.winter4666.bpofea.common.domain.exception.DataNotFoundException;
 import com.github.winter4666.bpofea.course.datafaker.CourseBuilder;
 import com.github.winter4666.bpofea.course.domain.model.Course;
-import com.github.winter4666.bpofea.course.domain.service.CourseService;
+import com.github.winter4666.bpofea.course.domain.service.CourseDao;
 import com.github.winter4666.bpofea.user.domain.model.Teacher;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,7 +30,7 @@ class TeacherServiceTest {
     private TeacherDao teacherDao;
 
     @Mock
-    private CourseService courseService;
+    private CourseDao courseDao;
 
     @InjectMocks
     private TeacherService teacherService;
@@ -73,7 +73,7 @@ class TeacherServiceTest {
         Course course = new CourseBuilder().build();
         Teacher teacher = mock(Teacher.class);
         when(teacherDao.findById(teacherId)).thenReturn(Optional.of(teacher));
-        when(courseService.findCourseByIdAndThrowExceptionIfNotFound(courseId)).thenReturn(course);
+        when(courseDao.getById(courseId)).thenReturn(course);
 
         teacherService.removeCourse(teacherId, courseId);
 
