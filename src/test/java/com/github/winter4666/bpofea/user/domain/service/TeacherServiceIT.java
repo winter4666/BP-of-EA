@@ -49,6 +49,7 @@ public class TeacherServiceIT extends RdbDaoTest {
                 new CourseBuilder().name(" ").build(),
                 new CourseBuilder().startDate(null).build(),
                 new CourseBuilder().stopDate(null).build(),
+                new CourseBuilder().capacity(null).build(),
                 new CourseBuilder().classTimes(null).build(),
                 new CourseBuilder().classTimes(new ArrayList<>()).build(),
                 new CourseBuilder().classTimes(List.of(new CourseBuilder.ClassTimeBuilder().dayOfWeek(null))).build(),

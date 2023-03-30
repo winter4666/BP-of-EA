@@ -40,7 +40,7 @@ public class TeacherController {
         return courseResponseMapper.courseToCourseResponse(teacherService.createCourse(teacherId, courseMapper.createCourseRequestToCourse(createCourseRequest)));
     }
 
-    public record CreateCourseRequest(String name, LocalDate startDate, LocalDate stopDate, List<ClassTimeDto> classTimes) {
+    public record CreateCourseRequest(String name, LocalDate startDate, LocalDate stopDate, List<ClassTimeDto> classTimes, Long capacity) {
 
     }
 

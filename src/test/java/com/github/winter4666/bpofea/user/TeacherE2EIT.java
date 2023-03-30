@@ -3,8 +3,9 @@ package com.github.winter4666.bpofea.user;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
-import com.github.winter4666.bpofea.common.dao.HibernateObjectMapperHolder;
+import com.github.winter4666.bpofea.course.datafaker.CourseBuilder;
 import com.github.winter4666.bpofea.testsupport.RdbDaoTest;
+import com.github.winter4666.bpofea.user.datafaker.TeacherBuilder;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import org.apache.commons.lang3.time.DateFormatUtils;
@@ -89,6 +90,7 @@ public class TeacherE2EIT extends RdbDaoTest {
                 put("startDate", LocalDate.of(2023, 1, 1));
                 put("stopDate", LocalDate.of(2023, 5, 1));
                 put("classTimes", List.of(classTime));
+                put("capacity", faker.number().randomNumber());
             }
         };
 
@@ -123,25 +125,9 @@ public class TeacherE2EIT extends RdbDaoTest {
                     {put("name", faker.educator().course());}
                     {put("job_number", String.valueOf(faker.number().randomNumber()));}
                 }).longValue();
-        Map<String, Object> classTime = new HashMap<>() {
-            {
-                put("dayOfWeek", DayOfWeek.MONDAY);
-                put("startTime", LocalTime.of(9, 0));
-                put("stopTime", LocalTime.of(10, 0));
-            }
-        };
         long courseId = new SimpleJdbcInsert(jdbcTemplate).withTableName("course")
                 .usingGeneratedKeyColumns("id")
-                .executeAndReturnKey(new HashMap<>(){
-                    {
-                        put("name", faker.educator().course());
-                        put("start_date", LocalDate.of(2023, 1, 1));
-                        put("stop_date", LocalDate.of(2023, 5, 1));
-                        put("class_times", HibernateObjectMapperHolder.get().writeValueAsString(List.of(classTime)));
-                        put("teacher_id", teacherId);
-                    }
-                }).longValue();
-
+                .executeAndReturnKey(new CourseBuilder().teacher(new TeacherBuilder().id(teacherId)).buildArgsForDbInsertion()).longValue();
 
         when().delete("/teachers/{teacherId}/courses/{courseId}", teacherId, courseId).then().statusCode(HttpStatus.NO_CONTENT.value());
 

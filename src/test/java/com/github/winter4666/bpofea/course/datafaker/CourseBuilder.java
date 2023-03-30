@@ -1,14 +1,18 @@
 package com.github.winter4666.bpofea.course.datafaker;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.javafaker.Faker;
+import com.github.winter4666.bpofea.common.dao.HibernateObjectMapperHolder;
 import com.github.winter4666.bpofea.course.domain.model.ClassTime;
 import com.github.winter4666.bpofea.course.domain.model.Course;
-import com.github.winter4666.bpofea.user.domain.model.Teacher;
+import com.github.winter4666.bpofea.user.datafaker.TeacherBuilder;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CourseBuilder {
 
@@ -24,7 +28,9 @@ public class CourseBuilder {
 
     private List<ClassTimeBuilder> classTimeBuilders = List.of(new ClassTimeBuilder());
 
-    private Teacher teacher = Teacher.builder().id(FAKER.number().randomNumber()).build();
+    private Long capacity = 30l;
+
+    private TeacherBuilder teacherBuilder = new TeacherBuilder().id(FAKER.number().randomNumber());
 
     public CourseBuilder id(Long id) {
         this.id = id;
@@ -51,8 +57,13 @@ public class CourseBuilder {
         return this;
     }
 
-    public CourseBuilder teacher(Teacher teacher) {
-        this.teacher = teacher;
+    public CourseBuilder capacity(Long capacity) {
+        this.capacity = capacity;
+        return this;
+    }
+
+    public CourseBuilder teacher(TeacherBuilder teacherBuilder) {
+        this.teacherBuilder = teacherBuilder;
         return this;
     }
 
@@ -63,8 +74,23 @@ public class CourseBuilder {
                 .startDate(startDate)
                 .stopDate(stopDate)
                 .classTimes(classTimeBuilders == null ? null : classTimeBuilders.stream().map(ClassTimeBuilder::build).toList())
-                .teacher(teacher)
+                .capacity(capacity)
+                .teacher(teacherBuilder.build())
                 .build();
+    }
+
+    public Map<String, Object> buildArgsForDbInsertion() throws JsonProcessingException {
+        return new HashMap<>(){
+            {
+                put("name", name);
+                put("start_date", startDate);
+                put("stop_date", stopDate);
+                put("class_times", classTimeBuilders == null ? null
+                    :  HibernateObjectMapperHolder.get().writeValueAsString(classTimeBuilders.stream().map(ClassTimeBuilder::build).toList()));
+                put("capacity", capacity);
+                put("teacher_id", teacherBuilder.build().getId());
+            }
+        };
     }
 
     public static class ClassTimeBuilder {

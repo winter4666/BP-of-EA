@@ -67,6 +67,7 @@ class TeacherControllerIT {
         when(teacherService.createCourse(eq(teacherId), argThat(c -> course.getName().equals(c.getName())
                 && course.getStartDate().equals(c.getStartDate())
                 && course.getStopDate().equals(c.getStopDate())
+                && course.getCapacity().equals(c.getCapacity())
                 && course.getClassTimes().get(0).getDayOfWeek().equals(c.getClassTimes().get(0).getDayOfWeek())
                 && course.getClassTimes().get(0).getStartTime().equals(c.getClassTimes().get(0).getStartTime())
                 && course.getClassTimes().get(0).getStopTime().equals(c.getClassTimes().get(0).getStopTime())
@@ -78,6 +79,7 @@ class TeacherControllerIT {
                         jsonPath("$.name", equalTo(course.getName())),
                         jsonPath("$.startDate", equalTo(course.getStartDate().toString())),
                         jsonPath("$.stopDate", equalTo(course.getStopDate().toString())),
+                        jsonPath("$.capacity", equalTo(course.getCapacity()), Long.class),
                         jsonPath("$.classTimes[0].dayOfWeek", equalTo(course.getClassTimes().get(0).getDayOfWeek().toString())),
                         jsonPath("$.classTimes[0].startTime", equalTo(course.getClassTimes().get(0).getStartTime().format(DateTimeFormatter.ISO_TIME))),
                         jsonPath("$.classTimes[0].stopTime", equalTo(course.getClassTimes().get(0).getStopTime().format(DateTimeFormatter.ISO_TIME))));

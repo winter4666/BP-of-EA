@@ -2,7 +2,6 @@ package com.github.winter4666.bpofea.course.dao;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.javafaker.Faker;
-import com.github.winter4666.bpofea.common.dao.HibernateObjectMapperHolder;
 import com.github.winter4666.bpofea.common.domain.model.Page;
 import com.github.winter4666.bpofea.common.domain.model.PageOptions;
 import com.github.winter4666.bpofea.course.datafaker.CourseBuilder;
@@ -16,7 +15,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.transaction.support.TransactionTemplate;
 
-import java.util.*;
+import java.util.Date;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -43,72 +44,59 @@ class RdbCourseDaoIT extends RdbDaoTest {
 
         courseDao.save(course);
 
-        List<Map<String, Object>> courses = jdbcTemplate.queryForList("select * from course");
+        Map<String, Object> courseInDb = jdbcTemplate.queryForMap("select * from course where id = ?", course.getId());
         assertAll(
-                () -> assertThat(courses.size(), equalTo(1)),
-                () -> assertThat(courses.get(0).get("name"), equalTo(course.getName())),
-                () -> assertThat(DateFormatUtils.format((Date)courses.get(0).get("start_date"), "yyyy-MM-dd"), equalTo(course.getStartDate().toString())),
-                () -> assertThat(DateFormatUtils.format((Date)courses.get(0).get("stop_date"), "yyyy-MM-dd"), equalTo(course.getStopDate().toString())),
-                () -> assertThat(courses.get(0).get("class_times"), isJson(allOf(
+                () -> assertThat(courseInDb.get("name"), equalTo(course.getName())),
+                () -> assertThat(DateFormatUtils.format((Date)courseInDb.get("start_date"), "yyyy-MM-dd"), equalTo(course.getStartDate().toString())),
+                () -> assertThat(DateFormatUtils.format((Date)courseInDb.get("stop_date"), "yyyy-MM-dd"), equalTo(course.getStopDate().toString())),
+                () -> assertThat(courseInDb.get("class_times"), isJson(allOf(
                                 withJsonPath("$[0].dayOfWeek", equalTo(course.getClassTimes().get(0).getDayOfWeek().toString())),
                                 withJsonPath("$[0].startTime[0]", equalTo(course.getClassTimes().get(0).getStartTime().getHour())),
                                 withJsonPath("$[0].startTime[1]", equalTo(course.getClassTimes().get(0).getStartTime().getMinute())),
                                 withJsonPath("$[0].stopTime[0]", equalTo(course.getClassTimes().get(0).getStopTime().getHour())),
                                 withJsonPath("$[0].stopTime[1]", equalTo(course.getClassTimes().get(0).getStopTime().getMinute()))
                         )
-                )));
+                )),
+                () -> assertThat(courseInDb.get("capacity"), equalTo(course.getCapacity())));
     }
 
     @Test
     void should_get_courses_successfully() throws JsonProcessingException {
-        CourseBuilder courseBuilder = new CourseBuilder();
         Faker faker = new Faker();
         long totalElements = 11L;
         Set<String> courseNames = Stream.generate(() -> faker.educator().course()).distinct().limit(totalElements).collect(Collectors.toSet());
-        List<Course> courses = new ArrayList<>();
+        CourseBuilder courseBuilder = new CourseBuilder();
         Set<Character> prefixes = Set.of('a', 'b');
         for(char c : prefixes) {
             for(String courseName : courseNames) {
-                Course course = courseBuilder.name(courseName).build();
                 new SimpleJdbcInsert(jdbcTemplate).withTableName("course")
-                        .execute(new HashMap<>(){
-                            {put("name", c + course.getName());}
-                            {put("start_date", course.getStartDate());}
-                            {put("stop_date", course.getStopDate());}
-                            {put("class_times", HibernateObjectMapperHolder.get().writeValueAsString(course.getClassTimes()));}
-                            {put("teacher_id", course.getTeacher().getId());}
-                        });
-                courses.add(course);
+                        .execute(courseBuilder.name(c + courseName).buildArgsForDbInsertion());
             }
         }
         int perPage = 10;
 
         Page<Course> actualCourses = courseDao.findAll(prefixes.iterator().next().toString(), new PageOptions(perPage, 1));
 
+        Course course = courseBuilder.build();
         assertAll(
                 () -> assertThat(actualCourses.totalElements(), equalTo(totalElements)),
                 () -> assertThat(actualCourses.content().size(), equalTo(perPage)),
-                () -> assertThat(actualCourses.content().get(0).getStartDate(), equalTo(courses.get(0).getStartDate())),
-                () -> assertThat(actualCourses.content().get(0).getStopDate(), equalTo(courses.get(0).getStopDate())),
-                () -> assertThat(actualCourses.content().get(0).getClassTimes().get(0).getDayOfWeek(), equalTo(courses.get(0).getClassTimes().get(0).getDayOfWeek())),
-                () -> assertThat(actualCourses.content().get(0).getClassTimes().get(0).getStartTime(), equalTo(courses.get(0).getClassTimes().get(0).getStartTime())),
-                () -> assertThat(actualCourses.content().get(0).getClassTimes().get(0).getStopTime(), equalTo(courses.get(0).getClassTimes().get(0).getStopTime())));
+                () -> assertThat(actualCourses.content().get(0).getStartDate(), equalTo(course.getStartDate())),
+                () -> assertThat(actualCourses.content().get(0).getStopDate(), equalTo(course.getStopDate())),
+                () -> assertThat(actualCourses.content().get(0).getClassTimes().get(0).getDayOfWeek(), equalTo(course.getClassTimes().get(0).getDayOfWeek())),
+                () -> assertThat(actualCourses.content().get(0).getClassTimes().get(0).getStartTime(), equalTo(course.getClassTimes().get(0).getStartTime())),
+                () -> assertThat(actualCourses.content().get(0).getClassTimes().get(0).getStopTime(), equalTo(course.getClassTimes().get(0).getStopTime())));
     }
 
     @Test
     void should_find_course_by_id_successfully() throws JsonProcessingException {
-        Course course = new CourseBuilder().build();
+        CourseBuilder courseBuilder = new CourseBuilder();
         long courseId = new SimpleJdbcInsert(jdbcTemplate).withTableName("course").usingGeneratedKeyColumns("id")
-                .executeAndReturnKey(new HashMap<>(){
-                    {put("name", course.getName());}
-                    {put("start_date", course.getStartDate());}
-                    {put("stop_date", course.getStopDate());}
-                    {put("class_times", HibernateObjectMapperHolder.get().writeValueAsString(course.getClassTimes()));}
-                    {put("teacher_id", course.getTeacher().getId());}
-                }).longValue();
+                .executeAndReturnKey(courseBuilder.buildArgsForDbInsertion()).longValue();
 
         Course courseInDb = courseDao.findById(courseId).orElse(null);
 
+        Course course = courseBuilder.build();
         assertAll(
                 () -> assertThat(courseInDb, notNullValue()),
                 () -> assertThat(courseInDb.getId(), equalTo(courseId)),
@@ -117,24 +105,20 @@ class RdbCourseDaoIT extends RdbDaoTest {
                 () -> assertThat(courseInDb.getStopDate(), equalTo(course.getStopDate())),
                 () -> assertThat(courseInDb.getClassTimes().get(0).getDayOfWeek(), equalTo(course.getClassTimes().get(0).getDayOfWeek())),
                 () -> assertThat(courseInDb.getClassTimes().get(0).getStartTime(), equalTo(course.getClassTimes().get(0).getStartTime())),
-                () -> assertThat(courseInDb.getClassTimes().get(0).getStopTime(), equalTo(course.getClassTimes().get(0).getStopTime())));
+                () -> assertThat(courseInDb.getClassTimes().get(0).getStopTime(), equalTo(course.getClassTimes().get(0).getStopTime())),
+                () -> assertThat(courseInDb.getCapacity(), equalTo(course.getCapacity())));
     }
 
     @Test
     @Transactional
     void should_get_course_by_id_successfully() throws JsonProcessingException {
-        Course course = new CourseBuilder().build();
+        CourseBuilder courseBuilder = new CourseBuilder();
         long courseId = new SimpleJdbcInsert(jdbcTemplate).withTableName("course").usingGeneratedKeyColumns("id")
-                .executeAndReturnKey(new HashMap<>(){
-                    {put("name", course.getName());}
-                    {put("start_date", course.getStartDate());}
-                    {put("stop_date", course.getStopDate());}
-                    {put("class_times", HibernateObjectMapperHolder.get().writeValueAsString(course.getClassTimes()));}
-                    {put("teacher_id", course.getTeacher().getId());}
-                }).longValue();
+                .executeAndReturnKey(courseBuilder.buildArgsForDbInsertion()).longValue();
 
         Course courseInDb = courseDao.getById(courseId);
 
+        Course course = courseBuilder.build();
         assertAll(
                 () -> assertThat(courseInDb.getId(), equalTo(courseId)),
                 () -> assertThat(courseInDb.getName(), equalTo(course.getName())),
@@ -142,6 +126,7 @@ class RdbCourseDaoIT extends RdbDaoTest {
                 () -> assertThat(courseInDb.getStopDate(), equalTo(course.getStopDate())),
                 () -> assertThat(courseInDb.getClassTimes().get(0).getDayOfWeek(), equalTo(course.getClassTimes().get(0).getDayOfWeek())),
                 () -> assertThat(courseInDb.getClassTimes().get(0).getStartTime(), equalTo(course.getClassTimes().get(0).getStartTime())),
-                () -> assertThat(courseInDb.getClassTimes().get(0).getStopTime(), equalTo(course.getClassTimes().get(0).getStopTime())));
+                () -> assertThat(courseInDb.getClassTimes().get(0).getStopTime(), equalTo(course.getClassTimes().get(0).getStopTime())),
+                () -> assertThat(courseInDb.getCapacity(), equalTo(course.getCapacity())));
     }
 }

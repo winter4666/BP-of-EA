@@ -40,13 +40,16 @@ public class Course {
     @NotNull
     private LocalDate stopDate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Teacher teacher;
-
     @Valid
     @NotEmpty
     @JdbcTypeCode(SqlTypes.JSON)
     private List<ClassTime> classTimes = new ArrayList<>();
+
+    @NotNull
+    private Long capacity;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Teacher teacher;
 
     public void onCreated(Teacher teacher) {
         if(!startDate.isBefore(stopDate)) {

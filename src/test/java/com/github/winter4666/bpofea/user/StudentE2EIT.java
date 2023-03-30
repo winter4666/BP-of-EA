@@ -3,7 +3,7 @@ package com.github.winter4666.bpofea.user;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
-import com.github.winter4666.bpofea.common.dao.HibernateObjectMapperHolder;
+import com.github.winter4666.bpofea.course.datafaker.CourseBuilder;
 import com.github.winter4666.bpofea.testsupport.RdbDaoTest;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.Test;
@@ -13,12 +13,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import static io.restassured.RestAssured.given;
 import static io.restassured.RestAssured.when;
@@ -43,25 +42,9 @@ public class StudentE2EIT extends RdbDaoTest {
                     {put("name", faker.educator().course());}
                     {put("student_number", String.valueOf(faker.number().randomNumber()));}
                 }).longValue();
-        Map<String, Object> classTime = new HashMap<>() {
-            {
-                put("dayOfWeek", DayOfWeek.MONDAY);
-                put("startTime", LocalTime.of(9, 0));
-                put("stopTime", LocalTime.of(10, 0));
-            }
-        };
-        Map<String, Object> course = new HashMap<>(){
-            {
-                put("name", faker.educator().course());
-                put("start_date", LocalDate.of(2023, 1, 1));
-                put("stop_date", LocalDate.of(2023, 5, 1));
-                put("class_times", HibernateObjectMapperHolder.get().writeValueAsString(List.of(classTime)));
-                put("teacher_id", faker.number().randomNumber());
-            }
-        };
         long courseId = new SimpleJdbcInsert(jdbcTemplate).withTableName("course")
                 .usingGeneratedKeyColumns("id")
-                .executeAndReturnKey(course).longValue();
+                .executeAndReturnKey(new CourseBuilder().buildArgsForDbInsertion()).longValue();
 
         given().contentType(ContentType.JSON).body(objectMapper.writeValueAsString(new HashMap<>(){
                     {
@@ -84,35 +67,18 @@ public class StudentE2EIT extends RdbDaoTest {
                     {put("name", faker.educator().course());}
                     {put("student_number", String.valueOf(faker.number().randomNumber()));}
                 }).longValue();
-        Map<String, Object> classTime = new HashMap<>() {
-            {
-                put("dayOfWeek", DayOfWeek.MONDAY);
-                put("startTime", LocalTime.of(9, 0));
-                put("stopTime", LocalTime.of(10, 0));
-            }
-        };
+        List<String> courseNames = Stream.generate(() -> faker.educator().course()).distinct().limit(2).toList();
         long courseId1 = new SimpleJdbcInsert(jdbcTemplate).withTableName("course")
                 .usingGeneratedKeyColumns("id")
-                .executeAndReturnKey(new HashMap<>(){
-                    {
-                        put("name", faker.educator().course());
-                        put("start_date", LocalDate.of(2023, 1, 1));
-                        put("stop_date", LocalDate.of(2023, 5, 1));
-                        put("class_times", HibernateObjectMapperHolder.get().writeValueAsString(List.of(classTime)));
-                        put("teacher_id", faker.number().randomNumber());
-                    }
-                }).longValue();
+                .executeAndReturnKey(new CourseBuilder().name(courseNames.get(0)).buildArgsForDbInsertion()).longValue();
         long courseId2 = new SimpleJdbcInsert(jdbcTemplate).withTableName("course")
                 .usingGeneratedKeyColumns("id")
-                .executeAndReturnKey(new HashMap<>(){
-                    {
-                        put("name", faker.educator().course());
-                        put("start_date", LocalDate.of(2023, 9, 1));
-                        put("stop_date", LocalDate.of(2023, 2, 1));
-                        put("class_times", HibernateObjectMapperHolder.get().writeValueAsString(List.of(classTime)));
-                        put("teacher_id", faker.number().randomNumber());
-                    }
-                }).longValue();
+                .executeAndReturnKey(new CourseBuilder()
+                        .name(courseNames.get(1))
+                        .startDate(LocalDate.of(2023, 9, 1))
+                        .stopDate(LocalDate.of(2023, 10, 1))
+                        .buildArgsForDbInsertion())
+                .longValue();
         new SimpleJdbcInsert(jdbcTemplate).withTableName("student_course")
                 .execute(new HashMap<>(){
                     {put("student_id", studentId);}
