@@ -20,14 +20,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(CourseController.class)
 @ComponentScan
@@ -66,13 +64,15 @@ class CourseControllerIT {
                         jsonPath("$.content[0].classTimes[0].dayOfWeek").value(course.getClassTimes().get(0).getDayOfWeek().toString()),
                         jsonPath("$.content[0].classTimes[0].startTime").value(course.getClassTimes().get(0).getStartTime().format(DateTimeFormatter.ISO_TIME)),
                         jsonPath("$.content[0].classTimes[0].stopTime").value(course.getClassTimes().get(0).getStopTime().format(DateTimeFormatter.ISO_TIME)),
+                        jsonPath("$.content[0].capacity").value(course.getCapacity()),
                         jsonPath("$.content[0].teacherId").value(course.getTeacher().getId()));
 
     }
 
     @Test
     void should_update_course_successfully() throws Exception {
-        Course course = new CourseBuilder().id(new Faker().random().nextLong()).build();
+        CourseBuilder courseBuilder = new CourseBuilder().id(new Faker().random().nextLong());
+        Course course = courseBuilder.build();
         Map<String, Object> updateCourseRequest = new HashMap<>(){{
             put("startDate", course.getStartDate());
             put("stopDate", course.getStopDate());
@@ -83,13 +83,7 @@ class CourseControllerIT {
 
         mvc.perform(patch("/courses/{courseId}", course.getId()).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(updateCourseRequest)))
                 .andExpectAll(status().isOk(),
-                        jsonPath("$.id", equalTo(course.getId()), Long.class),
-                        jsonPath("$.name", equalTo(course.getName())),
-                        jsonPath("$.startDate", equalTo(course.getStartDate().toString())),
-                        jsonPath("$.stopDate", equalTo(course.getStopDate().toString())),
-                        jsonPath("$.classTimes[0].dayOfWeek", equalTo(course.getClassTimes().get(0).getDayOfWeek().toString())),
-                        jsonPath("$.classTimes[0].startTime", equalTo(course.getClassTimes().get(0).getStartTime().format(DateTimeFormatter.ISO_TIME))),
-                        jsonPath("$.classTimes[0].stopTime", equalTo(course.getClassTimes().get(0).getStopTime().format(DateTimeFormatter.ISO_TIME))));
+                        content().json(objectMapper.writeValueAsString(courseBuilder.buildMapForResponse())));
     }
 
 }

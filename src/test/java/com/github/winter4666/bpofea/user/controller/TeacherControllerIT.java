@@ -16,8 +16,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.time.format.DateTimeFormatter;
-
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.refEq;
@@ -25,8 +23,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(TeacherController.class)
 @Import({CourseMapperImpl.class, CourseResponseMapperImpl.class})
@@ -62,20 +59,14 @@ class TeacherControllerIT {
     void should_create_course_successfully() throws Exception {
         Faker faker = new Faker();
         long teacherId = faker.number().randomNumber();
-        Course course = new CourseBuilder().id(new Faker().random().nextLong()).build();
+        CourseBuilder courseBuilder = new CourseBuilder().id(new Faker().random().nextLong());
+        Course course = courseBuilder.build();
 
         when(teacherService.createCourse(eq(teacherId), refEq(course, "id", "teacher"))).thenReturn(course);
 
         mvc.perform(post("/teachers/{teacherId}/courses", teacherId).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(course)))
                 .andExpectAll(status().isCreated(),
-                        jsonPath("$.id", equalTo(course.getId()), Long.class),
-                        jsonPath("$.name", equalTo(course.getName())),
-                        jsonPath("$.startDate", equalTo(course.getStartDate().toString())),
-                        jsonPath("$.stopDate", equalTo(course.getStopDate().toString())),
-                        jsonPath("$.capacity", equalTo(course.getCapacity()), Long.class),
-                        jsonPath("$.classTimes[0].dayOfWeek", equalTo(course.getClassTimes().get(0).getDayOfWeek().toString())),
-                        jsonPath("$.classTimes[0].startTime", equalTo(course.getClassTimes().get(0).getStartTime().format(DateTimeFormatter.ISO_TIME))),
-                        jsonPath("$.classTimes[0].stopTime", equalTo(course.getClassTimes().get(0).getStopTime().format(DateTimeFormatter.ISO_TIME))));
+                        content().json(objectMapper.writeValueAsString(courseBuilder.buildMapForResponse())));
     }
 
     @Test
