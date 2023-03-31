@@ -6,7 +6,6 @@ import com.github.winter4666.bpofea.course.controller.dto.ClassTimeDto;
 import com.github.winter4666.bpofea.course.controller.dto.CourseMapper;
 import com.github.winter4666.bpofea.course.controller.dto.CourseResponse;
 import com.github.winter4666.bpofea.course.controller.dto.CourseResponseMapper;
-import com.github.winter4666.bpofea.course.domain.model.Course;
 import com.github.winter4666.bpofea.course.domain.service.CourseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -26,8 +25,8 @@ public class CourseController {
     private final CourseMapper courseMapper;
 
     @GetMapping()
-    public Page<Course> getCourses(String name, @RequestParam int perPage, @RequestParam int page) {
-        return courseService.getCourses(name, new PageOptions(perPage, page));
+    public Page<CourseResponse> getCourses(String name, @RequestParam int perPage, @RequestParam int page) {
+        return courseService.getCourses(name, new PageOptions(perPage, page)).map(courseResponseMapper::courseToCourseResponse);
     }
 
     @PatchMapping("/{courseId}")

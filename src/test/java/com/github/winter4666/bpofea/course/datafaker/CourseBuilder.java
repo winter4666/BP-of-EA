@@ -28,7 +28,7 @@ public class CourseBuilder {
 
     private List<ClassTimeBuilder> classTimeBuilders = List.of(new ClassTimeBuilder());
 
-    private Long capacity = 30l;
+    private Long capacity = 30L;
 
     private TeacherBuilder teacherBuilder = new TeacherBuilder().id(FAKER.number().randomNumber());
 
@@ -89,6 +89,20 @@ public class CourseBuilder {
                     :  HibernateObjectMapperHolder.get().writeValueAsString(classTimeBuilders.stream().map(ClassTimeBuilder::build).toList()));
                 put("capacity", capacity);
                 put("teacher_id", teacherBuilder.build().getId());
+            }
+        };
+    }
+
+    public Map<String, Object> buildMapForResponse() {
+        return new HashMap<>(){
+            {
+                put("id", id);
+                put("name", name);
+                put("startDate", startDate);
+                put("stopDate", stopDate);
+                put("classTimes", classTimeBuilders == null ? null : classTimeBuilders.stream().map(ClassTimeBuilder::build).toList());
+                put("capacity", capacity);
+                put("teacherId", teacherBuilder.build().getId());
             }
         };
     }

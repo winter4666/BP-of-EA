@@ -48,7 +48,8 @@ class CourseControllerIT {
         Faker faker = new Faker();
         int perPage = (int)faker.number().randomNumber();
         int page = (int)faker.number().randomNumber();
-        Course course = new CourseBuilder().id(faker.random().nextLong()).build();
+        CourseBuilder courseBuilder = new CourseBuilder().id(faker.random().nextLong());
+        Course course = courseBuilder.build();
         long totalElements = faker.number().randomNumber();
         when(courseService.getCourses(course.getName(), new PageOptions(perPage, page))).thenReturn(new Page<>(List.of(course), totalElements));
 
@@ -64,7 +65,9 @@ class CourseControllerIT {
                         jsonPath("$.content[0].stopDate").value(course.getStopDate().toString()),
                         jsonPath("$.content[0].classTimes[0].dayOfWeek").value(course.getClassTimes().get(0).getDayOfWeek().toString()),
                         jsonPath("$.content[0].classTimes[0].startTime").value(course.getClassTimes().get(0).getStartTime().format(DateTimeFormatter.ISO_TIME)),
-                        jsonPath("$.content[0].classTimes[0].stopTime").value(course.getClassTimes().get(0).getStopTime().format(DateTimeFormatter.ISO_TIME)));
+                        jsonPath("$.content[0].classTimes[0].stopTime").value(course.getClassTimes().get(0).getStopTime().format(DateTimeFormatter.ISO_TIME)),
+                        jsonPath("$.content[0].teacherId").value(course.getTeacher().getId()));
+
     }
 
     @Test
