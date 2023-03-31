@@ -48,6 +48,8 @@ public class Course {
     @NotNull
     private Long capacity;
 
+    private Long currentStudentNumber;
+
     @ManyToOne(fetch = FetchType.LAZY)
     private Teacher teacher;
 
@@ -58,6 +60,7 @@ public class Course {
         if(classTimes.stream().distinct().count() < classTimes.size()) {
             throw new DataInvalidException("Duplicated class times existed");
         }
+        currentStudentNumber = 0L;
         this.teacher = teacher;
     }
 

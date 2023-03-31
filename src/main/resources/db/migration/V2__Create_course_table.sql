@@ -5,6 +5,7 @@ create table course (
     stop_date DATE not null,
     class_times JSON not null,
     capacity int unsigned not null,
+    current_student_number int unsigned not null,
     teacher_id int unsigned not null,
     PRIMARY KEY (id)
 );

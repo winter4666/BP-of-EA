@@ -99,14 +99,14 @@ public class TeacherE2EIT extends RdbDaoTest {
                 .then().statusCode(HttpStatus.CREATED.value())
                 .extract().response();
 
-        List<Map<String, Object>> courses = jdbcTemplate.queryForList("select * from course where id = ?", response.jsonPath().getLong("id"));
+        Map<String, Object> courseInDb = jdbcTemplate.queryForMap("select * from course where id = ?", response.jsonPath().getLong("id"));
         assertAll(
-                () -> assertThat(courses.size(), equalTo(1)),
-                () -> assertThat(courses.get(0).get("name"), equalTo(course.get("name"))),
-                () -> assertThat(DateFormatUtils.format((Date) courses.get(0).get("start_date"), "yyyy-MM-dd"), equalTo(course.get("startDate").toString())),
-                () -> assertThat(DateFormatUtils.format((Date) courses.get(0).get("stop_date"), "yyyy-MM-dd"), equalTo(course.get("stopDate").toString())),
-                () -> assertThat(courses.get(0).get("teacher_id"), equalTo(teacherId)),
-                () -> assertThat(courses.get(0).get("class_times"), isJson(allOf(
+                () -> assertThat(courseInDb.get("name"), equalTo(course.get("name"))),
+                () -> assertThat(DateFormatUtils.format((Date) courseInDb.get("start_date"), "yyyy-MM-dd"), equalTo(course.get("startDate").toString())),
+                () -> assertThat(DateFormatUtils.format((Date) courseInDb.get("stop_date"), "yyyy-MM-dd"), equalTo(course.get("stopDate").toString())),
+                () -> assertThat(courseInDb.get("teacher_id"), equalTo(teacherId)),
+                () -> assertThat(courseInDb.get("current_student_number"), equalTo(0L)),
+                () -> assertThat(courseInDb.get("class_times"), isJson(allOf(
                                 withJsonPath("$[0].dayOfWeek", equalTo(classTime.get("dayOfWeek").toString())),
                                 withJsonPath("$[0].startTime[0]", equalTo(((LocalTime) classTime.get("startTime")).getHour())),
                                 withJsonPath("$[0].startTime[1]", equalTo(((LocalTime) classTime.get("startTime")).getMinute())),

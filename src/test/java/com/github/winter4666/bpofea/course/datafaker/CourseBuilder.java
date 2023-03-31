@@ -30,6 +30,8 @@ public class CourseBuilder {
 
     private Long capacity = 30L;
 
+    private Long currentStudentNumber = 10L;
+
     private TeacherBuilder teacherBuilder = new TeacherBuilder().id(FAKER.number().randomNumber());
 
     public CourseBuilder id(Long id) {
@@ -62,6 +64,11 @@ public class CourseBuilder {
         return this;
     }
 
+    public CourseBuilder currentStudentNumber(Long currentStudentNumber) {
+        this.currentStudentNumber = currentStudentNumber;
+        return this;
+    }
+
     public CourseBuilder teacher(TeacherBuilder teacherBuilder) {
         this.teacherBuilder = teacherBuilder;
         return this;
@@ -75,6 +82,7 @@ public class CourseBuilder {
                 .stopDate(stopDate)
                 .classTimes(classTimeBuilders == null ? null : classTimeBuilders.stream().map(ClassTimeBuilder::build).toList())
                 .capacity(capacity)
+                .currentStudentNumber(currentStudentNumber)
                 .teacher(teacherBuilder.build())
                 .build();
     }
@@ -88,6 +96,7 @@ public class CourseBuilder {
                 put("class_times", classTimeBuilders == null ? null
                     :  HibernateObjectMapperHolder.get().writeValueAsString(classTimeBuilders.stream().map(ClassTimeBuilder::build).toList()));
                 put("capacity", capacity);
+                put("current_student_number", currentStudentNumber);
                 put("teacher_id", teacherBuilder.build().getId());
             }
         };
@@ -102,6 +111,7 @@ public class CourseBuilder {
                 put("stopDate", stopDate);
                 put("classTimes", classTimeBuilders == null ? null : classTimeBuilders.stream().map(ClassTimeBuilder::build).toList());
                 put("capacity", capacity);
+                put("currentStudentNumber", currentStudentNumber);
                 put("teacherId", teacherBuilder.build().getId());
             }
         };

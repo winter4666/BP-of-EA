@@ -65,6 +65,7 @@ class CourseControllerIT {
                         jsonPath("$.content[0].classTimes[0].startTime").value(course.getClassTimes().get(0).getStartTime().format(DateTimeFormatter.ISO_TIME)),
                         jsonPath("$.content[0].classTimes[0].stopTime").value(course.getClassTimes().get(0).getStopTime().format(DateTimeFormatter.ISO_TIME)),
                         jsonPath("$.content[0].capacity").value(course.getCapacity()),
+                        jsonPath("$.content[0].currentStudentNumber").value(course.getCurrentStudentNumber()),
                         jsonPath("$.content[0].teacherId").value(course.getTeacher().getId()));
 
     }

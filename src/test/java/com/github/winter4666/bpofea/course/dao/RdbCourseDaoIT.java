@@ -58,7 +58,8 @@ class RdbCourseDaoIT extends RdbDaoTest {
                                 withJsonPath("$[0].stopTime[1]", equalTo(course.getClassTimes().get(0).getStopTime().getMinute()))
                         )
                 )),
-                () -> assertThat(courseInDb.get("capacity"), equalTo(course.getCapacity())));
+                () -> assertThat(courseInDb.get("capacity"), equalTo(course.getCapacity())),
+                () -> assertThat(courseInDb.get("current_student_number"), equalTo(course.getCurrentStudentNumber())));
     }
 
     @Test

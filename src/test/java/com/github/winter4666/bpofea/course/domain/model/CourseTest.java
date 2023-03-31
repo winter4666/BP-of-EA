@@ -16,6 +16,7 @@ import java.util.stream.Stream;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.mockito.Mockito.mock;
@@ -29,7 +30,9 @@ class CourseTest {
 
         course.onCreated(teacher);
 
-        assertThat(course.getTeacher(), equalTo(teacher));
+        assertAll(
+                () -> assertThat(course.getTeacher(), equalTo(teacher)),
+                () -> assertThat(course.getCurrentStudentNumber(), equalTo(0L)));
     }
 
     @Test

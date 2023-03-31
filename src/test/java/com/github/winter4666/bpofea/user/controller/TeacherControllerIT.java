@@ -62,7 +62,7 @@ class TeacherControllerIT {
         CourseBuilder courseBuilder = new CourseBuilder().id(new Faker().random().nextLong());
         Course course = courseBuilder.build();
 
-        when(teacherService.createCourse(eq(teacherId), refEq(course, "id", "teacher"))).thenReturn(course);
+        when(teacherService.createCourse(eq(teacherId), refEq(course, "id", "teacher", "currentStudentNumber"))).thenReturn(course);
 
         mvc.perform(post("/teachers/{teacherId}/courses", teacherId).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(course)))
                 .andExpectAll(status().isCreated(),
