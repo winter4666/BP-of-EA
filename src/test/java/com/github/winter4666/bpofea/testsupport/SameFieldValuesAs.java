@@ -8,9 +8,9 @@ import org.hamcrest.TypeSafeMatcher;
 
 public class SameFieldValuesAs<T> extends TypeSafeMatcher<T> {
 
-    private T expected;
+    private final T expected;
 
-    private String[] excludeFields;
+    private final String[] excludeFields;
 
     public SameFieldValuesAs(T expected, String[] excludeFields) {
         this.expected = expected;
