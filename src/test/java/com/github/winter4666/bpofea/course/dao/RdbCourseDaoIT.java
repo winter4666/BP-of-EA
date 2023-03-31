@@ -21,6 +21,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static com.github.winter4666.bpofea.testsupport.SameFieldValuesAs.sameFieldValuesAs;
 import static com.jayway.jsonpath.matchers.JsonPathMatchers.isJson;
 import static com.jayway.jsonpath.matchers.JsonPathMatchers.withJsonPath;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -81,11 +82,7 @@ class RdbCourseDaoIT extends RdbDaoTest {
         assertAll(
                 () -> assertThat(actualCourses.totalElements(), equalTo(totalElements)),
                 () -> assertThat(actualCourses.content().size(), equalTo(perPage)),
-                () -> assertThat(actualCourses.content().get(0).getStartDate(), equalTo(course.getStartDate())),
-                () -> assertThat(actualCourses.content().get(0).getStopDate(), equalTo(course.getStopDate())),
-                () -> assertThat(actualCourses.content().get(0).getClassTimes().get(0).getDayOfWeek(), equalTo(course.getClassTimes().get(0).getDayOfWeek())),
-                () -> assertThat(actualCourses.content().get(0).getClassTimes().get(0).getStartTime(), equalTo(course.getClassTimes().get(0).getStartTime())),
-                () -> assertThat(actualCourses.content().get(0).getClassTimes().get(0).getStopTime(), equalTo(course.getClassTimes().get(0).getStopTime())));
+                () -> assertThat(actualCourses.content().get(0), sameFieldValuesAs(course, "id", "name", "teacher")));
     }
 
     @Test
@@ -100,13 +97,7 @@ class RdbCourseDaoIT extends RdbDaoTest {
         assertAll(
                 () -> assertThat(courseInDb, notNullValue()),
                 () -> assertThat(courseInDb.getId(), equalTo(courseId)),
-                () -> assertThat(courseInDb.getName(), equalTo(course.getName())),
-                () -> assertThat(courseInDb.getStartDate(), equalTo(course.getStartDate())),
-                () -> assertThat(courseInDb.getStopDate(), equalTo(course.getStopDate())),
-                () -> assertThat(courseInDb.getClassTimes().get(0).getDayOfWeek(), equalTo(course.getClassTimes().get(0).getDayOfWeek())),
-                () -> assertThat(courseInDb.getClassTimes().get(0).getStartTime(), equalTo(course.getClassTimes().get(0).getStartTime())),
-                () -> assertThat(courseInDb.getClassTimes().get(0).getStopTime(), equalTo(course.getClassTimes().get(0).getStopTime())),
-                () -> assertThat(courseInDb.getCapacity(), equalTo(course.getCapacity())));
+                () -> assertThat(courseInDb, sameFieldValuesAs(course, "id", "teacher")));
     }
 
     @Test
@@ -124,6 +115,7 @@ class RdbCourseDaoIT extends RdbDaoTest {
                 () -> assertThat(courseInDb.getName(), equalTo(course.getName())),
                 () -> assertThat(courseInDb.getStartDate(), equalTo(course.getStartDate())),
                 () -> assertThat(courseInDb.getStopDate(), equalTo(course.getStopDate())),
+                () -> assertThat(courseInDb.getCapacity(), equalTo(course.getCapacity())),
                 () -> assertThat(courseInDb.getClassTimes().get(0).getDayOfWeek(), equalTo(course.getClassTimes().get(0).getDayOfWeek())),
                 () -> assertThat(courseInDb.getClassTimes().get(0).getStartTime(), equalTo(course.getClassTimes().get(0).getStartTime())),
                 () -> assertThat(courseInDb.getClassTimes().get(0).getStopTime(), equalTo(course.getClassTimes().get(0).getStopTime())),
