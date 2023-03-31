@@ -19,8 +19,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.time.format.DateTimeFormatter;
 
 import static org.hamcrest.Matchers.equalTo;
-import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.refEq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -64,14 +64,7 @@ class TeacherControllerIT {
         long teacherId = faker.number().randomNumber();
         Course course = new CourseBuilder().id(new Faker().random().nextLong()).build();
 
-        when(teacherService.createCourse(eq(teacherId), argThat(c -> course.getName().equals(c.getName())
-                && course.getStartDate().equals(c.getStartDate())
-                && course.getStopDate().equals(c.getStopDate())
-                && course.getCapacity().equals(c.getCapacity())
-                && course.getClassTimes().get(0).getDayOfWeek().equals(c.getClassTimes().get(0).getDayOfWeek())
-                && course.getClassTimes().get(0).getStartTime().equals(c.getClassTimes().get(0).getStartTime())
-                && course.getClassTimes().get(0).getStopTime().equals(c.getClassTimes().get(0).getStopTime())
-        ))).thenReturn(course);
+        when(teacherService.createCourse(eq(teacherId), refEq(course, "id", "teacher"))).thenReturn(course);
 
         mvc.perform(post("/teachers/{teacherId}/courses", teacherId).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(course)))
                 .andExpectAll(status().isCreated(),
