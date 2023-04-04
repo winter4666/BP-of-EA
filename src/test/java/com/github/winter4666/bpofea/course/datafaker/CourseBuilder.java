@@ -5,6 +5,7 @@ import com.github.javafaker.Faker;
 import com.github.winter4666.bpofea.common.dao.HibernateObjectMapperHolder;
 import com.github.winter4666.bpofea.course.domain.model.ClassTime;
 import com.github.winter4666.bpofea.course.domain.model.Course;
+import com.github.winter4666.bpofea.course.domain.model.CustomCourseBuilder;
 import com.github.winter4666.bpofea.user.datafaker.TeacherBuilder;
 
 import java.time.DayOfWeek;
@@ -75,7 +76,11 @@ public class CourseBuilder {
     }
 
     public Course build() {
-        return Course.builder()
+        return createCustomCourseBuilder().build();
+    }
+
+    public CustomCourseBuilder createCustomCourseBuilder() {
+        return (CustomCourseBuilder) Course.builder()
                 .id(id)
                 .name(name)
                 .startDate(startDate)
@@ -83,8 +88,7 @@ public class CourseBuilder {
                 .classTimes(classTimeBuilders == null ? null : classTimeBuilders.stream().map(ClassTimeBuilder::build).toList())
                 .capacity(capacity)
                 .currentStudentNumber(currentStudentNumber)
-                .teacher(teacherBuilder.build())
-                .build();
+                .teacher(teacherBuilder.build());
     }
 
     public Map<String, Object> buildArgsForDbInsertion() throws JsonProcessingException {

@@ -113,4 +113,8 @@ public class Course {
     public int hashCode() {
         return Objects.hash(name, teacher.getId());
     }
+
+    public static CustomCourseBuilder builder() {
+        return new CustomCourseBuilder();
+    }
 }

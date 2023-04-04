@@ -5,7 +5,6 @@ import com.github.winter4666.bpofea.course.domain.model.Course;
 import com.github.winter4666.bpofea.course.domain.service.CourseDao;
 import com.github.winter4666.bpofea.user.domain.model.Teacher;
 import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +26,7 @@ public class TeacherService {
     }
 
     @Transactional
-    public Course createCourse(long teacherId, @Valid Course course) {
+    public Course createCourse(long teacherId, Course course) {
         Teacher teacher = findTeacherByIdAndThrowExceptionIfNotFound(teacherId);
         teacher.createCourse(course);
         return course;

@@ -7,13 +7,11 @@ import com.github.winter4666.bpofea.common.domain.model.PageOptions;
 import com.github.winter4666.bpofea.course.domain.model.Course;
 import com.github.winter4666.bpofea.course.domain.service.CourseDao;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.startsWith;
+import static com.github.winter4666.bpofea.course.dao.CourseSpecs.hasNameStartingWith;
 
 @Repository
 @RequiredArgsConstructor
@@ -23,10 +21,7 @@ public class RdbCourseDao implements CourseDao {
 
     @Override
     public Page<Course> findAll(String name, PageOptions pageOptions) {
-        Course probe = Course.builder().name(name).classTimes(null).build();
-        ExampleMatcher matcher = ExampleMatcher.matching()
-                .withMatcher("name", startsWith());
-        return PageFactory.createPageFrom(courseRepository.findAll(Example.of(probe, matcher), PageRequestFactory.createPageRequestFrom(pageOptions)));
+        return PageFactory.createPageFrom(courseRepository.findAll(hasNameStartingWith(name), PageRequestFactory.createPageRequestFrom(pageOptions)));
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.github.winter4666.bpofea.course.domain.model;
 import com.github.javafaker.Faker;
 import com.github.winter4666.bpofea.common.domain.exception.DataInvalidException;
 import com.github.winter4666.bpofea.course.datafaker.CourseBuilder;
+import com.github.winter4666.bpofea.user.datafaker.TeacherBuilder;
 import com.github.winter4666.bpofea.user.domain.model.Teacher;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -124,21 +125,21 @@ class CourseTest {
     static Stream<Arguments> coursePairAndExpectedResultProvider() {
         Faker faker = new Faker();
         List<Long> teacherIds = Stream.generate(() -> faker.number().randomNumber()).distinct().limit(2).toList();
-        Teacher teacher1 = Teacher.builder().id(teacherIds.get(0)).build();
-        Teacher teacher2 = Teacher.builder().id(teacherIds.get(1)).build();
+        TeacherBuilder teacherBuilder1 = new TeacherBuilder().id(teacherIds.get(0));
+        TeacherBuilder teacherBuilder2 = new TeacherBuilder().id(teacherIds.get(1));
         List<String> courseNames = Stream.generate(() -> faker.educator().course()).distinct().limit(2).toList();
-        Course course = Course.builder().name(courseNames.get(0)).teacher(teacher1).build();
+        Course course = new CourseBuilder().name(courseNames.get(0)).teacher(teacherBuilder1).build();
 
         return Stream.of(
                 Arguments.of(course, course, true),
                 Arguments.of(course, null, false),
                 Arguments.of(course, new Object(), false),
-                Arguments.of(Course.builder().name(courseNames.get(0)).teacher(teacher1).build(),
-                        Course.builder().name(courseNames.get(0)).teacher(teacher1).build(), true),
-                Arguments.of(Course.builder().name(courseNames.get(0)).teacher(teacher1).build(),
-                        Course.builder().name(courseNames.get(1)).teacher(teacher1).build(), false),
-                Arguments.of(Course.builder().name(courseNames.get(0)).teacher(teacher1).build(),
-                        Course.builder().name(courseNames.get(0)).teacher(teacher2).build(), false)
+                Arguments.of(new CourseBuilder().name(courseNames.get(0)).teacher(teacherBuilder1).build(),
+                        new CourseBuilder().name(courseNames.get(0)).teacher(teacherBuilder1).build(), true),
+                Arguments.of(new CourseBuilder().name(courseNames.get(0)).teacher(teacherBuilder1).build(),
+                        new CourseBuilder().name(courseNames.get(1)).teacher(teacherBuilder1).build(), false),
+                Arguments.of(new CourseBuilder().name(courseNames.get(0)).teacher(teacherBuilder1).build(),
+                        new CourseBuilder().name(courseNames.get(0)).teacher(teacherBuilder2).build(), false)
         );
     }
 
@@ -194,12 +195,12 @@ class CourseTest {
 
     @Test
     public void should_not_set_class_times_when_set_start_date_given_parameter_is_null() {
-        List<ClassTime> classTimes = List.of(new CourseBuilder.ClassTimeBuilder().build());
-        Course course = Course.builder().classTimes(classTimes).build();
+        List<CourseBuilder.ClassTimeBuilder> classTimeBuilders = List.of(new CourseBuilder.ClassTimeBuilder());
+        Course course = new CourseBuilder().classTimes(classTimeBuilders).build();
 
         course.setStopDateIfNotNull(null);
 
-        assertThat(course.getClassTimes(), equalTo(classTimes));
+        assertThat(course.getClassTimes(), equalTo(classTimeBuilders.stream().map(CourseBuilder.ClassTimeBuilder::build).toList()));
     }
 
 }
