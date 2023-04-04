@@ -2,10 +2,10 @@ package com.github.winter4666.bpofea.course.controller;
 
 import com.github.winter4666.bpofea.common.domain.model.Page;
 import com.github.winter4666.bpofea.common.domain.model.PageOptions;
-import com.github.winter4666.bpofea.course.controller.dto.ClassTimeDto;
 import com.github.winter4666.bpofea.course.controller.dto.CourseMapper;
 import com.github.winter4666.bpofea.course.controller.dto.CourseResponse;
 import com.github.winter4666.bpofea.course.controller.dto.CourseResponseMapper;
+import com.github.winter4666.bpofea.course.domain.model.ClassTime;
 import com.github.winter4666.bpofea.course.domain.service.CourseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -32,10 +32,10 @@ public class CourseController {
     @PatchMapping("/{courseId}")
     public CourseResponse updateCourse(@PathVariable long courseId, @RequestBody UpdateCourseRequest updateCourseRequest) {
         return courseResponseMapper.courseToCourseResponse(courseService.updateCourse(courseId, updateCourseRequest.startDate(), updateCourseRequest.stopDate(),
-                courseMapper.classTimeDtoListToClassTimeList(updateCourseRequest.classTimes())));
+                updateCourseRequest.classTimes()));
     }
 
-    record UpdateCourseRequest(LocalDate startDate, LocalDate stopDate, List<ClassTimeDto> classTimes) {
+    record UpdateCourseRequest(LocalDate startDate, LocalDate stopDate, List<ClassTime> classTimes) {
 
     }
 
