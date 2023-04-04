@@ -5,7 +5,7 @@ import com.github.javafaker.Faker;
 import com.github.winter4666.bpofea.common.dao.HibernateObjectMapperHolder;
 import com.github.winter4666.bpofea.course.domain.model.ClassTime;
 import com.github.winter4666.bpofea.course.domain.model.Course;
-import com.github.winter4666.bpofea.user.datafaker.TeacherBuilder;
+import com.github.winter4666.bpofea.user.datafaker.TestTeacherBuilder;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -32,7 +32,7 @@ public class TestCourseBuilder {
 
     private Long currentStudentNumber = 10L;
 
-    private TeacherBuilder teacherBuilder = new TeacherBuilder().id(FAKER.number().randomNumber());
+    private TestTeacherBuilder teacherBuilder = new TestTeacherBuilder().id(FAKER.number().randomNumber());
 
     public TestCourseBuilder id(Long id) {
         this.id = id;
@@ -69,7 +69,7 @@ public class TestCourseBuilder {
         return this;
     }
 
-    public TestCourseBuilder teacher(TeacherBuilder teacherBuilder) {
+    public TestCourseBuilder teacher(TestTeacherBuilder teacherBuilder) {
         this.teacherBuilder = teacherBuilder;
         return this;
     }

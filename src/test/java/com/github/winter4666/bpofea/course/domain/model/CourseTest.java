@@ -3,7 +3,7 @@ package com.github.winter4666.bpofea.course.domain.model;
 import com.github.javafaker.Faker;
 import com.github.winter4666.bpofea.common.domain.exception.DataInvalidException;
 import com.github.winter4666.bpofea.course.datafaker.TestCourseBuilder;
-import com.github.winter4666.bpofea.user.datafaker.TeacherBuilder;
+import com.github.winter4666.bpofea.user.datafaker.TestTeacherBuilder;
 import com.github.winter4666.bpofea.user.domain.model.Teacher;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -125,8 +125,8 @@ class CourseTest {
     static Stream<Arguments> coursePairAndExpectedResultProvider() {
         Faker faker = new Faker();
         List<Long> teacherIds = Stream.generate(() -> faker.number().randomNumber()).distinct().limit(2).toList();
-        TeacherBuilder teacherBuilder1 = new TeacherBuilder().id(teacherIds.get(0));
-        TeacherBuilder teacherBuilder2 = new TeacherBuilder().id(teacherIds.get(1));
+        TestTeacherBuilder teacherBuilder1 = new TestTeacherBuilder().id(teacherIds.get(0));
+        TestTeacherBuilder teacherBuilder2 = new TestTeacherBuilder().id(teacherIds.get(1));
         List<String> courseNames = Stream.generate(() -> faker.educator().course()).distinct().limit(2).toList();
         Course course = new TestCourseBuilder().name(courseNames.get(0)).teacher(teacherBuilder1).build();
 
