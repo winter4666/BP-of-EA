@@ -114,7 +114,7 @@ public class Course {
         return Objects.hash(name, teacher.getId());
     }
 
-    public static CustomCourseBuilder builder() {
-        return new CustomCourseBuilder();
+    public static com.github.winter4666.bpofea.course.domain.model.CourseBuilder builder() {
+        return new com.github.winter4666.bpofea.course.domain.model.CourseBuilder();
     }
 }

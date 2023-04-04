@@ -6,7 +6,7 @@ import jakarta.validation.ConstraintViolationException;
 
 import java.util.Set;
 
-public class CustomCourseBuilder extends Course.CourseBuilder {
+public class CourseBuilder extends Course.CourseBuilder {
     @Override
     public Course build() {
         Course course = super.build();

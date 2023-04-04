@@ -5,7 +5,6 @@ import com.github.javafaker.Faker;
 import com.github.winter4666.bpofea.common.dao.HibernateObjectMapperHolder;
 import com.github.winter4666.bpofea.course.domain.model.ClassTime;
 import com.github.winter4666.bpofea.course.domain.model.Course;
-import com.github.winter4666.bpofea.course.domain.model.CustomCourseBuilder;
 import com.github.winter4666.bpofea.user.datafaker.TeacherBuilder;
 
 import java.time.DayOfWeek;
@@ -15,7 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CourseBuilder {
+public class TestCourseBuilder {
 
     private static final Faker FAKER = new Faker();
 
@@ -35,52 +34,52 @@ public class CourseBuilder {
 
     private TeacherBuilder teacherBuilder = new TeacherBuilder().id(FAKER.number().randomNumber());
 
-    public CourseBuilder id(Long id) {
+    public TestCourseBuilder id(Long id) {
         this.id = id;
         return this;
     }
 
-    public CourseBuilder name(String name) {
+    public TestCourseBuilder name(String name) {
         this.name = name;
         return this;
     }
 
-    public CourseBuilder startDate(LocalDate startDate)  {
+    public TestCourseBuilder startDate(LocalDate startDate)  {
         this.startDate = startDate;
         return this;
     }
 
-    public CourseBuilder stopDate(LocalDate stopDate) {
+    public TestCourseBuilder stopDate(LocalDate stopDate) {
         this.stopDate = stopDate;
         return this;
     }
 
-    public CourseBuilder classTimes(List<ClassTimeBuilder> classTimeBuilders) {
+    public TestCourseBuilder classTimes(List<ClassTimeBuilder> classTimeBuilders) {
         this.classTimeBuilders = classTimeBuilders;
         return this;
     }
 
-    public CourseBuilder capacity(Long capacity) {
+    public TestCourseBuilder capacity(Long capacity) {
         this.capacity = capacity;
         return this;
     }
 
-    public CourseBuilder currentStudentNumber(Long currentStudentNumber) {
+    public TestCourseBuilder currentStudentNumber(Long currentStudentNumber) {
         this.currentStudentNumber = currentStudentNumber;
         return this;
     }
 
-    public CourseBuilder teacher(TeacherBuilder teacherBuilder) {
+    public TestCourseBuilder teacher(TeacherBuilder teacherBuilder) {
         this.teacherBuilder = teacherBuilder;
         return this;
     }
 
     public Course build() {
-        return createCustomCourseBuilder().build();
+        return createCourseBuilder().build();
     }
 
-    public CustomCourseBuilder createCustomCourseBuilder() {
-        return (CustomCourseBuilder) Course.builder()
+    public Course.CourseBuilder createCourseBuilder() {
+        return Course.builder()
                 .id(id)
                 .name(name)
                 .startDate(startDate)
