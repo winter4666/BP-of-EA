@@ -51,11 +51,11 @@ class RdbCourseDaoIT extends RdbDaoTest {
                 () -> assertThat(DateFormatUtils.format((Date)courseInDb.get("start_date"), "yyyy-MM-dd"), equalTo(course.getStartDate().toString())),
                 () -> assertThat(DateFormatUtils.format((Date)courseInDb.get("stop_date"), "yyyy-MM-dd"), equalTo(course.getStopDate().toString())),
                 () -> assertThat(courseInDb.get("class_times"), isJson(allOf(
-                                withJsonPath("$[0].dayOfWeek", equalTo(course.getClassTimes().get(0).getDayOfWeek().toString())),
-                                withJsonPath("$[0].startTime[0]", equalTo(course.getClassTimes().get(0).getStartTime().getHour())),
-                                withJsonPath("$[0].startTime[1]", equalTo(course.getClassTimes().get(0).getStartTime().getMinute())),
-                                withJsonPath("$[0].stopTime[0]", equalTo(course.getClassTimes().get(0).getStopTime().getHour())),
-                                withJsonPath("$[0].stopTime[1]", equalTo(course.getClassTimes().get(0).getStopTime().getMinute()))
+                                withJsonPath("$[0].dayOfWeek", equalTo(course.getClassTimes().get(0).dayOfWeek().toString())),
+                                withJsonPath("$[0].startTime[0]", equalTo(course.getClassTimes().get(0).startTime().getHour())),
+                                withJsonPath("$[0].startTime[1]", equalTo(course.getClassTimes().get(0).startTime().getMinute())),
+                                withJsonPath("$[0].stopTime[0]", equalTo(course.getClassTimes().get(0).stopTime().getHour())),
+                                withJsonPath("$[0].stopTime[1]", equalTo(course.getClassTimes().get(0).stopTime().getMinute()))
                         )
                 )),
                 () -> assertThat(courseInDb.get("capacity"), equalTo(course.getCapacity())),
@@ -117,9 +117,9 @@ class RdbCourseDaoIT extends RdbDaoTest {
                 () -> assertThat(courseInDb.getStartDate(), equalTo(course.getStartDate())),
                 () -> assertThat(courseInDb.getStopDate(), equalTo(course.getStopDate())),
                 () -> assertThat(courseInDb.getCapacity(), equalTo(course.getCapacity())),
-                () -> assertThat(courseInDb.getClassTimes().get(0).getDayOfWeek(), equalTo(course.getClassTimes().get(0).getDayOfWeek())),
-                () -> assertThat(courseInDb.getClassTimes().get(0).getStartTime(), equalTo(course.getClassTimes().get(0).getStartTime())),
-                () -> assertThat(courseInDb.getClassTimes().get(0).getStopTime(), equalTo(course.getClassTimes().get(0).getStopTime())),
+                () -> assertThat(courseInDb.getClassTimes().get(0).dayOfWeek(), equalTo(course.getClassTimes().get(0).dayOfWeek())),
+                () -> assertThat(courseInDb.getClassTimes().get(0).startTime(), equalTo(course.getClassTimes().get(0).startTime())),
+                () -> assertThat(courseInDb.getClassTimes().get(0).stopTime(), equalTo(course.getClassTimes().get(0).stopTime())),
                 () -> assertThat(courseInDb.getCapacity(), equalTo(course.getCapacity())));
     }
 }

@@ -61,9 +61,9 @@ class CourseControllerIT {
                         jsonPath("$.content[0].name").value(course.getName()),
                         jsonPath("$.content[0].startDate").value(course.getStartDate().toString()),
                         jsonPath("$.content[0].stopDate").value(course.getStopDate().toString()),
-                        jsonPath("$.content[0].classTimes[0].dayOfWeek").value(course.getClassTimes().get(0).getDayOfWeek().toString()),
-                        jsonPath("$.content[0].classTimes[0].startTime").value(course.getClassTimes().get(0).getStartTime().format(DateTimeFormatter.ISO_TIME)),
-                        jsonPath("$.content[0].classTimes[0].stopTime").value(course.getClassTimes().get(0).getStopTime().format(DateTimeFormatter.ISO_TIME)),
+                        jsonPath("$.content[0].classTimes[0].dayOfWeek").value(course.getClassTimes().get(0).dayOfWeek().toString()),
+                        jsonPath("$.content[0].classTimes[0].startTime").value(course.getClassTimes().get(0).startTime().format(DateTimeFormatter.ISO_TIME)),
+                        jsonPath("$.content[0].classTimes[0].stopTime").value(course.getClassTimes().get(0).stopTime().format(DateTimeFormatter.ISO_TIME)),
                         jsonPath("$.content[0].capacity").value(course.getCapacity()),
                         jsonPath("$.content[0].currentStudentNumber").value(course.getCurrentStudentNumber()),
                         jsonPath("$.content[0].teacherId").value(course.getTeacher().getId()));
