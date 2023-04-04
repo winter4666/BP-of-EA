@@ -23,7 +23,7 @@ public class RdbCourseDao implements CourseDao {
 
     @Override
     public Page<Course> findAll(String name, PageOptions pageOptions) {
-        Course probe = Course.builder().name(name).build();
+        Course probe = Course.builder().name(name).classTimes(null).build();
         ExampleMatcher matcher = ExampleMatcher.matching()
                 .withMatcher("name", startsWith());
         return PageFactory.createPageFrom(courseRepository.findAll(Example.of(probe, matcher), PageRequestFactory.createPageRequestFrom(pageOptions)));

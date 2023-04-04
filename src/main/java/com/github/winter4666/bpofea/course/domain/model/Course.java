@@ -7,10 +7,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
@@ -22,7 +19,7 @@ import java.util.Objects;
 
 @Entity
 @DynamicUpdate
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
 @Getter
@@ -40,6 +37,7 @@ public class Course {
     @NotNull
     private LocalDate stopDate;
 
+    @Builder.Default
     @Valid
     @NotEmpty
     @JdbcTypeCode(SqlTypes.JSON)

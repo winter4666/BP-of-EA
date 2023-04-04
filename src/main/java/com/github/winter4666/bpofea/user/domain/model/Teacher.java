@@ -5,6 +5,7 @@ import com.github.winter4666.bpofea.course.domain.model.Course;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,7 +17,7 @@ import java.util.Set;
 @Entity
 @SuperBuilder
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Teacher extends User {
 
     private String jobNumber;

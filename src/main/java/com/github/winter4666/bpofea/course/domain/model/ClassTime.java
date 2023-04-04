@@ -8,7 +8,7 @@ import java.time.LocalTime;
 
 @Getter
 @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode
 @Builder
 public class ClassTime {

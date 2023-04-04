@@ -14,6 +14,7 @@ public interface CourseMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "teacher", ignore = true)
+    @Mapping(target = "currentStudentNumber", ignore = true)
     Course createCourseRequestToCourse(TeacherController.CreateCourseRequest createCourseRequest);
 
     List<ClassTime> classTimeDtoListToClassTimeList(List<ClassTimeDto> classTimes);
