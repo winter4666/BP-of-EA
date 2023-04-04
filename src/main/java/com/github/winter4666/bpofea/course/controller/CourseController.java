@@ -25,8 +25,8 @@ public class CourseController {
     private final CourseMapper courseMapper;
 
     @GetMapping()
-    public Page<CourseResponse> getCourses(String name, @RequestParam int perPage, @RequestParam int page) {
-        return courseService.getCourses(name, new PageOptions(perPage, page)).map(courseResponseMapper::courseToCourseResponse);
+    public Page<CourseResponse> getCourses(String namePrefix, @RequestParam int perPage, @RequestParam int page) {
+        return courseService.getCourses(namePrefix, new PageOptions(perPage, page)).map(courseResponseMapper::courseToCourseResponse);
     }
 
     @PatchMapping("/{courseId}")

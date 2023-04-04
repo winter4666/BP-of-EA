@@ -20,8 +20,8 @@ public class RdbCourseDao implements CourseDao {
     private final CourseRepository courseRepository;
 
     @Override
-    public Page<Course> findAll(String name, PageOptions pageOptions) {
-        return PageFactory.createPageFrom(courseRepository.findAll(hasNameStartingWith(name), PageRequestFactory.createPageRequestFrom(pageOptions)));
+    public Page<Course> findAll(String namePrefix, PageOptions pageOptions) {
+        return PageFactory.createPageFrom(courseRepository.findAll(hasNameStartingWith(namePrefix), PageRequestFactory.createPageRequestFrom(pageOptions)));
     }
 
     @Override

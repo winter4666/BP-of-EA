@@ -54,7 +54,7 @@ class CourseControllerIT {
         mvc.perform(get("/courses")
                         .queryParam("perPage", String.valueOf(perPage))
                         .queryParam("page", String.valueOf(page))
-                        .queryParam("name", course.getName()))
+                        .queryParam("namePrefix", course.getName()))
                 .andExpectAll(status().isOk(),
                         jsonPath("$.totalElements").value(totalElements),
                         jsonPath("$.content[0].id").value(course.getId()),
