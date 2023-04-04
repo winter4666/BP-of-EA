@@ -14,17 +14,22 @@ public class StudentController {
 
     @PostMapping("/{studentId}/courses")
     @ResponseStatus(HttpStatus.CREATED)
-    public void chooseCourse(@PathVariable long studentId, @RequestBody ChooseCourseRequest chooseCourseRequest) {
+    public ChooseCourseResponse chooseCourse(@PathVariable long studentId, @RequestBody ChooseCourseRequest chooseCourseRequest) {
         studentService.chooseCourse(studentId, chooseCourseRequest.id());
+        return new ChooseCourseResponse(chooseCourseRequest.id());
+    }
+
+    record ChooseCourseRequest(Long id) {
+    }
+
+    record ChooseCourseResponse(Long id) {
+
     }
 
     @DeleteMapping("/{studentId}/courses/{courseId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void revokeChoice(@PathVariable long studentId, @PathVariable long courseId) {
         studentService.revokeChoice(studentId, courseId);
-    }
-
-    record ChooseCourseRequest(Long id) {
     }
 
 }

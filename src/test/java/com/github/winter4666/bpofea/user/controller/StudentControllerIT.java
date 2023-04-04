@@ -12,9 +12,11 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(StudentController.class)
@@ -36,7 +38,7 @@ class StudentControllerIT {
         Course course = new CourseBuilder().id(new Faker().random().nextLong()).build();
 
         mvc.perform(post("/students/{studentId}/courses", studentId).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(course)))
-                .andExpectAll(status().isCreated());
+                .andExpectAll(status().isCreated(), jsonPath("$.id", equalTo(course.getId())));
 
         verify(studentService).chooseCourse(studentId, course.getId());
     }
