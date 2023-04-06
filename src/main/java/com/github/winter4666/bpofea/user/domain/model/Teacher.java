@@ -24,7 +24,7 @@ public class Teacher extends User {
     private Set<Course> courses = new HashSet<>();
 
     @Builder
-    public Teacher(Long id, String name, String jobNumber, Set<Course> courses) {
+    Teacher(Long id, String name, String jobNumber, Set<Course> courses) {
         super(id, name);
         this.jobNumber = jobNumber;
         this.courses = courses;

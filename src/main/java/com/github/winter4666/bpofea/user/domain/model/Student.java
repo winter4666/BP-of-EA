@@ -28,7 +28,7 @@ public class Student extends User {
     private Set<Course> courses = new HashSet<>();
 
     @Builder
-    public Student(Long id, String name, String studentNumber) {
+    Student(Long id, String name, String studentNumber) {
         super(id, name);
         this.studentNumber = studentNumber;
     }
