@@ -30,18 +30,31 @@ public class TeacherBuilder {
         return this;
     }
 
+    public TeacherBuilder name(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public TeacherBuilder jobNumber(String jobNumber) {
+        this.jobNumber = jobNumber;
+        return this;
+    }
+
     public TeacherBuilder courses(Set<Course> courses) {
         this.courses = courses;
         return this;
     }
 
     public Teacher build() {
+        return createTeacherBuilder().build();
+    }
+
+    public Teacher.TeacherBuilder createTeacherBuilder() {
         return Teacher.builder()
                 .id(id)
                 .name(name)
                 .jobNumber(jobNumber)
-                .courses(courses)
-                .build();
+                .courses(courses);
     }
 
 }

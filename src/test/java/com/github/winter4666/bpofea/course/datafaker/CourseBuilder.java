@@ -6,6 +6,7 @@ import com.github.winter4666.bpofea.common.dao.HibernateObjectMapperHolder;
 import com.github.winter4666.bpofea.course.domain.model.ClassTime;
 import com.github.winter4666.bpofea.course.domain.model.Course;
 import com.github.winter4666.bpofea.user.datafaker.TeacherBuilder;
+import com.github.winter4666.bpofea.user.domain.model.Teacher;
 import com.github.winter4666.bpofea.user.domain.service.TeacherService;
 
 import java.time.DayOfWeek;
@@ -27,13 +28,13 @@ public class CourseBuilder {
 
     private LocalDate stopDate = LocalDate.of(2023, 5, 1);
 
-    private List<ClassTimeBuilder> classTimeBuilders = List.of(new ClassTimeBuilder());
+    private List<ClassTime> classTimes = List.of(new ClassTimeBuilder().build());
 
     private Long capacity = 30L;
 
     private Long currentStudentNumber = 10L;
 
-    private TeacherBuilder teacherBuilder = new TeacherBuilder().id(FAKER.number().randomNumber());
+    private Teacher teacher = new TeacherBuilder().id(FAKER.number().randomNumber()).build();
 
     public CourseBuilder id(Long id) {
         this.id = id;
@@ -56,7 +57,7 @@ public class CourseBuilder {
     }
 
     public CourseBuilder classTimes(List<ClassTimeBuilder> classTimeBuilders) {
-        this.classTimeBuilders = classTimeBuilders;
+        this.classTimes = classTimeBuilders == null ? null : classTimeBuilders.stream().map(ClassTimeBuilder::build).toList();
         return this;
     }
 
@@ -71,7 +72,7 @@ public class CourseBuilder {
     }
 
     public CourseBuilder teacher(TeacherBuilder teacherBuilder) {
-        this.teacherBuilder = teacherBuilder;
+        this.teacher = teacherBuilder.build();
         return this;
     }
 
@@ -85,10 +86,10 @@ public class CourseBuilder {
                 .name(name)
                 .startDate(startDate)
                 .stopDate(stopDate)
-                .classTimes(classTimeBuilders == null ? null : classTimeBuilders.stream().map(ClassTimeBuilder::build).toList())
+                .classTimes(classTimes)
                 .capacity(capacity)
                 .currentStudentNumber(currentStudentNumber)
-                .teacher(teacherBuilder.build());
+                .teacher(teacher);
     }
 
     public Map<String, Object> buildArgsForDbInsertion() throws JsonProcessingException {
@@ -97,11 +98,10 @@ public class CourseBuilder {
                 put("name", name);
                 put("start_date", startDate);
                 put("stop_date", stopDate);
-                put("class_times", classTimeBuilders == null ? null
-                    :  HibernateObjectMapperHolder.get().writeValueAsString(classTimeBuilders.stream().map(ClassTimeBuilder::build).toList()));
+                put("class_times", HibernateObjectMapperHolder.get().writeValueAsString(classTimes));
                 put("capacity", capacity);
                 put("current_student_number", currentStudentNumber);
-                put("teacher_id", teacherBuilder.build().getId());
+                put("teacher_id", teacher.getId());
             }
         };
     }
@@ -111,7 +111,7 @@ public class CourseBuilder {
                 name,
                 startDate,
                 stopDate,
-                classTimeBuilders == null ? null : classTimeBuilders.stream().map(ClassTimeBuilder::build).toList(),
+                classTimes,
                 capacity);
     }
 
@@ -122,10 +122,10 @@ public class CourseBuilder {
                 put("name", name);
                 put("startDate", startDate);
                 put("stopDate", stopDate);
-                put("classTimes", classTimeBuilders == null ? null : classTimeBuilders.stream().map(ClassTimeBuilder::build).toList());
+                put("classTimes", classTimes);
                 put("capacity", capacity);
                 put("currentStudentNumber", currentStudentNumber);
-                put("teacherId", teacherBuilder.build().getId());
+                put("teacherId", teacher.getId());
             }
         };
     }

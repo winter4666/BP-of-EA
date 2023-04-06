@@ -1,6 +1,6 @@
 package com.github.winter4666.bpofea.user.domain.model;
 
-import com.github.javafaker.Faker;
+import com.github.winter4666.bpofea.user.datafaker.TeacherBuilder;
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -19,8 +19,8 @@ public class TeacherBuilderTest {
 
     static Stream<Teacher.TeacherBuilder> teacherBuilderProvider() {
         return Stream.of(
-                Teacher.builder().name(" ").jobNumber(String.valueOf(new Faker().number().randomNumber())),
-                Teacher.builder().name(String.valueOf(new Faker().number().randomNumber())).jobNumber(" ")
+                new TeacherBuilder().name(" ").createTeacherBuilder(),
+                new TeacherBuilder().jobNumber(" ").createTeacherBuilder()
         );
     }
 }
