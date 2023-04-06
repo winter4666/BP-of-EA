@@ -88,7 +88,7 @@ class RdbCourseDaoIT extends RdbDaoTest {
     }
 
     @Test
-    void should_return_courses_when_find_all_given_course_prefix_is_null() throws JsonProcessingException {
+    void should_return_courses_when_find_all_given_course_prefix_and_state_is_null() throws JsonProcessingException {
         Faker faker = new Faker();
         long totalElements = 11L;
         Set<String> courseNames = Stream.generate(() -> faker.educator().course()).distinct().limit(totalElements).collect(Collectors.toSet());
@@ -99,7 +99,7 @@ class RdbCourseDaoIT extends RdbDaoTest {
         }
         int perPage = 10;
 
-        Page<Course> actualCourses = courseDao.findAll(null, Course.State.DRAFT, new PageOptions(perPage, 1));
+        Page<Course> actualCourses = courseDao.findAll(null, null, new PageOptions(perPage, 1));
 
         Course course = courseBuilder.build();
         assertAll(
