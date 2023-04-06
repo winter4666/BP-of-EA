@@ -28,10 +28,10 @@ class TeacherTest {
 
     @Test
     void should_remove_course_successfully() {
-        CourseBuilder courseBuilder = new CourseBuilder();
-        Teacher teacher = new TeacherBuilder().coursesFromBuilders(new HashSet<>(){{add(courseBuilder);}}).build();
+        Course course = new CourseBuilder().build();
+        Teacher teacher = new TeacherBuilder().courses(new HashSet<>(){{add(course);}}).build();
 
-        teacher.removeCourse(courseBuilder.build());
+        teacher.removeCourse(course);
 
         assertThat(teacher.getCourses(), is(empty()));
     }
