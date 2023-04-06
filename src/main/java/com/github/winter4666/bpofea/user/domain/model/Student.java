@@ -10,25 +10,28 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@SuperBuilder
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Student extends User {
 
     private String studentNumber;
 
-    @Builder.Default
     @ManyToMany
     @JoinTable(name = "student_course",
             joinColumns = @JoinColumn(name = "student_id"),
             inverseJoinColumns = @JoinColumn(name = "course_id"))
     private Set<Course> courses = new HashSet<>();
+
+    @Builder
+    public Student(Long id, String name, String studentNumber) {
+        super(id, name);
+        this.studentNumber = studentNumber;
+    }
 
     public void chooseCourse(Course course) {
         if(haveAnyCourseCollidingWith(course)) {

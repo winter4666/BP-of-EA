@@ -9,22 +9,26 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@SuperBuilder
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Teacher extends User {
 
     private String jobNumber;
 
-    @Builder.Default
     @OneToMany(orphanRemoval = true, mappedBy = "teacher", cascade = {CascadeType.PERSIST})
     private Set<Course> courses = new HashSet<>();
+
+    @Builder
+    public Teacher(Long id, String name, String jobNumber, Set<Course> courses) {
+        super(id, name);
+        this.jobNumber = jobNumber;
+        this.courses = courses;
+    }
 
     public void createCourse(Course course) {
         if(haveAnyCourseCollidingWith(course)) {
