@@ -64,7 +64,7 @@ class RdbCourseDaoIT extends RdbDaoTest {
     }
 
     @Test
-    void should_get_courses_successfully() throws JsonProcessingException {
+    void should_return_courses_when_find_all_given_course_prefix() throws JsonProcessingException {
         Faker faker = new Faker();
         long totalElements = 11L;
         Set<String> courseNames = Stream.generate(() -> faker.educator().course()).distinct().limit(totalElements).collect(Collectors.toSet());
@@ -78,7 +78,28 @@ class RdbCourseDaoIT extends RdbDaoTest {
         }
         int perPage = 10;
 
-        Page<Course> actualCourses = courseDao.findAll(prefixes.iterator().next().toString(), new PageOptions(perPage, 1));
+        Page<Course> actualCourses = courseDao.findAll(prefixes.iterator().next().toString(), Course.State.DRAFT, new PageOptions(perPage, 1));
+
+        Course course = courseBuilder.build();
+        assertAll(
+                () -> assertThat(actualCourses.totalElements(), equalTo(totalElements)),
+                () -> assertThat(actualCourses.content().size(), equalTo(perPage)),
+                () -> assertThat(actualCourses.content().get(0), sameFieldValuesAs(course, "id", "name", "teacher")));
+    }
+
+    @Test
+    void should_return_courses_when_find_all_given_course_prefix_is_null() throws JsonProcessingException {
+        Faker faker = new Faker();
+        long totalElements = 11L;
+        Set<String> courseNames = Stream.generate(() -> faker.educator().course()).distinct().limit(totalElements).collect(Collectors.toSet());
+        CourseBuilder courseBuilder = new CourseBuilder();
+        for(String courseName : courseNames) {
+            new SimpleJdbcInsert(jdbcTemplate).withTableName("course")
+                    .execute(courseBuilder.name(courseName).buildArgsForDbInsertion());
+        }
+        int perPage = 10;
+
+        Page<Course> actualCourses = courseDao.findAll(null, Course.State.DRAFT, new PageOptions(perPage, 1));
 
         Course course = courseBuilder.build();
         assertAll(

@@ -19,7 +19,7 @@ public class CourseService {
     private final CourseDao courseDao;
 
     public Page<Course> getCourses(String namePrefix, PageOptions pageOptions) {
-        return courseDao.findAll(namePrefix, pageOptions);
+        return courseDao.findAll(namePrefix, Course.State.DRAFT, pageOptions);
     }
 
     public Course findCourseByIdAndThrowExceptionIfNotFound(long courseId) {

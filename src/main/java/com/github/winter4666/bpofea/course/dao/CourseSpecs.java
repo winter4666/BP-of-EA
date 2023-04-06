@@ -8,6 +8,10 @@ import org.springframework.data.jpa.domain.Specification;
 public class CourseSpecs {
 
     public static Specification<Course> hasNameStartingWith(String namePrefix) {
-        return (root, query, builder) -> builder.like(root.get("name"), namePrefix + "%");
+        return Specification.where(namePrefix == null ? null : (root, query, builder) -> builder.like(root.get("name"), namePrefix + "%"));
+    }
+
+    public static Specification<Course> hasStateEqualTo(Course.State state) {
+        return Specification.where(state == null ? null : (root, query, builder) -> builder.equal(root.get("state"), state));
     }
 }
