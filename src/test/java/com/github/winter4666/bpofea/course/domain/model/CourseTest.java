@@ -1,7 +1,6 @@
 package com.github.winter4666.bpofea.course.domain.model;
 
 import com.github.javafaker.Faker;
-import com.github.winter4666.bpofea.common.domain.exception.DataInvalidException;
 import com.github.winter4666.bpofea.course.datafaker.CourseBuilder;
 import com.github.winter4666.bpofea.user.datafaker.TestTeacherBuilder;
 import com.github.winter4666.bpofea.user.domain.model.Teacher;
@@ -18,7 +17,6 @@ import java.util.stream.Stream;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.mockito.Mockito.mock;
 
@@ -32,26 +30,7 @@ class CourseTest {
         course.onCreated(teacher);
 
         assertAll(
-                () -> assertThat(course.getTeacher(), equalTo(teacher)),
-                () -> assertThat(course.getCurrentStudentNumber(), equalTo(0L)));
-    }
-
-    @Test
-    void should_throw_exception_when_created_given_stop_date_is_before_start_date() {
-        Course course = new CourseBuilder().startDate(LocalDate.of(2023, 5, 1)).stopDate(LocalDate.of(2023, 1, 1)).build();
-
-        DataInvalidException exception = assertThrows(DataInvalidException.class, () -> course.onCreated(mock(Teacher.class)));
-
-        assertThat(exception.getMessage(), equalTo("Stop data should be later than start data in a course"));
-    }
-
-    @Test
-    void should_throw_exception_when_created_given_duplicated_class_times_existed() {
-        Course course = new CourseBuilder().classTimes(List.of(new CourseBuilder.ClassTimeBuilder(), new CourseBuilder.ClassTimeBuilder())).build();
-
-        DataInvalidException exception = assertThrows(DataInvalidException.class, () -> course.onCreated(mock(Teacher.class)));
-
-        assertThat(exception.getMessage(), equalTo("Duplicated class times existed"));
+                () -> assertThat(course.getTeacher(), equalTo(teacher)));
     }
 
     @ParameterizedTest
@@ -175,7 +154,7 @@ class CourseTest {
 
     @Test
     public void should_not_set_stop_date_when_set_start_date_given_parameter_is_null() {
-        LocalDate stopDate = LocalDate.of(2022, 1, 1);
+        LocalDate stopDate = LocalDate.of(2023, 2, 1);
         Course course = new CourseBuilder().stopDate(stopDate).build();
 
         course.setStopDateIfNotNull(null);

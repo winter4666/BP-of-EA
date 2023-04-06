@@ -14,7 +14,6 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -38,11 +37,10 @@ public class Course {
     @NotNull
     private LocalDate stopDate;
 
-    @Builder.Default
     @Valid
     @NotEmpty
     @JdbcTypeCode(SqlTypes.JSON)
-    private List<ClassTime> classTimes = new ArrayList<>();
+    private List<ClassTime> classTimes;
 
     @NotNull
     private Long capacity;
@@ -53,13 +51,6 @@ public class Course {
     private Teacher teacher;
 
     public void onCreated(Teacher teacher) {
-        if(!startDate.isBefore(stopDate)) {
-            throw new DataInvalidException("Stop data should be later than start data in a course");
-        }
-        if(classTimes.stream().distinct().count() < classTimes.size()) {
-            throw new DataInvalidException("Duplicated class times existed");
-        }
-        currentStudentNumber = 0L;
         this.teacher = teacher;
     }
 
@@ -117,8 +108,14 @@ public class Course {
 
     public static class CourseBuilder {
         public Course build() {
-            Course course = new Course(id, name, startDate, stopDate, classTimes$value, capacity, currentStudentNumber, teacher);
+            Course course = new Course(id, name, startDate, stopDate, classTimes, capacity, currentStudentNumber == null ? 0L : currentStudentNumber, teacher);
             ValidatorHolder.get().validateAndThrowExceptionIfNotValid(course);
+            if(!startDate.isBefore(stopDate)) {
+                throw new DataInvalidException("Stop data should be later than start data in a course");
+            }
+            if(course.classTimes.stream().distinct().count() < course.classTimes.size()) {
+                throw new DataInvalidException("Duplicated class times existed");
+            }
             return course;
         }
     }
