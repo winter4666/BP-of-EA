@@ -22,7 +22,7 @@ public class CourseController {
     private final CourseResponseMapper courseResponseMapper;
 
     @GetMapping()
-    public Page<CourseResponse> getCourses(String namePrefix, @RequestParam int perPage, @RequestParam int page) {
+    public Page<CourseResponse> getCourses(@RequestParam(required = false) String namePrefix, @RequestParam int perPage, @RequestParam int page) {
         return courseService.getCourses(namePrefix, new PageOptions(perPage, page)).map(courseResponseMapper::courseToCourseResponse);
     }
 
