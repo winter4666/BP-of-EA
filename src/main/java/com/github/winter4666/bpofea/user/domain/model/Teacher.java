@@ -30,7 +30,6 @@ public class Teacher extends User {
         if(haveAnyCourseCollidingWith(course)) {
             throw new DataCollisionException("The teacher has some course colliding with the new course. Teacher id = {} ", getId());
         }
-        course.onCreated(this);
         courses.add(course);
     }
 

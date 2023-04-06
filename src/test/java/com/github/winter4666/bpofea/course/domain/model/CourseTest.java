@@ -3,7 +3,6 @@ package com.github.winter4666.bpofea.course.domain.model;
 import com.github.javafaker.Faker;
 import com.github.winter4666.bpofea.course.datafaker.CourseBuilder;
 import com.github.winter4666.bpofea.user.datafaker.TestTeacherBuilder;
-import com.github.winter4666.bpofea.user.domain.model.Teacher;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -16,22 +15,9 @@ import java.util.stream.Stream;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.mockito.Mockito.mock;
 
 class CourseTest {
-
-    @Test
-    void should_react_correctly_on_created() {
-        Teacher teacher = mock(Teacher.class);
-        Course course = new CourseBuilder().build();
-
-        course.onCreated(teacher);
-
-        assertAll(
-                () -> assertThat(course.getTeacher(), equalTo(teacher)));
-    }
 
     @ParameterizedTest
     @MethodSource("coursePairWithoutCollisionProvider")

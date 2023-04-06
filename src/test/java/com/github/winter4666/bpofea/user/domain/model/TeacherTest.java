@@ -23,7 +23,6 @@ class TeacherTest {
         teacher.createCourse(course);
 
         assertThat(teacher.getCourses().iterator().next(), equalTo(course));
-        verify(course).onCreated(teacher);
     }
 
     @Test

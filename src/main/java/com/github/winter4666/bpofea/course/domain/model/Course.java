@@ -50,10 +50,6 @@ public class Course {
     @ManyToOne(fetch = FetchType.LAZY)
     private Teacher teacher;
 
-    public void onCreated(Teacher teacher) {
-        this.teacher = teacher;
-    }
-
     public boolean collideWith(Course course) {
         if(startDate.isBefore(course.startDate)) {
             if(stopDate.isBefore(course.startDate)) {

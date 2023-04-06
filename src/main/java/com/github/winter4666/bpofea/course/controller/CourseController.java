@@ -2,7 +2,6 @@ package com.github.winter4666.bpofea.course.controller;
 
 import com.github.winter4666.bpofea.common.domain.model.Page;
 import com.github.winter4666.bpofea.common.domain.model.PageOptions;
-import com.github.winter4666.bpofea.course.controller.dto.CourseMapper;
 import com.github.winter4666.bpofea.course.controller.dto.CourseResponse;
 import com.github.winter4666.bpofea.course.controller.dto.CourseResponseMapper;
 import com.github.winter4666.bpofea.course.domain.model.ClassTime;
@@ -21,8 +20,6 @@ public class CourseController {
     private final CourseService courseService;
 
     private final CourseResponseMapper courseResponseMapper;
-
-    private final CourseMapper courseMapper;
 
     @GetMapping()
     public Page<CourseResponse> getCourses(String namePrefix, @RequestParam int perPage, @RequestParam int page) {

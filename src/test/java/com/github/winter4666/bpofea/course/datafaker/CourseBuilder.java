@@ -6,6 +6,7 @@ import com.github.winter4666.bpofea.common.dao.HibernateObjectMapperHolder;
 import com.github.winter4666.bpofea.course.domain.model.ClassTime;
 import com.github.winter4666.bpofea.course.domain.model.Course;
 import com.github.winter4666.bpofea.user.datafaker.TestTeacherBuilder;
+import com.github.winter4666.bpofea.user.domain.service.TeacherService;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -103,6 +104,15 @@ public class CourseBuilder {
                 put("teacher_id", teacherBuilder.build().getId());
             }
         };
+    }
+
+    public TeacherService.CreateCourseRequest buildCreateCourseRequest() {
+        return new TeacherService.CreateCourseRequest(
+                name,
+                startDate,
+                stopDate,
+                classTimeBuilders == null ? null : classTimeBuilders.stream().map(ClassTimeBuilder::build).toList(),
+                capacity);
     }
 
     public Map<String, Object> buildMapForResponse() {

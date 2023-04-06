@@ -1,17 +1,12 @@
 package com.github.winter4666.bpofea.user.controller;
 
-import com.github.winter4666.bpofea.course.controller.dto.CourseMapper;
 import com.github.winter4666.bpofea.course.controller.dto.CourseResponse;
 import com.github.winter4666.bpofea.course.controller.dto.CourseResponseMapper;
-import com.github.winter4666.bpofea.course.domain.model.ClassTime;
 import com.github.winter4666.bpofea.user.domain.model.Teacher;
 import com.github.winter4666.bpofea.user.domain.service.TeacherService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDate;
-import java.util.List;
 
 @RestController
 @RequestMapping("/teachers")
@@ -19,8 +14,6 @@ import java.util.List;
 public class TeacherController {
 
     private final TeacherService teacherService;
-
-    private final CourseMapper courseMapper;
 
     private final CourseResponseMapper courseResponseMapper;
 
@@ -36,14 +29,9 @@ public class TeacherController {
 
     @PostMapping("/{teacherId}/courses")
     @ResponseStatus(HttpStatus.CREATED)
-    public CourseResponse createCourse(@PathVariable Long teacherId, @RequestBody CreateCourseRequest createCourseRequest) {
-        return courseResponseMapper.courseToCourseResponse(teacherService.createCourse(teacherId, courseMapper.createCourseRequestToCourse(createCourseRequest)));
+    public CourseResponse createCourse(@PathVariable Long teacherId, @RequestBody TeacherService.CreateCourseRequest createCourseRequest) {
+        return courseResponseMapper.courseToCourseResponse(teacherService.createCourse(teacherId, createCourseRequest));
     }
-
-    public record CreateCourseRequest(String name, LocalDate startDate, LocalDate stopDate, List<ClassTime> classTimes, Long capacity) {
-
-    }
-
 
     @DeleteMapping("/{teacherId}/courses/{courseId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

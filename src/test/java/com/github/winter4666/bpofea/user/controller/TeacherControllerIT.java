@@ -2,10 +2,8 @@ package com.github.winter4666.bpofea.user.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
-import com.github.winter4666.bpofea.course.controller.dto.CourseMapperImpl;
 import com.github.winter4666.bpofea.course.controller.dto.CourseResponseMapperImpl;
 import com.github.winter4666.bpofea.course.datafaker.CourseBuilder;
-import com.github.winter4666.bpofea.course.domain.model.Course;
 import com.github.winter4666.bpofea.user.domain.model.Teacher;
 import com.github.winter4666.bpofea.user.domain.service.TeacherService;
 import org.junit.jupiter.api.Test;
@@ -17,8 +15,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.equalTo;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.ArgumentMatchers.refEq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -26,7 +22,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(TeacherController.class)
-@Import({CourseMapperImpl.class, CourseResponseMapperImpl.class})
+@Import({CourseResponseMapperImpl.class})
 class TeacherControllerIT {
 
     @Autowired
@@ -60,11 +56,12 @@ class TeacherControllerIT {
         Faker faker = new Faker();
         long teacherId = faker.number().randomNumber();
         CourseBuilder courseBuilder = new CourseBuilder().id(new Faker().random().nextLong());
-        Course course = courseBuilder.build();
 
-        when(teacherService.createCourse(eq(teacherId), refEq(course, "id", "teacher", "currentStudentNumber"))).thenReturn(course);
+        when(teacherService.createCourse(teacherId,
+                courseBuilder.buildCreateCourseRequest()))
+                .thenReturn(courseBuilder.build());
 
-        mvc.perform(post("/teachers/{teacherId}/courses", teacherId).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(course)))
+        mvc.perform(post("/teachers/{teacherId}/courses", teacherId).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(courseBuilder.buildCreateCourseRequest())))
                 .andExpectAll(status().isCreated(),
                         content().json(objectMapper.writeValueAsString(courseBuilder.buildMapForResponse())));
     }

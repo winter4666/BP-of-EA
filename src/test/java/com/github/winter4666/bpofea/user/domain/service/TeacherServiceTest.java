@@ -15,6 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
+import static com.github.winter4666.bpofea.testsupport.SameFieldValuesAs.sameFieldValuesAs;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -53,14 +54,14 @@ class TeacherServiceTest {
     void should_create_course_successfully() {
         Faker faker = new Faker();
         long teacherId = faker.number().randomNumber();
-        Course course = new CourseBuilder().build();
+        CourseBuilder courseBuilder = new CourseBuilder();
         Teacher teacher = mock(Teacher.class);
         when(teacherDao.findById(teacherId)).thenReturn(Optional.of(teacher));
 
-        Course returnedCourse = teacherService.createCourse(teacherId, course);
+        Course returnedCourse = teacherService.createCourse(teacherId, courseBuilder.buildCreateCourseRequest());
 
-        verify(teacher).createCourse(course);
-        assertThat(returnedCourse, equalTo(course));
+        verify(teacher).createCourse(refEq(courseBuilder.build(), "teacher", "currentStudentNumber"));
+        assertThat(returnedCourse, sameFieldValuesAs(courseBuilder.build(), "teacher", "currentStudentNumber"));
     }
 
     @Test
@@ -82,10 +83,9 @@ class TeacherServiceTest {
     void should_throw_exception_when_create_course_given_teacher_not_found() {
         Faker faker = new Faker();
         long teacherId = faker.number().randomNumber();
-        Course course = new CourseBuilder().build();
         Mockito.when(teacherDao.findById(teacherId)).thenReturn(Optional.empty());
 
-        DataNotFoundException exception = assertThrows(DataNotFoundException.class, () -> teacherService.createCourse(teacherId, course));
+        DataNotFoundException exception = assertThrows(DataNotFoundException.class, () -> teacherService.createCourse(teacherId, new CourseBuilder().buildCreateCourseRequest()));
 
         assertThat(exception.getMessage(), equalTo("Teacher cannot be found by teacher id " + teacherId));
     }
