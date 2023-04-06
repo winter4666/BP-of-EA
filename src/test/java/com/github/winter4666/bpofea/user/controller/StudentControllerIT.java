@@ -2,7 +2,7 @@ package com.github.winter4666.bpofea.user.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
-import com.github.winter4666.bpofea.course.datafaker.TestCourseBuilder;
+import com.github.winter4666.bpofea.course.datafaker.CourseBuilder;
 import com.github.winter4666.bpofea.course.domain.model.Course;
 import com.github.winter4666.bpofea.user.domain.service.StudentService;
 import org.junit.jupiter.api.Test;
@@ -35,7 +35,7 @@ class StudentControllerIT {
     void should_choose_course_successfully() throws Exception {
         Faker faker = new Faker();
         long studentId = faker.number().randomNumber();
-        Course course = new TestCourseBuilder().id(new Faker().random().nextLong()).build();
+        Course course = new CourseBuilder().id(new Faker().random().nextLong()).build();
 
         mvc.perform(post("/students/{studentId}/courses", studentId).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(course)))
                 .andExpectAll(status().isCreated(), jsonPath("$.id", equalTo(course.getId())));

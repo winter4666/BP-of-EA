@@ -4,7 +4,7 @@ import com.github.javafaker.Faker;
 import com.github.winter4666.bpofea.common.domain.exception.DataNotFoundException;
 import com.github.winter4666.bpofea.common.domain.model.Page;
 import com.github.winter4666.bpofea.common.domain.model.PageOptions;
-import com.github.winter4666.bpofea.course.datafaker.TestCourseBuilder;
+import com.github.winter4666.bpofea.course.datafaker.CourseBuilder;
 import com.github.winter4666.bpofea.course.domain.model.ClassTime;
 import com.github.winter4666.bpofea.course.domain.model.Course;
 import org.junit.jupiter.api.Test;
@@ -47,7 +47,7 @@ class CourseServiceTest {
 
     @Test
     void should_get_course_when_find_course_by_id_given_course_found() {
-        Course course = new TestCourseBuilder().id(new Faker().number().randomNumber()).build();
+        Course course = new CourseBuilder().id(new Faker().number().randomNumber()).build();
         when(courseDao.findById(course.getId())).thenReturn(Optional.of(course));
 
         Course actualCourse = courseService.findCourseByIdAndThrowExceptionIfNotFound(course.getId());
@@ -72,7 +72,7 @@ class CourseServiceTest {
         when(courseDao.findById(courseId)).thenReturn(Optional.of(course));
         LocalDate startDate = LocalDate.of(2023, 1, 1);
         LocalDate stopDate =  LocalDate.of(2023, 5, 1);
-        List<ClassTime> classTimes = List.of(new TestCourseBuilder.ClassTimeBuilder().build());
+        List<ClassTime> classTimes = List.of(new CourseBuilder.ClassTimeBuilder().build());
 
         courseService.updateCourse(courseId, startDate, stopDate, classTimes);
 

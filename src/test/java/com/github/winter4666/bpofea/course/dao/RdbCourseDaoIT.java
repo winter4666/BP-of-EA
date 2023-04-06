@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.javafaker.Faker;
 import com.github.winter4666.bpofea.common.domain.model.Page;
 import com.github.winter4666.bpofea.common.domain.model.PageOptions;
-import com.github.winter4666.bpofea.course.datafaker.TestCourseBuilder;
+import com.github.winter4666.bpofea.course.datafaker.CourseBuilder;
 import com.github.winter4666.bpofea.course.domain.model.Course;
 import com.github.winter4666.bpofea.testsupport.RdbDaoTest;
 import jakarta.transaction.Transactional;
@@ -41,7 +41,7 @@ class RdbCourseDaoIT extends RdbDaoTest {
 
     @Test
     void should_insert_successfully() {
-        Course course = new TestCourseBuilder().build();
+        Course course = new CourseBuilder().build();
 
         courseDao.save(course);
 
@@ -67,7 +67,7 @@ class RdbCourseDaoIT extends RdbDaoTest {
         Faker faker = new Faker();
         long totalElements = 11L;
         Set<String> courseNames = Stream.generate(() -> faker.educator().course()).distinct().limit(totalElements).collect(Collectors.toSet());
-        TestCourseBuilder courseBuilder = new TestCourseBuilder();
+        CourseBuilder courseBuilder = new CourseBuilder();
         Set<Character> prefixes = Set.of('a', 'b');
         for(char c : prefixes) {
             for(String courseName : courseNames) {
@@ -88,7 +88,7 @@ class RdbCourseDaoIT extends RdbDaoTest {
 
     @Test
     void should_find_course_by_id_successfully() throws JsonProcessingException {
-        TestCourseBuilder courseBuilder = new TestCourseBuilder();
+        CourseBuilder courseBuilder = new CourseBuilder();
         long courseId = new SimpleJdbcInsert(jdbcTemplate).withTableName("course").usingGeneratedKeyColumns("id")
                 .executeAndReturnKey(courseBuilder.buildArgsForDbInsertion()).longValue();
 
@@ -104,7 +104,7 @@ class RdbCourseDaoIT extends RdbDaoTest {
     @Test
     @Transactional
     void should_get_course_by_id_successfully() throws JsonProcessingException {
-        TestCourseBuilder courseBuilder = new TestCourseBuilder();
+        CourseBuilder courseBuilder = new CourseBuilder();
         long courseId = new SimpleJdbcInsert(jdbcTemplate).withTableName("course").usingGeneratedKeyColumns("id")
                 .executeAndReturnKey(courseBuilder.buildArgsForDbInsertion()).longValue();
 

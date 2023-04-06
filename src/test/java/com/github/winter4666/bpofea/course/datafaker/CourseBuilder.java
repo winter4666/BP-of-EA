@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class TestCourseBuilder {
+public class CourseBuilder {
 
     private static final Faker FAKER = new Faker();
 
@@ -34,42 +34,42 @@ public class TestCourseBuilder {
 
     private TestTeacherBuilder teacherBuilder = new TestTeacherBuilder().id(FAKER.number().randomNumber());
 
-    public TestCourseBuilder id(Long id) {
+    public CourseBuilder id(Long id) {
         this.id = id;
         return this;
     }
 
-    public TestCourseBuilder name(String name) {
+    public CourseBuilder name(String name) {
         this.name = name;
         return this;
     }
 
-    public TestCourseBuilder startDate(LocalDate startDate)  {
+    public CourseBuilder startDate(LocalDate startDate)  {
         this.startDate = startDate;
         return this;
     }
 
-    public TestCourseBuilder stopDate(LocalDate stopDate) {
+    public CourseBuilder stopDate(LocalDate stopDate) {
         this.stopDate = stopDate;
         return this;
     }
 
-    public TestCourseBuilder classTimes(List<ClassTimeBuilder> classTimeBuilders) {
+    public CourseBuilder classTimes(List<ClassTimeBuilder> classTimeBuilders) {
         this.classTimeBuilders = classTimeBuilders;
         return this;
     }
 
-    public TestCourseBuilder capacity(Long capacity) {
+    public CourseBuilder capacity(Long capacity) {
         this.capacity = capacity;
         return this;
     }
 
-    public TestCourseBuilder currentStudentNumber(Long currentStudentNumber) {
+    public CourseBuilder currentStudentNumber(Long currentStudentNumber) {
         this.currentStudentNumber = currentStudentNumber;
         return this;
     }
 
-    public TestCourseBuilder teacher(TestTeacherBuilder teacherBuilder) {
+    public CourseBuilder teacher(TestTeacherBuilder teacherBuilder) {
         this.teacherBuilder = teacherBuilder;
         return this;
     }

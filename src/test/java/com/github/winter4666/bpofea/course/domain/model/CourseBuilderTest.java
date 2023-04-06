@@ -1,6 +1,6 @@
 package com.github.winter4666.bpofea.course.domain.model;
 
-import com.github.winter4666.bpofea.course.datafaker.TestCourseBuilder;
+import com.github.winter4666.bpofea.course.datafaker.CourseBuilder;
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -21,15 +21,15 @@ class CourseBuilderTest {
 
     static Stream<Course.CourseBuilder> courseProvider() {
         return Stream.of(
-                new TestCourseBuilder().name(" ").createCourseBuilder(),
-                new TestCourseBuilder().startDate(null).createCourseBuilder(),
-                new TestCourseBuilder().stopDate(null).createCourseBuilder(),
-                new TestCourseBuilder().capacity(null).createCourseBuilder(),
-                new TestCourseBuilder().classTimes(null).createCourseBuilder(),
-                new TestCourseBuilder().classTimes(new ArrayList<>()).createCourseBuilder(),
-                new TestCourseBuilder().classTimes(List.of(new TestCourseBuilder.ClassTimeBuilder().dayOfWeek(null))).createCourseBuilder(),
-                new TestCourseBuilder().classTimes(List.of(new TestCourseBuilder.ClassTimeBuilder().startTime(null))).createCourseBuilder(),
-                new TestCourseBuilder().classTimes(List.of(new TestCourseBuilder.ClassTimeBuilder().stopTime(null))).createCourseBuilder()
+                new CourseBuilder().name(" ").createCourseBuilder(),
+                new CourseBuilder().startDate(null).createCourseBuilder(),
+                new CourseBuilder().stopDate(null).createCourseBuilder(),
+                new CourseBuilder().capacity(null).createCourseBuilder(),
+                new CourseBuilder().classTimes(null).createCourseBuilder(),
+                new CourseBuilder().classTimes(new ArrayList<>()).createCourseBuilder(),
+                new CourseBuilder().classTimes(List.of(new CourseBuilder.ClassTimeBuilder().dayOfWeek(null))).createCourseBuilder(),
+                new CourseBuilder().classTimes(List.of(new CourseBuilder.ClassTimeBuilder().startTime(null))).createCourseBuilder(),
+                new CourseBuilder().classTimes(List.of(new CourseBuilder.ClassTimeBuilder().stopTime(null))).createCourseBuilder()
         );
     }
 

@@ -2,7 +2,7 @@ package com.github.winter4666.bpofea.user.domain.service;
 
 import com.github.javafaker.Faker;
 import com.github.winter4666.bpofea.common.domain.exception.DataNotFoundException;
-import com.github.winter4666.bpofea.course.datafaker.TestCourseBuilder;
+import com.github.winter4666.bpofea.course.datafaker.CourseBuilder;
 import com.github.winter4666.bpofea.course.domain.model.Course;
 import com.github.winter4666.bpofea.course.domain.service.CourseDao;
 import com.github.winter4666.bpofea.user.domain.model.Teacher;
@@ -53,7 +53,7 @@ class TeacherServiceTest {
     void should_create_course_successfully() {
         Faker faker = new Faker();
         long teacherId = faker.number().randomNumber();
-        Course course = new TestCourseBuilder().build();
+        Course course = new CourseBuilder().build();
         Teacher teacher = mock(Teacher.class);
         when(teacherDao.findById(teacherId)).thenReturn(Optional.of(teacher));
 
@@ -68,7 +68,7 @@ class TeacherServiceTest {
         Faker faker = new Faker();
         long teacherId = faker.number().randomNumber();
         long courseId = faker.number().randomNumber();
-        Course course = new TestCourseBuilder().build();
+        Course course = new CourseBuilder().build();
         Teacher teacher = mock(Teacher.class);
         when(teacherDao.findById(teacherId)).thenReturn(Optional.of(teacher));
         when(courseDao.getById(courseId)).thenReturn(course);
@@ -82,7 +82,7 @@ class TeacherServiceTest {
     void should_throw_exception_when_create_course_given_teacher_not_found() {
         Faker faker = new Faker();
         long teacherId = faker.number().randomNumber();
-        Course course = new TestCourseBuilder().build();
+        Course course = new CourseBuilder().build();
         Mockito.when(teacherDao.findById(teacherId)).thenReturn(Optional.empty());
 
         DataNotFoundException exception = assertThrows(DataNotFoundException.class, () -> teacherService.createCourse(teacherId, course));

@@ -2,7 +2,7 @@ package com.github.winter4666.bpofea.course.domain.model;
 
 import com.github.javafaker.Faker;
 import com.github.winter4666.bpofea.common.domain.exception.DataInvalidException;
-import com.github.winter4666.bpofea.course.datafaker.TestCourseBuilder;
+import com.github.winter4666.bpofea.course.datafaker.CourseBuilder;
 import com.github.winter4666.bpofea.user.datafaker.TestTeacherBuilder;
 import com.github.winter4666.bpofea.user.domain.model.Teacher;
 import org.junit.jupiter.api.Test;
@@ -27,7 +27,7 @@ class CourseTest {
     @Test
     void should_react_correctly_on_created() {
         Teacher teacher = mock(Teacher.class);
-        Course course = new TestCourseBuilder().build();
+        Course course = new CourseBuilder().build();
 
         course.onCreated(teacher);
 
@@ -38,7 +38,7 @@ class CourseTest {
 
     @Test
     void should_throw_exception_when_created_given_stop_date_is_before_start_date() {
-        Course course = new TestCourseBuilder().startDate(LocalDate.of(2023, 5, 1)).stopDate(LocalDate.of(2023, 1, 1)).build();
+        Course course = new CourseBuilder().startDate(LocalDate.of(2023, 5, 1)).stopDate(LocalDate.of(2023, 1, 1)).build();
 
         DataInvalidException exception = assertThrows(DataInvalidException.class, () -> course.onCreated(mock(Teacher.class)));
 
@@ -47,7 +47,7 @@ class CourseTest {
 
     @Test
     void should_throw_exception_when_created_given_duplicated_class_times_existed() {
-        Course course = new TestCourseBuilder().classTimes(List.of(new TestCourseBuilder.ClassTimeBuilder(), new TestCourseBuilder.ClassTimeBuilder())).build();
+        Course course = new CourseBuilder().classTimes(List.of(new CourseBuilder.ClassTimeBuilder(), new CourseBuilder.ClassTimeBuilder())).build();
 
         DataInvalidException exception = assertThrows(DataInvalidException.class, () -> course.onCreated(mock(Teacher.class)));
 
@@ -63,47 +63,47 @@ class CourseTest {
     static Stream<Arguments> coursePairWithoutCollisionProvider() {
         return Stream.of(
                 arguments(
-                        new TestCourseBuilder()
+                        new CourseBuilder()
                                 .startDate(LocalDate.of(2023, 1, 1))
                                 .stopDate(LocalDate.of(2023, 5, 1))
                                 .build(),
-                        new TestCourseBuilder()
+                        new CourseBuilder()
                                 .startDate(LocalDate.of(2023, 6, 1))
                                 .stopDate(LocalDate.of(2023, 7, 1))
                                 .build()
                 ),
                 arguments(
-                        new TestCourseBuilder()
+                        new CourseBuilder()
                                 .startDate(LocalDate.of(2023, 6, 1))
                                 .stopDate(LocalDate.of(2023, 7, 1))
                                 .build(),
-                        new TestCourseBuilder()
+                        new CourseBuilder()
                                 .startDate(LocalDate.of(2023, 1, 1))
                                 .stopDate(LocalDate.of(2023, 5, 1))
                                 .build()
                 ),
                 arguments(
-                        new TestCourseBuilder()
+                        new CourseBuilder()
                                 .startDate(LocalDate.of(2023, 1, 1))
                                 .stopDate(LocalDate.of(2023, 5, 1))
-                                .classTimes(List.of(new TestCourseBuilder.ClassTimeBuilder().dayOfWeek(DayOfWeek.MONDAY)))
+                                .classTimes(List.of(new CourseBuilder.ClassTimeBuilder().dayOfWeek(DayOfWeek.MONDAY)))
                                 .build(),
-                        new TestCourseBuilder()
+                        new CourseBuilder()
                                 .startDate(LocalDate.of(2023, 1, 1))
                                 .stopDate(LocalDate.of(2023, 5, 1))
-                                .classTimes(List.of(new TestCourseBuilder.ClassTimeBuilder().dayOfWeek(DayOfWeek.TUESDAY)))
+                                .classTimes(List.of(new CourseBuilder.ClassTimeBuilder().dayOfWeek(DayOfWeek.TUESDAY)))
                                 .build()
                 ),
                 arguments(
-                        new TestCourseBuilder()
+                        new CourseBuilder()
                                 .startDate(LocalDate.of(2023, 1, 1))
                                 .stopDate(LocalDate.of(2023, 5, 1))
-                                .classTimes(List.of(new TestCourseBuilder.ClassTimeBuilder().dayOfWeek(DayOfWeek.MONDAY)))
+                                .classTimes(List.of(new CourseBuilder.ClassTimeBuilder().dayOfWeek(DayOfWeek.MONDAY)))
                                 .build(),
-                        new TestCourseBuilder()
+                        new CourseBuilder()
                                 .startDate(LocalDate.of(2023, 3, 1))
                                 .stopDate(LocalDate.of(2023, 5, 1))
-                                .classTimes(List.of(new TestCourseBuilder.ClassTimeBuilder().dayOfWeek(DayOfWeek.TUESDAY)))
+                                .classTimes(List.of(new CourseBuilder.ClassTimeBuilder().dayOfWeek(DayOfWeek.TUESDAY)))
                                 .build()
                 )
         );
@@ -111,8 +111,8 @@ class CourseTest {
 
     @Test
     void should_return_true_when_invoke_collide_with_given_collision_existed() {
-        Course course1 = new TestCourseBuilder().build();
-        Course course2 = new TestCourseBuilder().build();
+        Course course1 = new CourseBuilder().build();
+        Course course2 = new CourseBuilder().build();
         assertThat(course1.collideWith(course2), equalTo(true));
     }
 
@@ -128,18 +128,18 @@ class CourseTest {
         TestTeacherBuilder teacherBuilder1 = new TestTeacherBuilder().id(teacherIds.get(0));
         TestTeacherBuilder teacherBuilder2 = new TestTeacherBuilder().id(teacherIds.get(1));
         List<String> courseNames = Stream.generate(() -> faker.educator().course()).distinct().limit(2).toList();
-        Course course = new TestCourseBuilder().name(courseNames.get(0)).teacher(teacherBuilder1).build();
+        Course course = new CourseBuilder().name(courseNames.get(0)).teacher(teacherBuilder1).build();
 
         return Stream.of(
                 Arguments.of(course, course, true),
                 Arguments.of(course, null, false),
                 Arguments.of(course, new Object(), false),
-                Arguments.of(new TestCourseBuilder().name(courseNames.get(0)).teacher(teacherBuilder1).build(),
-                        new TestCourseBuilder().name(courseNames.get(0)).teacher(teacherBuilder1).build(), true),
-                Arguments.of(new TestCourseBuilder().name(courseNames.get(0)).teacher(teacherBuilder1).build(),
-                        new TestCourseBuilder().name(courseNames.get(1)).teacher(teacherBuilder1).build(), false),
-                Arguments.of(new TestCourseBuilder().name(courseNames.get(0)).teacher(teacherBuilder1).build(),
-                        new TestCourseBuilder().name(courseNames.get(0)).teacher(teacherBuilder2).build(), false)
+                Arguments.of(new CourseBuilder().name(courseNames.get(0)).teacher(teacherBuilder1).build(),
+                        new CourseBuilder().name(courseNames.get(0)).teacher(teacherBuilder1).build(), true),
+                Arguments.of(new CourseBuilder().name(courseNames.get(0)).teacher(teacherBuilder1).build(),
+                        new CourseBuilder().name(courseNames.get(1)).teacher(teacherBuilder1).build(), false),
+                Arguments.of(new CourseBuilder().name(courseNames.get(0)).teacher(teacherBuilder1).build(),
+                        new CourseBuilder().name(courseNames.get(0)).teacher(teacherBuilder2).build(), false)
         );
     }
 
@@ -156,7 +156,7 @@ class CourseTest {
     @Test
     public void should_not_set_start_date_when_set_start_date_given_parameter_is_null() {
         LocalDate startDate = LocalDate.of(2022, 1, 1);
-        Course course = new TestCourseBuilder().startDate(startDate).build();
+        Course course = new CourseBuilder().startDate(startDate).build();
 
         course.setStartDateIfNotNull(null);
 
@@ -176,7 +176,7 @@ class CourseTest {
     @Test
     public void should_not_set_stop_date_when_set_start_date_given_parameter_is_null() {
         LocalDate stopDate = LocalDate.of(2022, 1, 1);
-        Course course = new TestCourseBuilder().stopDate(stopDate).build();
+        Course course = new CourseBuilder().stopDate(stopDate).build();
 
         course.setStopDateIfNotNull(null);
 
@@ -186,7 +186,7 @@ class CourseTest {
     @Test
     public void should_set_class_times_when_set_start_date_given_parameter_not_null() {
         Course course = new Course();
-        List<ClassTime> classTimes = List.of(new TestCourseBuilder.ClassTimeBuilder().build());
+        List<ClassTime> classTimes = List.of(new CourseBuilder.ClassTimeBuilder().build());
 
         course.setClassTimesIfNotNull(classTimes);
 
@@ -195,12 +195,12 @@ class CourseTest {
 
     @Test
     public void should_not_set_class_times_when_set_start_date_given_parameter_is_null() {
-        List<TestCourseBuilder.ClassTimeBuilder> classTimeBuilders = List.of(new TestCourseBuilder.ClassTimeBuilder());
-        Course course = new TestCourseBuilder().classTimes(classTimeBuilders).build();
+        List<CourseBuilder.ClassTimeBuilder> classTimeBuilders = List.of(new CourseBuilder.ClassTimeBuilder());
+        Course course = new CourseBuilder().classTimes(classTimeBuilders).build();
 
         course.setStopDateIfNotNull(null);
 
-        assertThat(course.getClassTimes(), equalTo(classTimeBuilders.stream().map(TestCourseBuilder.ClassTimeBuilder::build).toList()));
+        assertThat(course.getClassTimes(), equalTo(classTimeBuilders.stream().map(CourseBuilder.ClassTimeBuilder::build).toList()));
     }
 
 }

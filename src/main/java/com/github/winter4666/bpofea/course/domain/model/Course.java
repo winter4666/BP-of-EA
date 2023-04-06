@@ -1,6 +1,7 @@
 package com.github.winter4666.bpofea.course.domain.model;
 
 import com.github.winter4666.bpofea.common.domain.exception.DataInvalidException;
+import com.github.winter4666.bpofea.common.domain.validation.ValidatorHolder;
 import com.github.winter4666.bpofea.user.domain.model.Teacher;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
@@ -114,7 +115,11 @@ public class Course {
         return Objects.hash(name, teacher.getId());
     }
 
-    public static com.github.winter4666.bpofea.course.domain.model.CourseBuilder builder() {
-        return new com.github.winter4666.bpofea.course.domain.model.CourseBuilder();
+    public static class CourseBuilder {
+        public Course build() {
+            Course course = new Course(id, name, startDate, stopDate, classTimes$value, capacity, currentStudentNumber, teacher);
+            ValidatorHolder.get().validateAndThrowExceptionIfNotValid(course);
+            return course;
+        }
     }
 }

@@ -2,7 +2,7 @@ package com.github.winter4666.bpofea.course;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.winter4666.bpofea.course.datafaker.TestCourseBuilder;
+import com.github.winter4666.bpofea.course.datafaker.CourseBuilder;
 import com.github.winter4666.bpofea.testsupport.RdbDaoTest;
 import io.restassured.http.ContentType;
 import org.apache.commons.lang3.time.DateFormatUtils;
@@ -37,7 +37,7 @@ public class CourseE2EIT extends RdbDaoTest {
     void should_update_course_successfully() throws JsonProcessingException {
         long courseId = new SimpleJdbcInsert(jdbcTemplate).withTableName("course")
                 .usingGeneratedKeyColumns("id")
-                .executeAndReturnKey(new TestCourseBuilder().buildArgsForDbInsertion()).longValue();
+                .executeAndReturnKey(new CourseBuilder().buildArgsForDbInsertion()).longValue();
         Map<String, Object> updateCourseRequest = new HashMap<>(){{
             put("startDate", LocalDate.of(2023,2,1));
         }};

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
 import com.github.winter4666.bpofea.course.controller.dto.CourseMapperImpl;
 import com.github.winter4666.bpofea.course.controller.dto.CourseResponseMapperImpl;
-import com.github.winter4666.bpofea.course.datafaker.TestCourseBuilder;
+import com.github.winter4666.bpofea.course.datafaker.CourseBuilder;
 import com.github.winter4666.bpofea.course.domain.model.Course;
 import com.github.winter4666.bpofea.user.domain.model.Teacher;
 import com.github.winter4666.bpofea.user.domain.service.TeacherService;
@@ -59,7 +59,7 @@ class TeacherControllerIT {
     void should_create_course_successfully() throws Exception {
         Faker faker = new Faker();
         long teacherId = faker.number().randomNumber();
-        TestCourseBuilder courseBuilder = new TestCourseBuilder().id(new Faker().random().nextLong());
+        CourseBuilder courseBuilder = new CourseBuilder().id(new Faker().random().nextLong());
         Course course = courseBuilder.build();
 
         when(teacherService.createCourse(eq(teacherId), refEq(course, "id", "teacher", "currentStudentNumber"))).thenReturn(course);

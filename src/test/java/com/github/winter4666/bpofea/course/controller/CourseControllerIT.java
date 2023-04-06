@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
 import com.github.winter4666.bpofea.common.domain.model.Page;
 import com.github.winter4666.bpofea.common.domain.model.PageOptions;
-import com.github.winter4666.bpofea.course.datafaker.TestCourseBuilder;
+import com.github.winter4666.bpofea.course.datafaker.CourseBuilder;
 import com.github.winter4666.bpofea.course.domain.model.Course;
 import com.github.winter4666.bpofea.course.domain.service.CourseService;
 import org.junit.jupiter.api.Test;
@@ -46,7 +46,7 @@ class CourseControllerIT {
         Faker faker = new Faker();
         int perPage = (int)faker.number().randomNumber();
         int page = (int)faker.number().randomNumber();
-        TestCourseBuilder courseBuilder = new TestCourseBuilder().id(faker.random().nextLong());
+        CourseBuilder courseBuilder = new CourseBuilder().id(faker.random().nextLong());
         Course course = courseBuilder.build();
         long totalElements = faker.number().randomNumber();
         when(courseService.getCourses(course.getName(), new PageOptions(perPage, page))).thenReturn(new Page<>(List.of(course), totalElements));
@@ -72,7 +72,7 @@ class CourseControllerIT {
 
     @Test
     void should_update_course_successfully() throws Exception {
-        TestCourseBuilder courseBuilder = new TestCourseBuilder().id(new Faker().random().nextLong());
+        CourseBuilder courseBuilder = new CourseBuilder().id(new Faker().random().nextLong());
         Course course = courseBuilder.build();
         Map<String, Object> updateCourseRequest = new HashMap<>(){{
             put("startDate", course.getStartDate());

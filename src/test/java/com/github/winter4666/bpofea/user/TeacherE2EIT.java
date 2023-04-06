@@ -3,7 +3,7 @@ package com.github.winter4666.bpofea.user;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
-import com.github.winter4666.bpofea.course.datafaker.TestCourseBuilder;
+import com.github.winter4666.bpofea.course.datafaker.CourseBuilder;
 import com.github.winter4666.bpofea.testsupport.RdbDaoTest;
 import com.github.winter4666.bpofea.user.datafaker.TestTeacherBuilder;
 import io.restassured.http.ContentType;
@@ -127,7 +127,7 @@ public class TeacherE2EIT extends RdbDaoTest {
                 }).longValue();
         long courseId = new SimpleJdbcInsert(jdbcTemplate).withTableName("course")
                 .usingGeneratedKeyColumns("id")
-                .executeAndReturnKey(new TestCourseBuilder().teacher(new TestTeacherBuilder().id(teacherId)).buildArgsForDbInsertion()).longValue();
+                .executeAndReturnKey(new CourseBuilder().teacher(new TestTeacherBuilder().id(teacherId)).buildArgsForDbInsertion()).longValue();
 
         when().delete("/teachers/{teacherId}/courses/{courseId}", teacherId, courseId).then().statusCode(HttpStatus.NO_CONTENT.value());
 

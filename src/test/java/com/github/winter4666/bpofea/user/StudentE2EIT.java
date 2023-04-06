@@ -3,7 +3,7 @@ package com.github.winter4666.bpofea.user;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
-import com.github.winter4666.bpofea.course.datafaker.TestCourseBuilder;
+import com.github.winter4666.bpofea.course.datafaker.CourseBuilder;
 import com.github.winter4666.bpofea.testsupport.RdbDaoTest;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.Test;
@@ -44,7 +44,7 @@ public class StudentE2EIT extends RdbDaoTest {
                 }).longValue();
         long courseId = new SimpleJdbcInsert(jdbcTemplate).withTableName("course")
                 .usingGeneratedKeyColumns("id")
-                .executeAndReturnKey(new TestCourseBuilder().buildArgsForDbInsertion()).longValue();
+                .executeAndReturnKey(new CourseBuilder().buildArgsForDbInsertion()).longValue();
 
         given().contentType(ContentType.JSON).body(objectMapper.writeValueAsString(new HashMap<>(){
                     {
@@ -70,10 +70,10 @@ public class StudentE2EIT extends RdbDaoTest {
         List<String> courseNames = Stream.generate(() -> faker.educator().course()).distinct().limit(2).toList();
         long courseId1 = new SimpleJdbcInsert(jdbcTemplate).withTableName("course")
                 .usingGeneratedKeyColumns("id")
-                .executeAndReturnKey(new TestCourseBuilder().name(courseNames.get(0)).buildArgsForDbInsertion()).longValue();
+                .executeAndReturnKey(new CourseBuilder().name(courseNames.get(0)).buildArgsForDbInsertion()).longValue();
         long courseId2 = new SimpleJdbcInsert(jdbcTemplate).withTableName("course")
                 .usingGeneratedKeyColumns("id")
-                .executeAndReturnKey(new TestCourseBuilder()
+                .executeAndReturnKey(new CourseBuilder()
                         .name(courseNames.get(1))
                         .startDate(LocalDate.of(2023, 9, 1))
                         .stopDate(LocalDate.of(2023, 10, 1))
