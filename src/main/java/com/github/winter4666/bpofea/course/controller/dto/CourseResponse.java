@@ -1,6 +1,7 @@
 package com.github.winter4666.bpofea.course.controller.dto;
 
 import com.github.winter4666.bpofea.course.domain.model.ClassTime;
+import com.github.winter4666.bpofea.course.domain.model.Course;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -13,5 +14,6 @@ public record CourseResponse(
         List<ClassTime> classTimes,
         Long capacity,
         Long teacherId,
-        Long currentStudentNumber) {
+        Long currentStudentNumber,
+        Course.State state) {
 }

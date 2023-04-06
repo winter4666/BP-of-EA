@@ -36,6 +36,8 @@ public class CourseBuilder {
 
     private Teacher teacher = new TeacherBuilder().id(FAKER.number().randomNumber()).build();
 
+    private Course.State state = Course.State.DRAFT;
+
     public CourseBuilder id(Long id) {
         this.id = id;
         return this;
@@ -89,7 +91,8 @@ public class CourseBuilder {
                 .classTimes(classTimes)
                 .capacity(capacity)
                 .currentStudentNumber(currentStudentNumber)
-                .teacher(teacher);
+                .teacher(teacher)
+                .state(state);
     }
 
     public Map<String, Object> buildArgsForDbInsertion() throws JsonProcessingException {
@@ -102,6 +105,7 @@ public class CourseBuilder {
                 put("capacity", capacity);
                 put("current_student_number", currentStudentNumber);
                 put("teacher_id", teacher.getId());
+                put("state", state);
             }
         };
     }
@@ -126,6 +130,7 @@ public class CourseBuilder {
                 put("capacity", capacity);
                 put("currentStudentNumber", currentStudentNumber);
                 put("teacherId", teacher.getId());
+                put("state", state.toString());
             }
         };
     }

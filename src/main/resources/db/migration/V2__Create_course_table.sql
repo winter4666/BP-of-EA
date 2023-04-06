@@ -7,5 +7,6 @@ create table course (
     capacity int unsigned not null,
     current_student_number int unsigned not null,
     teacher_id int unsigned not null,
+    state varchar(16) not null,
     PRIMARY KEY (id)
 );

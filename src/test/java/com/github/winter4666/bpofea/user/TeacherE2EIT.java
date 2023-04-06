@@ -113,7 +113,8 @@ public class TeacherE2EIT extends RdbDaoTest {
                                 withJsonPath("$[0].stopTime[0]", equalTo(((LocalTime) classTime.get("stopTime")).getHour())),
                                 withJsonPath("$[0].stopTime[1]", equalTo(((LocalTime) classTime.get("stopTime")).getMinute()))
                         )
-                )));
+                )),
+                () -> assertThat(courseInDb.get("state"), equalTo("DRAFT")));
     }
 
     @Test

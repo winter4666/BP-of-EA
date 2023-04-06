@@ -50,6 +50,9 @@ public class Course {
     @ManyToOne(fetch = FetchType.LAZY)
     private Teacher teacher;
 
+    @Enumerated(EnumType.STRING)
+    private State state;
+
     public boolean collideWith(Course course) {
         if(startDate.isBefore(course.startDate)) {
             if(stopDate.isBefore(course.startDate)) {
@@ -104,7 +107,8 @@ public class Course {
 
     public static class CourseBuilder {
         public Course build() {
-            Course course = new Course(id, name, startDate, stopDate, classTimes, capacity, currentStudentNumber == null ? 0L : currentStudentNumber, teacher);
+            Course course = new Course(id, name, startDate, stopDate, classTimes, capacity, Objects.requireNonNullElse(currentStudentNumber, 0L), teacher,
+                    Objects.requireNonNullElse(state, State.DRAFT));
             ValidatorHolder.get().validateAndThrowExceptionIfNotValid(course);
             if(!startDate.isBefore(stopDate)) {
                 throw new DataInvalidException("Stop data should be later than start data in a course");
@@ -114,5 +118,9 @@ public class Course {
             }
             return course;
         }
+    }
+
+    public enum State {
+        DRAFT, PUBLISHED
     }
 }

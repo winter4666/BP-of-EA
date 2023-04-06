@@ -59,7 +59,8 @@ class RdbCourseDaoIT extends RdbDaoTest {
                         )
                 )),
                 () -> assertThat(courseInDb.get("capacity"), equalTo(course.getCapacity())),
-                () -> assertThat(courseInDb.get("current_student_number"), equalTo(course.getCurrentStudentNumber())));
+                () -> assertThat(courseInDb.get("current_student_number"), equalTo(course.getCurrentStudentNumber())),
+                () -> assertThat(courseInDb.get("state"), equalTo(course.getState().toString())));
     }
 
     @Test
@@ -120,6 +121,7 @@ class RdbCourseDaoIT extends RdbDaoTest {
                 () -> assertThat(courseInDb.getClassTimes().get(0).dayOfWeek(), equalTo(course.getClassTimes().get(0).dayOfWeek())),
                 () -> assertThat(courseInDb.getClassTimes().get(0).startTime(), equalTo(course.getClassTimes().get(0).startTime())),
                 () -> assertThat(courseInDb.getClassTimes().get(0).stopTime(), equalTo(course.getClassTimes().get(0).stopTime())),
-                () -> assertThat(courseInDb.getCapacity(), equalTo(course.getCapacity())));
+                () -> assertThat(courseInDb.getCapacity(), equalTo(course.getCapacity())),
+                () -> assertThat(courseInDb.getState(), equalTo(course.getState())));
     }
 }
