@@ -6,17 +6,13 @@ import com.github.winter4666.bpofea.course.domain.model.Course;
 import com.github.winter4666.bpofea.course.domain.service.CourseDao;
 import com.github.winter4666.bpofea.user.domain.model.Teacher;
 import jakarta.transaction.Transactional;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Service
-@Validated
 @RequiredArgsConstructor
 public class TeacherService {
 
@@ -24,7 +20,7 @@ public class TeacherService {
 
     private final CourseDao courseDao;
 
-    public Teacher addTeacher(@NotBlank String name, @NotNull String jobNumber) {
+    public Teacher addTeacher(String name, String jobNumber) {
         Teacher teacher = Teacher.builder().name(name).jobNumber(jobNumber).build();;
         return teacherDao.save(teacher);
     }

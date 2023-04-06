@@ -3,6 +3,7 @@ package com.github.winter4666.bpofea.user.domain.model;
 import com.github.winter4666.bpofea.common.domain.exception.DataCollisionException;
 import com.github.winter4666.bpofea.course.datafaker.CourseBuilder;
 import com.github.winter4666.bpofea.course.domain.model.Course;
+import com.github.winter4666.bpofea.user.datafaker.TeacherBuilder;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
@@ -27,10 +28,10 @@ class TeacherTest {
 
     @Test
     void should_remove_course_successfully() {
-        Course course = mock(Course.class);
-        Teacher teacher = Teacher.builder().courses(new HashSet<>(){{add(course);}}).build();
+        CourseBuilder courseBuilder = new CourseBuilder();
+        Teacher teacher = new TeacherBuilder().coursesFromBuilders(new HashSet<>(){{add(courseBuilder);}}).build();
 
-        teacher.removeCourse(course);
+        teacher.removeCourse(courseBuilder.build());
 
         assertThat(teacher.getCourses(), is(empty()));
     }
@@ -48,7 +49,7 @@ class TeacherTest {
     void should_return_ture_when_invoke_have_any_course_colliding_with_given_collision_existed() {
         Course course1 = mock(Course.class);
         Course course2 = new CourseBuilder().build();
-        Teacher teacher = Teacher.builder().courses(Set.of(course1)).build();
+        Teacher teacher = new TeacherBuilder().courses(Set.of(course1)).build();
         when(course1.collideWith(course2)).thenReturn(true);
 
         boolean result = teacher.haveAnyCourseCollidingWith(course2);

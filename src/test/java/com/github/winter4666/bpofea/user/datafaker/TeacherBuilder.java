@@ -1,0 +1,47 @@
+package com.github.winter4666.bpofea.user.datafaker;
+
+import com.github.javafaker.Faker;
+import com.github.winter4666.bpofea.course.datafaker.CourseBuilder;
+import com.github.winter4666.bpofea.course.domain.model.Course;
+import com.github.winter4666.bpofea.user.domain.model.Teacher;
+
+import java.util.Set;
+import java.util.stream.Collectors;
+
+public class TeacherBuilder {
+
+    private static final Faker FAKER = new Faker();
+
+    private Long id;
+
+    private String name = FAKER.name().name();
+
+    private String jobNumber = String.valueOf(FAKER.number().randomNumber());
+
+    private Set<Course> courses;
+
+    public TeacherBuilder id(Long id) {
+        this.id = id;
+        return this;
+    }
+
+    public TeacherBuilder coursesFromBuilders(Set<CourseBuilder> courseBuilders) {
+        this.courses = courseBuilders == null ? null : courseBuilders.stream().map(CourseBuilder::build).collect(Collectors.toSet());
+        return this;
+    }
+
+    public TeacherBuilder courses(Set<Course> courses) {
+        this.courses = courses;
+        return this;
+    }
+
+    public Teacher build() {
+        return Teacher.builder()
+                .id(id)
+                .name(name)
+                .jobNumber(jobNumber)
+                .courses(courses)
+                .build();
+    }
+
+}

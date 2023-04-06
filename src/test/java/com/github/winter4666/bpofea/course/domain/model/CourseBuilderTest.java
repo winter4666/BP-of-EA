@@ -19,14 +19,14 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class CourseBuilderTest {
 
     @ParameterizedTest
-    @MethodSource("courseProvider")
+    @MethodSource("courseBuilderProvider")
     void should_throw_exception_when_start_course_given_invalid_course(Course.CourseBuilder courseBuilder) {
         Exception exception = assertThrows(Exception.class, courseBuilder::build);
 
         assertThat(exception, anyOf(instanceOf(ConstraintViolationException.class), instanceOf(DataInvalidException.class)));
     }
 
-    static Stream<Course.CourseBuilder> courseProvider() {
+    static Stream<Course.CourseBuilder> courseBuilderProvider() {
         return Stream.of(
                 new CourseBuilder().name(" ").createCourseBuilder(),
                 new CourseBuilder().startDate(null).createCourseBuilder(),
