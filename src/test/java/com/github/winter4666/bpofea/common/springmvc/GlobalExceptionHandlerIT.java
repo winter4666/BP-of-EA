@@ -8,6 +8,7 @@ import com.github.winter4666.bpofea.common.domain.exception.DataNotFoundExceptio
 import com.github.winter4666.bpofea.mockmodule.controller.MockModelController;
 import com.github.winter4666.bpofea.mockmodule.domain.model.MockModel;
 import com.github.winter4666.bpofea.mockmodule.domain.service.MockModelService;
+import jakarta.persistence.OptimisticLockException;
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -93,6 +94,18 @@ class GlobalExceptionHandlerIT {
         String errorMessage = "data collided";
         MockModel mockModel = MockModel.builder().name(new Faker().name().fullName()).build();
         when(mockModelService.addMockModel(mockModel.getName())).thenThrow(new DataCollisionException(errorMessage));
+
+        MvcResult mvcResult =  mvc.perform(post("/mock_models").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(mockModel)))
+                .andExpectAll(status().isConflict()).andReturn();
+
+        assertThat(mvcResult.getResponse().getContentAsString(), equalTo(errorMessage));
+    }
+
+    @Test
+    void should_return_409_status_code_and_error_message_when_call_restful_api_given_optimistic_lock_exception_occurred() throws Exception {
+        String errorMessage = "data collided";
+        MockModel mockModel = MockModel.builder().name(new Faker().name().fullName()).build();
+        when(mockModelService.addMockModel(mockModel.getName())).thenThrow(new OptimisticLockException(errorMessage));
 
         MvcResult mvcResult =  mvc.perform(post("/mock_models").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(mockModel)))
                 .andExpectAll(status().isConflict()).andReturn();

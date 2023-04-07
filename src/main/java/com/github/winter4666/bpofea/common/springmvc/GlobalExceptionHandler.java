@@ -5,6 +5,7 @@ import com.github.winter4666.bpofea.common.domain.exception.DataCollisionExcepti
 import com.github.winter4666.bpofea.common.domain.exception.DataInvalidException;
 import com.github.winter4666.bpofea.common.domain.exception.DataNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.OptimisticLockException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
@@ -33,8 +34,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return this.handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
 
-    @ExceptionHandler(DataCollisionException.class)
-    public ResponseEntity<Object> handleDataCollisionException(DataCollisionException ex, WebRequest request) {
+    @ExceptionHandler({DataCollisionException.class, OptimisticLockException.class})
+    public ResponseEntity<Object> handleDataCollisionException(Exception ex, WebRequest request) {
         return this.handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.CONFLICT, request);
     }
 

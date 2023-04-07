@@ -38,6 +38,8 @@ public class CourseBuilder {
 
     private Course.State state = Course.State.DRAFT;
 
+    private final long version = 0L;
+
     public CourseBuilder id(Long id) {
         this.id = id;
         return this;
@@ -97,7 +99,8 @@ public class CourseBuilder {
                 .capacity(capacity)
                 .currentStudentNumber(currentStudentNumber)
                 .teacher(teacher)
-                .state(state);
+                .state(state)
+                .version(version);
     }
 
     public Map<String, Object> buildArgsForDbInsertion() throws JsonProcessingException {
@@ -111,6 +114,7 @@ public class CourseBuilder {
                 put("current_student_number", currentStudentNumber);
                 put("teacher_id", teacher.getId());
                 put("state", state);
+                put("version", version);
             }
         };
     }

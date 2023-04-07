@@ -54,6 +54,10 @@ public class Course {
     @Enumerated(EnumType.STRING)
     private State state;
 
+    @Getter(AccessLevel.NONE)
+    @Version
+    private long version;
+
     public boolean collideWith(Course course) {
         if(startDate.isBefore(course.startDate)) {
             if(stopDate.isBefore(course.startDate)) {
@@ -128,7 +132,7 @@ public class Course {
     public static class CourseBuilder {
         public Course build() {
             Course course = new Course(id, name, startDate, stopDate, classTimes, capacity, Objects.requireNonNullElse(currentStudentNumber, 0L), teacher,
-                    Objects.requireNonNullElse(state, State.DRAFT));
+                    Objects.requireNonNullElse(state, State.DRAFT), version);
             ValidatorHolder.get().validateAndThrowExceptionIfNotValid(course);
             if(!startDate.isBefore(stopDate)) {
                 throw new DataInvalidException("Stop data should be later than start data in a course");

@@ -60,8 +60,8 @@ class TeacherServiceTest {
 
         Course returnedCourse = teacherService.createCourse(teacherId, courseBuilder.buildCreateCourseRequest());
 
-        verify(teacher).createCourse(refEq(courseBuilder.build(), "teacher", "currentStudentNumber"));
-        assertThat(returnedCourse, sameFieldValuesAs(courseBuilder.build(), "teacher", "currentStudentNumber"));
+        verify(teacher).createCourse(refEq(courseBuilder.build(), "teacher", "currentStudentNumber", "version"));
+        assertThat(returnedCourse, sameFieldValuesAs(courseBuilder.build(), "teacher", "currentStudentNumber", "version"));
     }
 
     @Test

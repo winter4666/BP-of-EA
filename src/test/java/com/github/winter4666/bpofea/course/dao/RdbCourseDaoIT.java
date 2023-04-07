@@ -7,14 +7,16 @@ import com.github.winter4666.bpofea.common.domain.model.PageOptions;
 import com.github.winter4666.bpofea.course.datafaker.CourseBuilder;
 import com.github.winter4666.bpofea.course.domain.model.Course;
 import com.github.winter4666.bpofea.testsupport.RdbDaoTest;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.OptimisticLockException;
 import jakarta.transaction.Transactional;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.transaction.support.TransactionTemplate;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Map;
 import java.util.Set;
@@ -27,6 +29,7 @@ import static com.jayway.jsonpath.matchers.JsonPathMatchers.withJsonPath;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class RdbCourseDaoIT extends RdbDaoTest {
 
@@ -37,7 +40,7 @@ class RdbCourseDaoIT extends RdbDaoTest {
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
-    private TransactionTemplate transactionTemplate;
+    private EntityManager entityManager;
 
     @Test
     void should_insert_successfully() {
@@ -144,5 +147,18 @@ class RdbCourseDaoIT extends RdbDaoTest {
                 () -> assertThat(courseInDb.getClassTimes().get(0).stopTime(), equalTo(course.getClassTimes().get(0).stopTime())),
                 () -> assertThat(courseInDb.getCapacity(), equalTo(course.getCapacity())),
                 () -> assertThat(courseInDb.getState(), equalTo(course.getState())));
+    }
+
+    @Transactional
+    @Test
+    void should_throw_exception_when_update_course_given_collision_occurred() throws JsonProcessingException {
+        CourseBuilder courseBuilder = new CourseBuilder();
+        long courseId = new SimpleJdbcInsert(jdbcTemplate).withTableName("course").usingGeneratedKeyColumns("id")
+                .executeAndReturnKey(courseBuilder.buildArgsForDbInsertion()).longValue();
+        Course course = courseDao.findById(courseId).orElseThrow();
+        jdbcTemplate.update("update course set version = version + 1 where id = ?", courseId);
+        course.setStartDateIfNotNull(LocalDate.of(2023, 2, 1));
+
+        assertThrows(OptimisticLockException.class, () -> entityManager.flush());
     }
 }

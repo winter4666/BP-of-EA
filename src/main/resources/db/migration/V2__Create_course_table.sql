@@ -8,5 +8,6 @@ create table course (
     current_student_number int unsigned not null,
     teacher_id int unsigned not null,
     state varchar(16) not null,
+    version int unsigned not null,
     PRIMARY KEY (id)
 );
