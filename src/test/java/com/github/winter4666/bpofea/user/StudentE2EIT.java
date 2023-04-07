@@ -75,12 +75,13 @@ public class StudentE2EIT extends RdbDaoTest {
                     {put("student_number", String.valueOf(faker.number().randomNumber()));}
                 }).longValue();
         List<String> courseNames = Stream.generate(() -> faker.educator().course()).distinct().limit(2).toList();
+        CourseBuilder courseBuilder = new CourseBuilder().state(Course.State.PUBLISHED);
         long courseId1 = new SimpleJdbcInsert(jdbcTemplate).withTableName("course")
                 .usingGeneratedKeyColumns("id")
-                .executeAndReturnKey(new CourseBuilder().name(courseNames.get(0)).buildArgsForDbInsertion()).longValue();
+                .executeAndReturnKey(courseBuilder.name(courseNames.get(0)).buildArgsForDbInsertion()).longValue();
         long courseId2 = new SimpleJdbcInsert(jdbcTemplate).withTableName("course")
                 .usingGeneratedKeyColumns("id")
-                .executeAndReturnKey(new CourseBuilder()
+                .executeAndReturnKey(courseBuilder
                         .name(courseNames.get(1))
                         .startDate(LocalDate.of(2023, 9, 1))
                         .stopDate(LocalDate.of(2023, 10, 1))
@@ -101,7 +102,11 @@ public class StudentE2EIT extends RdbDaoTest {
         when().delete("/students/{studentId}/courses/{courseId}", studentId, courseId1).then().statusCode(HttpStatus.NO_CONTENT.value());
 
         List<Map<String, Object>> studentCourses = jdbcTemplate.queryForList("select * from student_course where student_id = ?", studentId);
-        assertThat(studentCourses.size(), is(equalTo(1)));
+        Map<String, Object> course = jdbcTemplate.queryForMap("select * from course where id = ?", courseId1);
+        assertAll(
+                () -> assertThat(studentCourses.size(), is(equalTo(1))),
+                () -> assertThat(course.get("current_student_number"), equalTo(courseBuilder.build().getCurrentStudentNumber() - 1))
+        );
     }
 
 }

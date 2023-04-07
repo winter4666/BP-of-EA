@@ -94,13 +94,22 @@ public class Course {
     }
 
     public void onChosen() {
-        if(state != State.PUBLISHED) {
-            throw new DataCollisionException("The state of the course is not published. CourseId = {}", id);
-        }
+        validateStateIsPublished();
         if(currentStudentNumber >= capacity) {
             throw new DataCollisionException("The people number in the course has reached to capacity. CourseId = {}", id);
         }
         currentStudentNumber++;
+    }
+
+    public void onRevoked() {
+        validateStateIsPublished();
+        currentStudentNumber--;
+    }
+
+    private void validateStateIsPublished() {
+        if(state != State.PUBLISHED) {
+            throw new DataCollisionException("The state of the course is not published. CourseId = {}", id);
+        }
     }
 
     @Override

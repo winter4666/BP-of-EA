@@ -42,6 +42,7 @@ class StudentTest {
 
         student.revokeChoice(course);
 
+        verify(course).onRevoked();
         assertThat(student.getCourses(), is(empty()));
     }
 }

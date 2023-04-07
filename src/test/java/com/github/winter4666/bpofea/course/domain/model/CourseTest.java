@@ -199,4 +199,14 @@ class CourseTest {
 
         assertThat(course.getCurrentStudentNumber(), equalTo(currentStudentNumber + 1));
     }
+
+    @Test
+    public void should_decrease_current_student_number_when_on_revoked_given_state_is_published() {
+        long currentStudentNumber = 10L;
+        Course course = new CourseBuilder().currentStudentNumber(currentStudentNumber).capacity(20L).state(Course.State.PUBLISHED).build();
+
+        course.onRevoked();
+
+        assertThat(course.getCurrentStudentNumber(), equalTo(currentStudentNumber - 1));
+    }
 }
