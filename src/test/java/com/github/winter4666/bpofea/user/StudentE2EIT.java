@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
 import com.github.winter4666.bpofea.course.datafaker.CourseBuilder;
+import com.github.winter4666.bpofea.course.domain.model.Course;
 import com.github.winter4666.bpofea.testsupport.RdbDaoTest;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.Test;
@@ -23,6 +24,7 @@ import static io.restassured.RestAssured.given;
 import static io.restassured.RestAssured.when;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public class StudentE2EIT extends RdbDaoTest {
@@ -42,9 +44,10 @@ public class StudentE2EIT extends RdbDaoTest {
                     {put("name", faker.educator().course());}
                     {put("student_number", String.valueOf(faker.number().randomNumber()));}
                 }).longValue();
+        CourseBuilder courseBuilder = new CourseBuilder().state(Course.State.PUBLISHED);
         long courseId = new SimpleJdbcInsert(jdbcTemplate).withTableName("course")
                 .usingGeneratedKeyColumns("id")
-                .executeAndReturnKey(new CourseBuilder().buildArgsForDbInsertion()).longValue();
+                .executeAndReturnKey(courseBuilder.buildArgsForDbInsertion()).longValue();
 
         given().contentType(ContentType.JSON).body(objectMapper.writeValueAsString(new HashMap<>(){
                     {
@@ -55,7 +58,11 @@ public class StudentE2EIT extends RdbDaoTest {
                 .then().statusCode(HttpStatus.CREATED.value());
 
         List<Map<String, Object>> studentCourses = jdbcTemplate.queryForList("select * from student_course where student_id = ? and course_id = ?", studentId, courseId);
-        assertThat(studentCourses, is(not(empty())));
+        Map<String, Object> course = jdbcTemplate.queryForMap("select * from course where id = ?", courseId);
+        assertAll(
+                () -> assertThat(studentCourses, is(not(empty()))),
+                () -> assertThat(course.get("current_student_number"), equalTo(courseBuilder.build().getCurrentStudentNumber() + 1))
+        );
     }
 
     @Test

@@ -18,7 +18,10 @@ class StudentTest {
     void should_choose_course_successfully() {
         Student student = new Student();
         Course course = mock(Course.class);
+
         student.chooseCourse(course);
+
+        verify(course).onChosen();
         assertThat(student.getCourses().iterator().next(), equalTo(course));
     }
 

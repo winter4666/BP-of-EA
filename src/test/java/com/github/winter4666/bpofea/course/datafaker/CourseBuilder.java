@@ -78,6 +78,11 @@ public class CourseBuilder {
         return this;
     }
 
+    public CourseBuilder state(Course.State state) {
+        this.state = state;
+        return this;
+    }
+
     public Course build() {
         return createCourseBuilder().build();
     }

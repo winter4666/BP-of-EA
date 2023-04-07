@@ -37,6 +37,7 @@ public class Student extends User {
         if(haveAnyCourseCollidingWith(course)) {
             throw new DataCollisionException("The student has chosen some course colliding with the new course. Student id = {} ", getId());
         }
+        course.onChosen();
         courses.add(course);
     }
 

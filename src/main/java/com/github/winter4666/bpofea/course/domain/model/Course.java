@@ -1,5 +1,6 @@
 package com.github.winter4666.bpofea.course.domain.model;
 
+import com.github.winter4666.bpofea.common.domain.exception.DataCollisionException;
 import com.github.winter4666.bpofea.common.domain.exception.DataInvalidException;
 import com.github.winter4666.bpofea.common.domain.validation.ValidatorHolder;
 import com.github.winter4666.bpofea.user.domain.model.Teacher;
@@ -90,6 +91,16 @@ public class Course {
             return;
         }
         this.classTimes = classTimes;
+    }
+
+    public void onChosen() {
+        if(state != State.PUBLISHED) {
+            throw new DataCollisionException("The state of the course is not published. CourseId = {}", id);
+        }
+        if(currentStudentNumber >= capacity) {
+            throw new DataCollisionException("The people number in the course has reached to capacity. CourseId = {}", id);
+        }
+        currentStudentNumber++;
     }
 
     @Override

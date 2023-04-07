@@ -1,11 +1,13 @@
 package com.github.winter4666.bpofea.course.domain.model;
 
 import com.github.javafaker.Faker;
+import com.github.winter4666.bpofea.common.domain.exception.DataCollisionException;
 import com.github.winter4666.bpofea.course.datafaker.CourseBuilder;
 import com.github.winter4666.bpofea.user.datafaker.TeacherBuilder;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.time.DayOfWeek;
@@ -15,6 +17,7 @@ import java.util.stream.Stream;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 class CourseTest {
@@ -168,4 +171,32 @@ class CourseTest {
         assertThat(course.getClassTimes(), equalTo(classTimeBuilders.stream().map(CourseBuilder.ClassTimeBuilder::build).toList()));
     }
 
+    @ParameterizedTest
+    @EnumSource(value = Course.State.class, names = {"PUBLISHED"}, mode = EnumSource.Mode.EXCLUDE)
+    public void should_throw_exception_when_on_chosen_given_state_is_not_published(Course.State state) {
+        Course course = new CourseBuilder().state(state).build();
+
+        DataCollisionException exception = assertThrows(DataCollisionException.class, course::onChosen) ;
+
+        assertThat(exception.getMessage(), equalTo("The state of the course is not published. CourseId = " + course.getId()));
+    }
+
+    @Test
+    public void should_throw_exception_when_on_chosen_given_student_number_reach_to_capacity() {
+        Course course = new CourseBuilder().currentStudentNumber(20L).capacity(20L).state(Course.State.PUBLISHED).build();
+
+        DataCollisionException exception = assertThrows(DataCollisionException.class, course::onChosen) ;
+
+        assertThat(exception.getMessage(), equalTo("The people number in the course has reached to capacity. CourseId = " + course.getId()));
+    }
+
+    @Test
+    public void should_increase_current_student_number_when_on_chosen_given_state_is_published() {
+        long currentStudentNumber = 10L;
+        Course course = new CourseBuilder().currentStudentNumber(currentStudentNumber).capacity(20L).state(Course.State.PUBLISHED).build();
+
+        course.onChosen();
+
+        assertThat(course.getCurrentStudentNumber(), equalTo(currentStudentNumber + 1));
+    }
 }
