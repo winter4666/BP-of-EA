@@ -8,8 +8,12 @@ import com.github.winter4666.bpofea.course.domain.model.Course;
 import com.github.winter4666.bpofea.testsupport.RdbDaoTest;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.slf4j.helpers.MessageFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.system.CapturedOutput;
+import org.springframework.boot.test.system.OutputCaptureExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -35,8 +39,9 @@ public class StudentE2EIT extends RdbDaoTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @ExtendWith(OutputCaptureExtension.class)
     @Test
-    void should_choose_course_successfully() throws JsonProcessingException {
+    void should_choose_course_successfully(CapturedOutput output) throws JsonProcessingException {
         Faker faker = new Faker();
         long studentId = new SimpleJdbcInsert(jdbcTemplate).withTableName("student")
                 .usingGeneratedKeyColumns("id")
@@ -44,7 +49,7 @@ public class StudentE2EIT extends RdbDaoTest {
                     {put("name", faker.educator().course());}
                     {put("student_number", String.valueOf(faker.number().randomNumber()));}
                 }).longValue();
-        CourseBuilder courseBuilder = new CourseBuilder().state(Course.State.PUBLISHED);
+        CourseBuilder courseBuilder = new CourseBuilder().currentStudentNumber(29L).capacity(30L).state(Course.State.PUBLISHED);
         long courseId = new SimpleJdbcInsert(jdbcTemplate).withTableName("course")
                 .usingGeneratedKeyColumns("id")
                 .executeAndReturnKey(courseBuilder.buildArgsForDbInsertion()).longValue();
@@ -61,8 +66,10 @@ public class StudentE2EIT extends RdbDaoTest {
         Map<String, Object> course = jdbcTemplate.queryForMap("select * from course where id = ?", courseId);
         assertAll(
                 () -> assertThat(studentCourses, is(not(empty()))),
-                () -> assertThat(course.get("current_student_number"), equalTo(courseBuilder.build().getCurrentStudentNumber() + 1))
+                () -> assertThat(course.get("current_student_number"), equalTo(courseBuilder.build().getCurrentStudentNumber() + 1)),
+                () -> assertThat(output.getOut(), containsString(MessageFormatter.format("Course {} is full", course.get("name")).getMessage()))
         );
+
     }
 
     @Test

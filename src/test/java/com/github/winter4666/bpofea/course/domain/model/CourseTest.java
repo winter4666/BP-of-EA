@@ -16,7 +16,9 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
@@ -197,7 +199,23 @@ class CourseTest {
 
         course.onChosen();
 
-        assertThat(course.getCurrentStudentNumber(), equalTo(currentStudentNumber + 1));
+        assertAll(
+                () -> assertThat(course.getCurrentStudentNumber(), equalTo(currentStudentNumber + 1)),
+                () -> assertThat(course.getDomainEvents(), empty())
+        );
+    }
+
+    @Test
+    public void should_increase_current_student_number_and_register_event_when_on_chosen_given_state_is_published_and_course_is_full() {
+        long currentStudentNumber = 19L;
+        Course course = new CourseBuilder().currentStudentNumber(currentStudentNumber).capacity(20L).state(Course.State.PUBLISHED).build();
+
+        course.onChosen();
+
+        assertAll(
+                () -> assertThat(course.getCurrentStudentNumber(), equalTo(currentStudentNumber + 1)),
+                () -> assertThat(course.getDomainEvents().size(), equalTo(1))
+        );
     }
 
     @Test

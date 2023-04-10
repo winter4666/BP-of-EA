@@ -2,7 +2,9 @@ package com.github.winter4666.bpofea.course.domain.model;
 
 import com.github.winter4666.bpofea.common.domain.exception.DataCollisionException;
 import com.github.winter4666.bpofea.common.domain.exception.DataInvalidException;
+import com.github.winter4666.bpofea.common.domain.model.DomainEventPublishable;
 import com.github.winter4666.bpofea.common.domain.validation.ValidatorHolder;
+import com.github.winter4666.bpofea.course.domain.event.CourseFullEvent;
 import com.github.winter4666.bpofea.user.domain.model.Teacher;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
@@ -15,6 +17,7 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -22,9 +25,8 @@ import java.util.Objects;
 @DynamicUpdate
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
-@Builder
 @Getter
-public class Course {
+public class Course implements DomainEventPublishable<CourseFullEvent> {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
@@ -57,6 +59,23 @@ public class Course {
     @Getter(AccessLevel.NONE)
     @Version
     private long version;
+
+    @Transient
+    private List<CourseFullEvent> domainEvents = new ArrayList<>();
+
+    @Builder
+    public Course(Long id, String name, LocalDate startDate, LocalDate stopDate, List<ClassTime> classTimes, Long capacity, Long currentStudentNumber, Teacher teacher, State state, long version) {
+        this.id = id;
+        this.name = name;
+        this.startDate = startDate;
+        this.stopDate = stopDate;
+        this.classTimes = classTimes;
+        this.capacity = capacity;
+        this.currentStudentNumber = currentStudentNumber;
+        this.teacher = teacher;
+        this.state = state;
+        this.version = version;
+    }
 
     public boolean collideWith(Course course) {
         if(startDate.isBefore(course.startDate)) {
@@ -103,6 +122,9 @@ public class Course {
             throw new DataCollisionException("The people number in the course has reached to capacity. CourseId = {}", id);
         }
         currentStudentNumber++;
+        if(currentStudentNumber.equals(capacity)) {
+            registerEvent(new CourseFullEvent(this));
+        }
     }
 
     public void onRevoked() {
