@@ -1,4 +1,4 @@
-package com.github.winter4666.bpofea.testsupport;
+package com.github.winter4666.bpofea.testsupport.MySQL;
 
 import org.testcontainers.containers.MySQLContainer;
 

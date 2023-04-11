@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
 import com.github.winter4666.bpofea.course.datafaker.CourseBuilder;
 import com.github.winter4666.bpofea.course.domain.model.Course;
-import com.github.winter4666.bpofea.testsupport.RdbDaoTest;
+import com.github.winter4666.bpofea.testsupport.MySQL.MySQLTestable;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,7 +31,7 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-public class StudentE2EIT extends RdbDaoTest {
+public class StudentE2EIT implements MySQLTestable {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;

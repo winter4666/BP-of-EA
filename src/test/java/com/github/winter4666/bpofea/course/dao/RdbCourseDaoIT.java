@@ -6,7 +6,7 @@ import com.github.winter4666.bpofea.common.domain.model.Page;
 import com.github.winter4666.bpofea.common.domain.model.PageOptions;
 import com.github.winter4666.bpofea.course.datafaker.CourseBuilder;
 import com.github.winter4666.bpofea.course.domain.model.Course;
-import com.github.winter4666.bpofea.testsupport.RdbDaoTest;
+import com.github.winter4666.bpofea.testsupport.MySQL.MySQLTestable;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.OptimisticLockException;
 import jakarta.transaction.Transactional;
@@ -31,7 +31,7 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class RdbCourseDaoIT extends RdbDaoTest {
+class RdbCourseDaoIT implements MySQLTestable {
 
     @Autowired
     private RdbCourseDao courseDao;

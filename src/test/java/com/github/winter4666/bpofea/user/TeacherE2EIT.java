@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
 import com.github.winter4666.bpofea.course.datafaker.CourseBuilder;
-import com.github.winter4666.bpofea.testsupport.RdbDaoTest;
+import com.github.winter4666.bpofea.testsupport.MySQL.MySQLTestable;
 import com.github.winter4666.bpofea.user.datafaker.TeacherBuilder;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
@@ -33,7 +33,7 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-public class TeacherE2EIT extends RdbDaoTest {
+public class TeacherE2EIT implements MySQLTestable {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;

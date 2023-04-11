@@ -3,7 +3,7 @@ package com.github.winter4666.bpofea.course.message;
 import com.github.winter4666.bpofea.course.datafaker.CourseBuilder;
 import com.github.winter4666.bpofea.course.domain.event.CourseFullEvent;
 import com.github.winter4666.bpofea.course.domain.model.Course;
-import com.github.winter4666.bpofea.testsupport.RdbDaoTest;
+import com.github.winter4666.bpofea.testsupport.MySQL.MySQLTestable;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.helpers.MessageFormatter;
@@ -14,7 +14,7 @@ import org.springframework.boot.test.system.OutputCaptureExtension;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 
-class MessageSenderIT extends RdbDaoTest {
+class MessageSenderIT implements MySQLTestable {
 
     @Autowired
     private MessageSender messageSender;
