@@ -5,6 +5,7 @@ import com.github.winter4666.bpofea.common.domain.exception.DataInvalidException
 import com.github.winter4666.bpofea.common.domain.model.DomainEventPublishable;
 import com.github.winter4666.bpofea.common.domain.validation.ValidatorHolder;
 import com.github.winter4666.bpofea.course.domain.event.CourseFullEvent;
+import com.github.winter4666.bpofea.user.domain.model.Student;
 import com.github.winter4666.bpofea.user.domain.model.Teacher;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
@@ -52,6 +53,9 @@ public class Course implements DomainEventPublishable<CourseFullEvent> {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Teacher teacher;
+
+    @ManyToMany(mappedBy = "courses")
+    private List<Student> students = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     private State state;

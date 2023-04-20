@@ -16,9 +16,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -66,7 +64,7 @@ class RdbCourseDaoIT extends RdbDaoTest {
     }
 
     @Test
-    void should_return_courses_when_find_all_given_course_prefix() throws JsonProcessingException {
+    void should_return_courses_when_find_all_given_course_prefix_and_status() throws JsonProcessingException {
         Faker faker = new Faker();
         long totalElements = 11L;
         Set<String> courseNames = Stream.generate(() -> faker.educator().course()).distinct().limit(totalElements).collect(Collectors.toSet());
@@ -80,13 +78,44 @@ class RdbCourseDaoIT extends RdbDaoTest {
         }
         int perPage = 10;
 
-        Page<Course> actualCourses = courseDao.findAll(prefixes.iterator().next().toString(), Course.State.DRAFT, new PageOptions(perPage, 1));
+        Page<Course> actualCourses = courseDao.findCoursesNotRelatedToStudent(null, prefixes.iterator().next().toString(), Course.State.DRAFT, new PageOptions(perPage, 1));
 
         Course course = courseBuilder.build();
         assertAll(
                 () -> assertThat(actualCourses.totalElements(), equalTo(totalElements)),
                 () -> assertThat(actualCourses.content().size(), equalTo(perPage)),
-                () -> assertThat(actualCourses.content().get(0), sameFieldValuesAs(course, "id", "name", "teacher")));
+                () -> assertThat(actualCourses.content().get(0), sameFieldValuesAs(course, "id", "name", "teacher", "students")));
+    }
+
+    @Test
+    void should_return_courses_when_find_all_given_student_id() throws JsonProcessingException {
+        Faker faker = new Faker();
+        List<Long> studentIds =  Stream.generate(() -> faker.number().randomNumber()).distinct().limit(2).toList();
+        List<String> courseNames = Stream.generate(() -> faker.educator().course()).distinct().limit(2).toList();
+        CourseBuilder courseBuilder = new CourseBuilder();
+        long courseId1 = new SimpleJdbcInsert(jdbcTemplate).withTableName("course")
+                .usingGeneratedKeyColumns("id")
+                .executeAndReturnKey(courseBuilder.name(courseNames.get(0)).buildArgsForDbInsertion()).longValue();
+        long courseId2 = new SimpleJdbcInsert(jdbcTemplate).withTableName("course")
+                .usingGeneratedKeyColumns("id")
+                .executeAndReturnKey(courseBuilder.name(courseNames.get(1)).buildArgsForDbInsertion()).longValue();
+        new SimpleJdbcInsert(jdbcTemplate).withTableName("student_course")
+                .execute(new HashMap<>(){
+                    {put("student_id", studentIds.get(0));}
+                    {put("course_id", courseId1);}
+                });
+        new SimpleJdbcInsert(jdbcTemplate).withTableName("student_course")
+                .execute(new HashMap<>(){
+                    {put("student_id", studentIds.get(1));}
+                    {put("course_id", courseId2);}
+                });
+
+        Page<Course> actualCourses = courseDao.findCoursesNotRelatedToStudent(studentIds.get(0), null, null, new PageOptions(10, 1));
+
+        assertAll(
+                () -> assertThat(actualCourses.totalElements(), equalTo(1L)),
+                () -> assertThat(actualCourses.content().get(0).getName(), equalTo(courseNames.get(1)))
+        );
     }
 
     @Test
@@ -101,13 +130,13 @@ class RdbCourseDaoIT extends RdbDaoTest {
         }
         int perPage = 10;
 
-        Page<Course> actualCourses = courseDao.findAll(null, null, new PageOptions(perPage, 1));
+        Page<Course> actualCourses = courseDao.findCoursesNotRelatedToStudent(null,null, null, new PageOptions(perPage, 1));
 
         Course course = courseBuilder.build();
         assertAll(
                 () -> assertThat(actualCourses.totalElements(), equalTo(totalElements)),
                 () -> assertThat(actualCourses.content().size(), equalTo(perPage)),
-                () -> assertThat(actualCourses.content().get(0), sameFieldValuesAs(course, "id", "name", "teacher")));
+                () -> assertThat(actualCourses.content().get(0), sameFieldValuesAs(course, "id", "name", "teacher", "students")));
     }
 
     @Test
@@ -122,7 +151,7 @@ class RdbCourseDaoIT extends RdbDaoTest {
         assertAll(
                 () -> assertThat(courseInDb, notNullValue()),
                 () -> assertThat(courseInDb.getId(), equalTo(courseId)),
-                () -> assertThat(courseInDb, sameFieldValuesAs(course, "id", "teacher")));
+                () -> assertThat(courseInDb, sameFieldValuesAs(course, "id", "teacher", "students")));
     }
 
     @Test

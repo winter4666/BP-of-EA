@@ -19,7 +19,7 @@ public class CourseService {
     private final CourseDao courseDao;
 
     public Page<Course> getCourses(String namePrefix, PageOptions pageOptions) {
-        return courseDao.findAll(namePrefix, Course.State.PUBLISHED, pageOptions);
+        return courseDao.findCoursesNotRelatedToStudent(null, namePrefix, Course.State.PUBLISHED, pageOptions);
     }
 
     public Course findCourseByIdAndThrowExceptionIfNotFound(long courseId) {

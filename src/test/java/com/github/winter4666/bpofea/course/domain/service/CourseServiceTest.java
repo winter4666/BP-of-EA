@@ -38,7 +38,7 @@ class CourseServiceTest {
         Page<Course> courses = new Page<>(new ArrayList<>(), faker.number().randomNumber());
         PageOptions pageOptions = new PageOptions((int)faker.number().randomNumber(), (int)faker.number().randomNumber());
         String name = faker.educator().course();
-        when(courseDao.findAll(name, Course.State.PUBLISHED, pageOptions)).thenReturn(courses);
+        when(courseDao.findCoursesNotRelatedToStudent(null, name, Course.State.PUBLISHED, pageOptions)).thenReturn(courses);
 
         Page<Course> actualCourses = courseService.getCourses(name, pageOptions);
 

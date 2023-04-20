@@ -11,8 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-import static com.github.winter4666.bpofea.course.dao.CourseSpecs.hasNameStartingWith;
-import static com.github.winter4666.bpofea.course.dao.CourseSpecs.hasStateEqualTo;
+import static com.github.winter4666.bpofea.course.dao.CourseSpecs.*;
 
 @Repository
 @RequiredArgsConstructor
@@ -21,8 +20,10 @@ public class RdbCourseDao implements CourseDao {
     private final CourseRepository courseRepository;
 
     @Override
-    public Page<Course> findAll(String namePrefix, Course.State state, PageOptions pageOptions) {
-        return PageFactory.createPageFrom(courseRepository.findAll(hasNameStartingWith(namePrefix).and(hasStateEqualTo(state)), PageRequestFactory.createPageRequestFrom(pageOptions)));
+    public Page<Course> findCoursesNotRelatedToStudent(Long studentId, String namePrefix, Course.State state, PageOptions pageOptions) {
+        return PageFactory.createPageFrom(courseRepository.findAll(
+                hasNameStartingWith(namePrefix).and(hasStateEqualTo(state)).and(isNotRelatedToStudent(studentId)),
+                PageRequestFactory.createPageRequestFrom(pageOptions)));
     }
 
     @Override
