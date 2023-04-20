@@ -6,13 +6,12 @@ import com.github.winter4666.bpofea.common.domain.model.Page;
 import com.github.winter4666.bpofea.common.domain.model.PageOptions;
 import com.github.winter4666.bpofea.course.datafaker.CourseBuilder;
 import com.github.winter4666.bpofea.course.domain.model.Course;
-import com.github.winter4666.bpofea.testsupport.MySQL.MySQLTestable;
-import jakarta.persistence.EntityManager;
+import com.github.winter4666.bpofea.testsupport.RdbDaoTest;
 import jakarta.persistence.OptimisticLockException;
-import jakarta.transaction.Transactional;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
@@ -31,7 +30,7 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class RdbCourseDaoIT implements MySQLTestable {
+class RdbCourseDaoIT extends RdbDaoTest {
 
     @Autowired
     private RdbCourseDao courseDao;
@@ -40,7 +39,7 @@ class RdbCourseDaoIT implements MySQLTestable {
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
-    private EntityManager entityManager;
+    private TestEntityManager entityManager;
 
     @Test
     void should_insert_successfully() {
@@ -127,7 +126,6 @@ class RdbCourseDaoIT implements MySQLTestable {
     }
 
     @Test
-    @Transactional
     void should_get_course_by_id_successfully() throws JsonProcessingException {
         CourseBuilder courseBuilder = new CourseBuilder();
         long courseId = new SimpleJdbcInsert(jdbcTemplate).withTableName("course").usingGeneratedKeyColumns("id")
@@ -149,7 +147,6 @@ class RdbCourseDaoIT implements MySQLTestable {
                 () -> assertThat(courseInDb.getState(), equalTo(course.getState())));
     }
 
-    @Transactional
     @Test
     void should_throw_exception_when_update_course_given_collision_occurred() throws JsonProcessingException {
         CourseBuilder courseBuilder = new CourseBuilder();

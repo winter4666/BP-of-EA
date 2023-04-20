@@ -1,7 +1,7 @@
 package com.github.winter4666.bpofea.user.dao;
 
 import com.github.javafaker.Faker;
-import com.github.winter4666.bpofea.testsupport.MySQL.MySQLTestable;
+import com.github.winter4666.bpofea.testsupport.RdbDaoTest;
 import com.github.winter4666.bpofea.user.domain.model.Teacher;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-class RdbTeacherDaoIT implements MySQLTestable {
+class RdbTeacherDaoIT extends RdbDaoTest {
 
     @Autowired
     private RdbTeacherDao teacherDao;

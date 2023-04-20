@@ -3,17 +3,15 @@ package com.github.winter4666.bpofea.testsupport.MySQL;
 import com.github.winter4666.bpofea.testsupport.SpringBeanRetriever;
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeEach;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 
 import static com.github.winter4666.bpofea.testsupport.MySQL.MySQLContainerHolder.MY_SQL_CONTAINER;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 public interface MySQLTestable {
 
     @BeforeEach
-    default void init() {
+    default void cleanDatabase() {
         Flyway flyway = SpringBeanRetriever.getBean(Flyway.class);
         flyway.clean();
         flyway.migrate();
