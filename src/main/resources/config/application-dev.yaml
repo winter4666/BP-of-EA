@@ -1,5 +1,5 @@
 spring:
    datasource:
-      url: jdbc:mysql://bb-entrypoint.default.svc.cluster.local/demo
+      url: jdbc:mysql://mysql-service.default.svc.cluster.local/demo
       username: root
       password: secret
