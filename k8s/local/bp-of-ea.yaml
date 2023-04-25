@@ -1,3 +1,25 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-service
+spec:
+  selector:
+    app.kubernetes.io/name: mysql
+  ports:
+    - port: 3306
+      targetPort: 3306
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bp-of-ea-service
+spec:
+  selector:
+    app.kubernetes.io/name: bp-of-ea
+  ports:
+    - port: 8080
+      targetPort: 8080
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -6,11 +28,11 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: mysql
+      app.kubernetes.io/name: mysql
   template:
     metadata:
       labels:
-        app: mysql
+        app.kubernetes.io/name: mysql
     spec:
       containers:
       - name: mysql
@@ -29,11 +51,11 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: bp-of-ea
+      app.kubernetes.io/name: bp-of-ea
   template:
     metadata:
       labels:
-        app: bp-of-ea
+        app.kubernetes.io/name: bp-of-ea
     spec:
       containers:
       - name: bp-of-ea
@@ -41,25 +63,3 @@ spec:
         env:
         - name: APP_ENVIRONMENT
           value: "dev"
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: mysql-service
-spec:
-  selector:
-    app: mysql
-  ports:
-  - port: 3306
-    targetPort: 3306
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: bp-of-ea-service
-spec:
-  selector:
-    app: bp-of-ea
-  ports:
-  - port: 8080
-    targetPort: 8080
