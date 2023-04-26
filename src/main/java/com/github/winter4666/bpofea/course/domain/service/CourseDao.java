@@ -14,4 +14,6 @@ public interface CourseDao {
     Optional<Course> findById(Long courseId);
 
     Course getById(Long courseId);
+
+    void delete(Course course);
 }

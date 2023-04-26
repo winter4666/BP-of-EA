@@ -227,4 +227,25 @@ class CourseTest {
 
         assertThat(course.getCurrentStudentNumber(), equalTo(currentStudentNumber - 1));
     }
+
+    @Test
+    public void should_return_true_when_belong_to_teacher_given_teacher_id_is_equal() {
+        long teacherId = new Faker().number().randomNumber();
+        Course course = new CourseBuilder().teacher(new TeacherBuilder().id(teacherId)).build();
+
+        boolean returnValue = course.belongToTeacher(teacherId);
+
+        assertThat(returnValue, equalTo(true));
+    }
+
+    @Test
+    public void should_return_false_when_not_belong_to_teacher_given_teacher_id_is_not_equal() {
+        Faker faker = new Faker();
+        List<Long> teacherIds = Stream.generate(() -> faker.number().randomNumber()).distinct().limit(2).toList();
+        Course course = new CourseBuilder().teacher(new TeacherBuilder().id(teacherIds.get(0))).build();
+
+        boolean returnValue = course.belongToTeacher(teacherIds.get(1));
+
+        assertThat(returnValue, equalTo(false));
+    }
 }

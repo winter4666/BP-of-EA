@@ -40,10 +40,6 @@ public class Teacher extends User {
         courses.add(course);
     }
 
-    public void removeCourse(Course course) {
-        courses.remove(course);
-    }
-
     public static class TeacherBuilder {
         public Teacher build() {
             Teacher teacher = new Teacher(id, name, jobNumber, courses);

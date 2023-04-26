@@ -1,5 +1,6 @@
 package com.github.winter4666.bpofea.user.domain.service;
 
+import com.github.winter4666.bpofea.common.domain.exception.DataInvalidException;
 import com.github.winter4666.bpofea.common.domain.exception.DataNotFoundException;
 import com.github.winter4666.bpofea.course.domain.model.ClassTime;
 import com.github.winter4666.bpofea.course.domain.model.Course;
@@ -43,9 +44,11 @@ public class TeacherService {
 
     @Transactional
     public void removeCourse(long teacherId, long courseId) {
-        Teacher teacher = findTeacherByIdAndThrowExceptionIfNotFound(teacherId);
         Course course = courseDao.getById(courseId);
-        teacher.removeCourse(course);
+        if(!course.belongToTeacher(teacherId)) {
+            throw new DataInvalidException("Course {} cannot be removed by teacher {}", courseId, teacherId);
+        }
+        courseDao.delete(course);
     }
 
     private Teacher findTeacherByIdAndThrowExceptionIfNotFound(long teacherId) {

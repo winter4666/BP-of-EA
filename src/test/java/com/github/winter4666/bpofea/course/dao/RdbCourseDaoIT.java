@@ -187,4 +187,16 @@ class RdbCourseDaoIT extends RdbDaoTest {
 
         assertThrows(OptimisticLockException.class, () -> entityManager.flush());
     }
+
+    @Test
+    void should_delete_course_by_id_successfully() {
+        Course course = new CourseBuilder().build();
+        entityManager.persist(course);
+
+        courseDao.delete(course);
+
+        entityManager.flush();
+        Long courseCount = jdbcTemplate.queryForObject("select count(1) from course where id = ?", Long.class, course.getId());
+        assertThat(courseCount, is(equalTo(0L)));
+    }
 }

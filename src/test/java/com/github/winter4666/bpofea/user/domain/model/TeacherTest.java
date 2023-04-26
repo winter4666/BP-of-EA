@@ -6,11 +6,10 @@ import com.github.winter4666.bpofea.course.domain.model.Course;
 import com.github.winter4666.bpofea.user.datafaker.TeacherBuilder;
 import org.junit.jupiter.api.Test;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
@@ -24,16 +23,6 @@ class TeacherTest {
         teacher.createCourse(course);
 
         assertThat(teacher.getCourses().iterator().next(), equalTo(course));
-    }
-
-    @Test
-    void should_remove_course_successfully() {
-        Course course = new CourseBuilder().build();
-        Teacher teacher = new TeacherBuilder().courses(new HashSet<>(){{add(course);}}).build();
-
-        teacher.removeCourse(course);
-
-        assertThat(teacher.getCourses(), is(empty()));
     }
 
     @Test

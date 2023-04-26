@@ -1,6 +1,7 @@
 package com.github.winter4666.bpofea.user.domain.service;
 
 import com.github.javafaker.Faker;
+import com.github.winter4666.bpofea.common.domain.exception.DataInvalidException;
 import com.github.winter4666.bpofea.common.domain.exception.DataNotFoundException;
 import com.github.winter4666.bpofea.course.datafaker.CourseBuilder;
 import com.github.winter4666.bpofea.course.domain.model.Course;
@@ -12,6 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.slf4j.helpers.MessageFormatter;
 
 import java.util.Optional;
 
@@ -69,14 +71,28 @@ class TeacherServiceTest {
         Faker faker = new Faker();
         long teacherId = faker.number().randomNumber();
         long courseId = faker.number().randomNumber();
-        Course course = new CourseBuilder().build();
-        Teacher teacher = mock(Teacher.class);
-        when(teacherDao.findById(teacherId)).thenReturn(Optional.of(teacher));
+        Course course = mock(Course.class);
         when(courseDao.getById(courseId)).thenReturn(course);
+        when(course.belongToTeacher(teacherId)).thenReturn(true);
 
         teacherService.removeCourse(teacherId, courseId);
 
-        verify(teacher).removeCourse(course);
+        verify(courseDao).delete(course);
+    }
+
+    @Test
+    void should_throw_exception_when_remove_course_given_course_not_belong_to_teacher() {
+        Faker faker = new Faker();
+        long teacherId = faker.number().randomNumber();
+        long courseId = faker.number().randomNumber();
+        Course course = mock(Course.class);
+        when(courseDao.getById(courseId)).thenReturn(course);
+        when(course.belongToTeacher(teacherId)).thenReturn(false);
+
+        DataInvalidException exception = assertThrows(DataInvalidException.class, () -> teacherService.removeCourse(teacherId, courseId));
+
+        assertThat(exception.getMessage(), equalTo(MessageFormatter.format("Course {} cannot be removed by teacher {}", courseId, teacherId)
+                .getMessage()));
     }
 
     @Test

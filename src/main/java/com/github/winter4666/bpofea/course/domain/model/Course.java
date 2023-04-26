@@ -142,6 +142,10 @@ public class Course implements DomainEventPublishable<CourseFullEvent> {
         }
     }
 
+    public boolean belongToTeacher(long teacherId) {
+        return teacher.getId().equals(teacherId);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

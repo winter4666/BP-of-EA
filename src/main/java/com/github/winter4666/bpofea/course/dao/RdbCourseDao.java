@@ -40,4 +40,9 @@ public class RdbCourseDao implements CourseDao {
     public Course getById(Long courseId) {
         return courseRepository.getReferenceById(courseId);
     }
+
+    @Override
+    public void delete(Course course) {
+        courseRepository.delete(course);
+    }
 }
