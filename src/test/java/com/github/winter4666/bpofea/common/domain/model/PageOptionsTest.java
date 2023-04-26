@@ -11,9 +11,16 @@ class PageOptionsTest {
 
     @Test
     void should_throw_exception_given_per_page_not_greater_than_zero() {
-        DataInvalidException exception = assertThrows(DataInvalidException.class, () -> new PageOptions(0, 0));
+        DataInvalidException exception = assertThrows(DataInvalidException.class, () -> new PageOptions(0, 1));
 
         assertThat(exception.getMessage(), equalTo("Parameter perPage must be greater than 0"));
+    }
+
+    @Test
+    void should_throw_exception_given_page_not_greater_than_zero() {
+        DataInvalidException exception = assertThrows(DataInvalidException.class, () -> new PageOptions(1, 0));
+
+        assertThat(exception.getMessage(), equalTo("Parameter page must be greater than 0"));
     }
 
 }

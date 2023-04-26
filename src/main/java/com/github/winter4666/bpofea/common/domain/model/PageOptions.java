@@ -8,6 +8,9 @@ public record PageOptions(int perPage, int page) {
         if(perPage <= 0) {
             throw new DataInvalidException("Parameter perPage must be greater than 0");
         }
+        if(page <= 0) {
+            throw new DataInvalidException("Parameter page must be greater than 0");
+        }
     }
 
 }
