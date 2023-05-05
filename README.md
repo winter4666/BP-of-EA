@@ -71,7 +71,7 @@ MyBatis还是JPA？我认为这个问题几乎可以等同于是要面向过程�
 ### 是否使用RESTful API？
 本项目使用了RESTful API，因为我觉得它已经成为了一个事实上的标准，使用这种标准化的方式可以享受标准化带来的各种好处。本项目实现RESTful API时，参考了[GitHub REST API documentation](https://docs.github.com/en/rest)。
 
-但是，我必须要说，RESTful API并不适用于所有项目。视需求而定，其它风格的API也是可以接受的,譬如[JSON-RPC](https://www.jsonrpc.org/)。但是最关键的问题时，API的风格应时统一的。
+但是，我必须要说，RESTful API并不适用于所有项目。视需求而定，其它风格的API也是可以接受的,譬如[JSON-RPC](https://www.jsonrpc.org/)。但是最关键的问题时，API的风格应是统一的。
 
 ### Gradle还是Maven？
 Gradle擅长构建，而Maven擅长依赖管理。本项目选择了Maven，因为它足够简单，而且也完全可以满足我的需求。若是你的项目存在非常复杂的构建过程，或对构建速度也很苛刻的要求，可选择Gradle。
