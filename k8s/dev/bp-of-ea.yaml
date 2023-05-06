@@ -7,7 +7,6 @@ spec:
     app.kubernetes.io/name: mysql
   ports:
     - port: 3306
-      targetPort: 3306
 ---
 apiVersion: v1
 kind: Service
@@ -18,7 +17,6 @@ spec:
     app.kubernetes.io/name: bp-of-ea
   ports:
     - port: 8080
-      targetPort: 8080
 ---
 apiVersion: apps/v1
 kind: Deployment

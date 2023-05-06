@@ -3,3 +3,5 @@ spring:
       url: jdbc:mysql://mysql-service.default.svc.cluster.local/demo
       username: root
       password: secret
+teacherInfoServer:
+   baseUrl: http://teacher-service.default.svc.cluster.local:8090
