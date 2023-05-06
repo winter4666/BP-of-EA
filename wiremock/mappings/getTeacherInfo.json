@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPath": "/teachers"
+  },
+  "response": {
+    "status": 200,
+    "body": "[{\"gender\": \"MAN\"}]",
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}
