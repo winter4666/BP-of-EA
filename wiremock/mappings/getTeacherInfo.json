@@ -5,7 +5,7 @@
   },
   "response": {
     "status": 200,
-    "body": "[{\"gender\": \"MAN\"}]",
+    "jsonBody": [{"gender": "MAN"}],
     "headers": {
       "Content-Type": "application/json"
     }
