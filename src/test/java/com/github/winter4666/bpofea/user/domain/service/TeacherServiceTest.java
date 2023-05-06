@@ -6,7 +6,10 @@ import com.github.winter4666.bpofea.common.domain.exception.DataNotFoundExceptio
 import com.github.winter4666.bpofea.course.datafaker.CourseBuilder;
 import com.github.winter4666.bpofea.course.domain.model.Course;
 import com.github.winter4666.bpofea.course.domain.service.CourseDao;
+import com.github.winter4666.bpofea.user.datafaker.TeacherBuilder;
+import com.github.winter4666.bpofea.user.domain.model.Gender;
 import com.github.winter4666.bpofea.user.domain.model.Teacher;
+import com.github.winter4666.bpofea.user.domain.model.TeacherMoreInfo;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -20,6 +23,7 @@ import java.util.Optional;
 import static com.github.winter4666.bpofea.testsupport.SameFieldValuesAs.sameFieldValuesAs;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.*;
@@ -32,6 +36,9 @@ class TeacherServiceTest {
 
     @Mock
     private CourseDao courseDao;
+
+    @Mock
+    private TeacherInfoService teacherInfoService;
 
     @InjectMocks
     private TeacherService teacherService;
@@ -50,6 +57,22 @@ class TeacherServiceTest {
         Teacher returnedTeacher = teacherService.addTeacher(teacher.getName(), teacher.getJobNumber());
 
         assertThat(returnedTeacher, equalTo(teacher));
+    }
+
+    @Test
+    void should_return_teacher_info_successfully() {
+        Teacher teacher = new TeacherBuilder().id(new Faker().number().randomNumber()).build();
+        TeacherMoreInfo teacherMoreInfo = new TeacherMoreInfo(Gender.MAN);
+        when(teacherDao.findById(teacher.getId())).thenReturn(Optional.of(teacher));
+        when(teacherInfoService.getTeacherInfo(teacher.getJobNumber())).thenReturn(teacherMoreInfo);
+
+        TeacherService.TeacherInfo teacherInfo = teacherService.getTeacherInfo(teacher.getId());
+
+        assertAll(
+                () -> assertThat(teacherInfo.teacherId(), equalTo(teacher.getId())),
+                () -> assertThat(teacherInfo.name(), equalTo(teacher.getName())),
+                () -> assertThat(teacherInfo.jobNumber(), equalTo(teacher.getJobNumber())),
+                () -> assertThat(teacherInfo.gender(), equalTo(teacherMoreInfo.gender())));
     }
 
     @Test

@@ -5,7 +5,9 @@ import com.github.winter4666.bpofea.common.domain.exception.DataNotFoundExceptio
 import com.github.winter4666.bpofea.course.domain.model.ClassTime;
 import com.github.winter4666.bpofea.course.domain.model.Course;
 import com.github.winter4666.bpofea.course.domain.service.CourseDao;
+import com.github.winter4666.bpofea.user.domain.model.Gender;
 import com.github.winter4666.bpofea.user.domain.model.Teacher;
+import com.github.winter4666.bpofea.user.domain.model.TeacherMoreInfo;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,9 +23,21 @@ public class TeacherService {
 
     private final CourseDao courseDao;
 
+    private final TeacherInfoService teacherInfoService;
+
     public Teacher addTeacher(String name, String jobNumber) {
         Teacher teacher = Teacher.builder().name(name).jobNumber(jobNumber).build();;
         return teacherDao.save(teacher);
+    }
+
+    public TeacherInfo getTeacherInfo(long teacherId) {
+        Teacher teacher = findTeacherByIdAndThrowExceptionIfNotFound(teacherId);
+        TeacherMoreInfo teacherMoreInfo = teacherInfoService.getTeacherInfo(teacher.getJobNumber());
+        return new TeacherInfo(teacherId, teacher.getName(), teacher.getJobNumber(), teacherMoreInfo.gender());
+    }
+
+    public record TeacherInfo(Long teacherId, String name, String jobNumber, Gender gender) {
+
     }
 
     @Transactional

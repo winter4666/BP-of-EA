@@ -44,8 +44,8 @@ class CourseControllerIT {
     @Test
     void should_get_courses_successfully() throws Exception {
         Faker faker = new Faker();
-        int perPage = (int)faker.number().randomNumber();
-        int page = (int)faker.number().randomNumber();
+        int perPage = faker.number().numberBetween(1, Integer.MAX_VALUE);
+        int page = faker.number().numberBetween(1, Integer.MAX_VALUE);
         CourseBuilder courseBuilder = new CourseBuilder().id(faker.random().nextLong());
         Course course = courseBuilder.build();
         long totalElements = faker.number().randomNumber();
