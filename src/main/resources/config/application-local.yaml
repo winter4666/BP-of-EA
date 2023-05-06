@@ -12,3 +12,6 @@ logging:
       org.hibernate.type: trace
       org.hibernate.orm.jdbc.bind: trace
       org.hibernate.orm.jdbc.extract: trace
+
+teacherInfoServer:
+   baseUrl: http://localhost:8090

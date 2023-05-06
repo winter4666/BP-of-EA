@@ -32,8 +32,8 @@ public class TeacherService {
 
     public TeacherInfo getTeacherInfo(long teacherId) {
         Teacher teacher = findTeacherByIdAndThrowExceptionIfNotFound(teacherId);
-        TeacherMoreInfo teacherMoreInfo = teacherInfoService.getTeacherInfo(teacher.getJobNumber());
-        return new TeacherInfo(teacherId, teacher.getName(), teacher.getJobNumber(), teacherMoreInfo.gender());
+        Gender gender = teacherInfoService.getTeacherInfo(teacher.getJobNumber()).map(TeacherMoreInfo::gender).orElse(null);
+        return new TeacherInfo(teacherId, teacher.getName(), teacher.getJobNumber(), gender);
     }
 
     public record TeacherInfo(Long teacherId, String name, String jobNumber, Gender gender) {

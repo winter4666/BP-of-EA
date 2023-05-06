@@ -64,7 +64,7 @@ class TeacherServiceTest {
         Teacher teacher = new TeacherBuilder().id(new Faker().number().randomNumber()).build();
         TeacherMoreInfo teacherMoreInfo = new TeacherMoreInfo(Gender.MAN);
         when(teacherDao.findById(teacher.getId())).thenReturn(Optional.of(teacher));
-        when(teacherInfoService.getTeacherInfo(teacher.getJobNumber())).thenReturn(teacherMoreInfo);
+        when(teacherInfoService.getTeacherInfo(teacher.getJobNumber())).thenReturn(Optional.of(teacherMoreInfo));
 
         TeacherService.TeacherInfo teacherInfo = teacherService.getTeacherInfo(teacher.getId());
 
