@@ -3,6 +3,8 @@ package com.github.winter4666.bpofea.user;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
+import com.github.tomakehurst.wiremock.client.WireMock;
+import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import com.github.winter4666.bpofea.course.datafaker.CourseBuilder;
 import com.github.winter4666.bpofea.testsupport.MySQL.MySQLTestable;
 import com.github.winter4666.bpofea.user.datafaker.TeacherBuilder;
@@ -24,15 +26,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.jayway.jsonpath.matchers.JsonPathMatchers.isJson;
 import static com.jayway.jsonpath.matchers.JsonPathMatchers.withJsonPath;
 import static io.restassured.RestAssured.given;
 import static io.restassured.RestAssured.when;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@WireMockTest(httpPort = 8090)
 public class TeacherE2EIT implements MySQLTestable {
 
     @Autowired
@@ -134,6 +139,24 @@ public class TeacherE2EIT implements MySQLTestable {
 
         List<Map<String, Object>> courses = jdbcTemplate.queryForList("select * from course where id = ?", courseId);
         assertThat(courses, is(empty()));
+    }
+
+    @Test
+    void should_get_teacher_info_successfully() {
+        TeacherBuilder teacherBuilder = new TeacherBuilder();
+        long teacherId = new SimpleJdbcInsert(jdbcTemplate).withTableName("teacher")
+                .usingGeneratedKeyColumns("id")
+                .executeAndReturnKey(teacherBuilder.buildArgsForDbInsertion()).longValue();
+        stubFor(get(urlPathEqualTo("/teachers")).withQueryParam("jobNumber", WireMock.equalTo(teacherBuilder.getJobNumber()))
+                .willReturn(okJson("[{\"gender\": \"MAN\"}]")));
+
+        when().get("/teachers/{id}", teacherId)
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .body("jobNumber", equalTo(teacherBuilder.getJobNumber()))
+                .body("gender", equalTo("MAN"))
+                .extract().response();
+
     }
 
 }

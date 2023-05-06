@@ -39,5 +39,9 @@ public class TeacherController {
         teacherService.removeCourse(teacherId, courseId);
     }
 
+    @GetMapping("/{id}")
+    public TeacherService.TeacherInfo getTeacherInfo(@PathVariable long id) {
+        return teacherService.getTeacherInfo(id);
+    }
 
 }

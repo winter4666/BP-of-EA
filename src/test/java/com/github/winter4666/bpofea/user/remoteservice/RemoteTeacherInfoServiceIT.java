@@ -1,6 +1,7 @@
 package com.github.winter4666.bpofea.user.remoteservice;
 
 import com.github.javafaker.Faker;
+import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import com.github.winter4666.bpofea.config.WebClientConfig;
 import com.github.winter4666.bpofea.user.domain.model.Gender;
@@ -26,7 +27,7 @@ class RemoteTeacherInfoServiceIT {
     @Test
     void should_return_teacher_info_when_get_teacher_info_given_teacher_info_found() {
         String jobNumber = String.valueOf(new Faker().number().randomNumber());
-        stubFor(get(urlPathEqualTo("/teachers")).withQueryParam("jobNumber", equalTo(jobNumber))
+        stubFor(get(urlPathEqualTo("/teachers")).withQueryParam("jobNumber", WireMock.equalTo(jobNumber))
                 .willReturn(okJson("[{\"gender\": \"MAN\"}]")));
 
         TeacherMoreInfo teacherMoreInfo = remoteTeacherInfoService.getTeacherInfo(jobNumber).orElseThrow();
@@ -37,7 +38,7 @@ class RemoteTeacherInfoServiceIT {
     @Test
     void should_return_null_when_get_teacher_info_given_teacher_info_not_found() {
         String jobNumber = String.valueOf(new Faker().number().randomNumber());
-        stubFor(get(urlPathEqualTo("/teachers")).withQueryParam("jobNumber", equalTo(jobNumber))
+        stubFor(get(urlPathEqualTo("/teachers")).withQueryParam("jobNumber", WireMock.equalTo(jobNumber))
                 .willReturn(okJson("[]")));
 
         TeacherMoreInfo teacherMoreInfo = remoteTeacherInfoService.getTeacherInfo(jobNumber).orElse(null);

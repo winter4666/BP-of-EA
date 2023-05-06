@@ -69,7 +69,7 @@ class TeacherServiceTest {
         TeacherService.TeacherInfo teacherInfo = teacherService.getTeacherInfo(teacher.getId());
 
         assertAll(
-                () -> assertThat(teacherInfo.teacherId(), equalTo(teacher.getId())),
+                () -> assertThat(teacherInfo.id(), equalTo(teacher.getId())),
                 () -> assertThat(teacherInfo.name(), equalTo(teacher.getName())),
                 () -> assertThat(teacherInfo.jobNumber(), equalTo(teacher.getJobNumber())),
                 () -> assertThat(teacherInfo.gender(), equalTo(teacherMoreInfo.gender())));

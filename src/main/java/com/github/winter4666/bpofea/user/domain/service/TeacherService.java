@@ -30,13 +30,13 @@ public class TeacherService {
         return teacherDao.save(teacher);
     }
 
-    public TeacherInfo getTeacherInfo(long teacherId) {
-        Teacher teacher = findTeacherByIdAndThrowExceptionIfNotFound(teacherId);
+    public TeacherInfo getTeacherInfo(long id) {
+        Teacher teacher = findTeacherByIdAndThrowExceptionIfNotFound(id);
         Gender gender = teacherInfoService.getTeacherInfo(teacher.getJobNumber()).map(TeacherMoreInfo::gender).orElse(null);
-        return new TeacherInfo(teacherId, teacher.getName(), teacher.getJobNumber(), gender);
+        return new TeacherInfo(id, teacher.getName(), teacher.getJobNumber(), gender);
     }
 
-    public record TeacherInfo(Long teacherId, String name, String jobNumber, Gender gender) {
+    public record TeacherInfo(long id, String name, String jobNumber, Gender gender) {
 
     }
 

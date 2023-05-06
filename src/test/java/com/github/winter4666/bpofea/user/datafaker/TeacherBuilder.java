@@ -4,10 +4,14 @@ import com.github.javafaker.Faker;
 import com.github.winter4666.bpofea.course.datafaker.CourseBuilder;
 import com.github.winter4666.bpofea.course.domain.model.Course;
 import com.github.winter4666.bpofea.user.domain.model.Teacher;
+import lombok.Getter;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Getter
 public class TeacherBuilder {
 
     private static final Faker FAKER = new Faker();
@@ -55,6 +59,15 @@ public class TeacherBuilder {
                 .name(name)
                 .jobNumber(jobNumber)
                 .courses(courses);
+    }
+
+    public Map<String, Object> buildArgsForDbInsertion() {
+        return new HashMap<>(){
+            {
+                put("name", name);
+                put("job_number", jobNumber);
+            }
+        };
     }
 
 }
