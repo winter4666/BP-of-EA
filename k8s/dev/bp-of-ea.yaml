@@ -18,6 +18,16 @@ spec:
   ports:
     - port: 8080
 ---
+apiVersion: v1
+kind: Service
+metadata:
+  name: teacher-service
+spec:
+  selector:
+    app.kubernetes.io/name: teacher
+  ports:
+    - port: 8090
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -61,3 +71,50 @@ spec:
         env:
         - name: APP_ENVIRONMENT
           value: "dev"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: teacher-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: teacher
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: teacher
+    spec:
+      containers:
+        - name: teacher
+          image: wiremock/wiremock:2.35.0
+          args: ["--port", "8090", "--verbose"]
+          volumeMounts:
+            - name: wiremock-mappings-volume
+              mountPath: "/home/wiremock/mappings"
+              readOnly: true
+      volumes:
+        - name: wiremock-mappings-volume
+          configMap:
+            name: wiremock-mappings
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: wiremock-mappings
+data:
+  getTeacherInfo.json: |
+    {
+      "request": {
+        "method": "GET",
+        "urlPath": "/teachers"
+      },
+      "response": {
+        "status": 200,
+        "jsonBody": [{"gender": "MAN"}],
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      }
+    }
