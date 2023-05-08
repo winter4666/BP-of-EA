@@ -156,11 +156,8 @@ spec:
   gateways:
     - bp-of-ea-gateway
   http:
-    - match:
-        - uri:
-            prefix: /
-      route:
+    - route:
         - destination:
-            host: bp-of-ea-service
+            host: bp-of-ea-service.default.svc.cluster.local
             port:
               number: 8080
