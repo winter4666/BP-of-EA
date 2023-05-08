@@ -113,7 +113,7 @@ data:
         "urlPath": "/teachers"
       },
       "response": {
-        "status": 200,
+        "status": 502,
         "jsonBody": [{"gender": "MAN"}],
         "headers": {
           "Content-Type": "application/json"
@@ -161,3 +161,21 @@ spec:
             host: bp-of-ea-service.default.svc.cluster.local
             port:
               number: 8080
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: teacher-service
+spec:
+  hosts:
+    - teacher-service.default.svc.cluster.local
+  http:
+    - route:
+        - destination:
+            host: teacher-service.default.svc.cluster.local
+            port:
+              number: 8090
+      retries:
+        attempts: 3
+        perTryTimeout: 2s
+        retryOn: connect-failure,refused-stream,gateway-error
