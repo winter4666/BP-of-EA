@@ -3,6 +3,7 @@ package com.github.winter4666.bpofea.course.dao;
 import com.github.winter4666.bpofea.course.domain.model.Course;
 import com.github.winter4666.bpofea.course.domain.model.Course_;
 import com.github.winter4666.bpofea.user.domain.model.Student;
+import com.github.winter4666.bpofea.user.domain.model.StudentCourse_;
 import com.github.winter4666.bpofea.user.domain.model.Student_;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.JoinType;
@@ -23,7 +24,7 @@ public class CourseSpecs {
     public static Specification<Course> isNotRelatedToStudent(Long studentId) {
         return Specification.where(studentId == null ? null : (root, query, builder) -> {
             query.distinct(true);
-            Join<Course, Student> student = root.join(Course_.STUDENTS, JoinType.LEFT);
+            Join<Course, Student> student = root.join(Course_.STUDENT_COURSES, JoinType.LEFT).join(StudentCourse_.STUDENT, JoinType.LEFT);
             return builder.or(builder.notEqual(student.get(Student_.ID), studentId), builder.isNull(student.get(Student_.ID)));
         });
     }

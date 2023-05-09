@@ -84,7 +84,7 @@ class RdbCourseDaoIT extends RdbDaoTest {
         assertAll(
                 () -> assertThat(actualCourses.totalElements(), equalTo(totalElements)),
                 () -> assertThat(actualCourses.content().size(), equalTo(perPage)),
-                () -> assertThat(actualCourses.content().get(0), sameFieldValuesAs(course, "id", "name", "teacher", "students")));
+                () -> assertThat(actualCourses.content().get(0), sameFieldValuesAs(course, "id", "name", "teacher", "studentCourses")));
     }
 
     @Test
@@ -136,7 +136,7 @@ class RdbCourseDaoIT extends RdbDaoTest {
         assertAll(
                 () -> assertThat(actualCourses.totalElements(), equalTo(totalElements)),
                 () -> assertThat(actualCourses.content().size(), equalTo(perPage)),
-                () -> assertThat(actualCourses.content().get(0), sameFieldValuesAs(course, "id", "name", "teacher", "students")));
+                () -> assertThat(actualCourses.content().get(0), sameFieldValuesAs(course, "id", "name", "teacher", "studentCourses")));
     }
 
     @Test
@@ -151,7 +151,7 @@ class RdbCourseDaoIT extends RdbDaoTest {
         assertAll(
                 () -> assertThat(courseInDb, notNullValue()),
                 () -> assertThat(courseInDb.getId(), equalTo(courseId)),
-                () -> assertThat(courseInDb, sameFieldValuesAs(course, "id", "teacher", "students")));
+                () -> assertThat(courseInDb, sameFieldValuesAs(course, "id", "teacher", "studentCourses")));
     }
 
     @Test

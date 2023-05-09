@@ -3,12 +3,9 @@ package com.github.winter4666.bpofea.user.domain.model;
 import com.github.winter4666.bpofea.common.domain.exception.DataCollisionException;
 import com.github.winter4666.bpofea.course.domain.model.Course;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.util.ReflectionTestUtils;
-
-import java.util.HashSet;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
@@ -32,17 +29,5 @@ class StudentTest {
         doReturn(true).when(student).haveAnyCourseCollidingWith(course);
 
         assertThrows(DataCollisionException.class, () -> student.chooseCourse(course));
-    }
-
-    @Test
-    void should_revoke_choice_successfully() {
-        Course course = mock(Course.class);
-        Student student = Student.builder().build();
-        ReflectionTestUtils.setField(student, "courses", new HashSet<>(){{add(course);}});
-
-        student.revokeChoice(course);
-
-        verify(course).onRevoked();
-        assertThat(student.getCourses(), is(empty()));
     }
 }

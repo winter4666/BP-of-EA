@@ -6,6 +6,7 @@ import com.github.winter4666.bpofea.course.domain.model.Course;
 import com.github.winter4666.bpofea.course.domain.service.CourseDao;
 import com.github.winter4666.bpofea.course.domain.service.CourseService;
 import com.github.winter4666.bpofea.user.domain.model.Student;
+import com.github.winter4666.bpofea.user.domain.model.StudentCourse;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -30,6 +31,9 @@ class StudentServiceTest {
 
     @Mock
     private CourseService courseService;
+
+    @Mock
+    private StudentCourseDao studentCourseDao;
 
     @InjectMocks
     private StudentService studentService;
@@ -63,16 +67,15 @@ class StudentServiceTest {
     @Test
     void should_revoke_choice_successfully() {
         Faker faker = new Faker();
-        Student student = mock(Student.class);
-        Course course = mock(Course.class);
+        StudentCourse studentCourse = new StudentCourse(mock(Student.class), mock(Course.class));
         long studentId = faker.number().randomNumber();
         long courseId = faker.number().randomNumber();
-        when(studentDao.findById(studentId)).thenReturn(Optional.of(student));
-        when(courseDao.getById(courseId)).thenReturn(course);
+        when(studentCourseDao.findByStudentIdAndCourseId(studentId, courseId)).thenReturn(Optional.of(studentCourse));
 
         studentService.revokeChoice(studentId, courseId);
 
-        verify(student).revokeChoice(course);
+        verify(studentCourseDao).delete(studentCourse);
+        verify(studentCourse.getCourse()).onRevoked();
     }
 
 }

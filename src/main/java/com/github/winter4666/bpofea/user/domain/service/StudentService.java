@@ -2,9 +2,9 @@ package com.github.winter4666.bpofea.user.domain.service;
 
 import com.github.winter4666.bpofea.common.domain.exception.DataNotFoundException;
 import com.github.winter4666.bpofea.course.domain.model.Course;
-import com.github.winter4666.bpofea.course.domain.service.CourseDao;
 import com.github.winter4666.bpofea.course.domain.service.CourseService;
 import com.github.winter4666.bpofea.user.domain.model.Student;
+import com.github.winter4666.bpofea.user.domain.model.StudentCourse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,7 +19,7 @@ public class StudentService {
 
     private final CourseService courseService;
 
-    private final CourseDao courseDao;
+    private final StudentCourseDao studentCourseDao;
 
     @Transactional
     public void chooseCourse(long studentId, long courseId) {
@@ -30,9 +30,9 @@ public class StudentService {
 
     @Transactional
     public void revokeChoice(long studentId, long courseId) {
-        Student student = findStudentByIdAndThrowExceptionIfNotFound(studentId);
-        Course course = courseDao.getById(courseId);
-        student.revokeChoice(course);
+        StudentCourse studentCourse = studentCourseDao.findByStudentIdAndCourseId(studentId, courseId).orElseThrow();
+        studentCourseDao.delete(studentCourse);
+        studentCourse.getCourse().onRevoked();
     }
 
     private Student findStudentByIdAndThrowExceptionIfNotFound(long studentId) {
