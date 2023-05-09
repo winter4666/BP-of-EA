@@ -3,6 +3,7 @@ package com.github.winter4666.bpofea.course.domain.model;
 import com.github.winter4666.bpofea.common.domain.exception.DataCollisionException;
 import com.github.winter4666.bpofea.common.domain.exception.DataInvalidException;
 import com.github.winter4666.bpofea.common.domain.model.DomainEventPublishable;
+import com.github.winter4666.bpofea.common.domain.util.EqualsTemplate;
 import com.github.winter4666.bpofea.common.domain.validation.ValidatorHolder;
 import com.github.winter4666.bpofea.course.domain.event.CourseFullEvent;
 import com.github.winter4666.bpofea.user.domain.model.StudentCourse;
@@ -149,13 +150,10 @@ public class Course implements DomainEventPublishable<CourseFullEvent> {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Course course = (Course) o;
-        return new EqualsBuilder()
-                .append(name, course.name)
-                .append(teacher.getId(), course.teacher.getId())
-                .isEquals();
+        return EqualsTemplate.equals(this, o, (t, other) -> new EqualsBuilder()
+                .append(t.name, other.name)
+                .append(t.teacher.getId(), other.teacher.getId())
+                .isEquals());
     }
 
     @Override

@@ -1,11 +1,13 @@
 package com.github.winter4666.bpofea.user.domain.model;
 
+import com.github.winter4666.bpofea.common.domain.util.EqualsTemplate;
 import com.github.winter4666.bpofea.course.domain.model.Course;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.builder.EqualsBuilder;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -35,15 +37,10 @@ public class StudentCourse implements Serializable {
 
         @Override
         public boolean equals(Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (o == null || getClass() != o.getClass()) {
-                return false;
-            }
-            PK pk = (PK) o;
-            return Objects.equals(pk.student.getId(), student.getId()) &&
-                    Objects.equals(pk.course.getId(), course.getId());
+            return EqualsTemplate.equals(this, o, (t, other) -> new EqualsBuilder()
+                    .append(t.student.getId(), other.student.getId())
+                    .append(t.course.getId(), other.course.getId())
+                    .isEquals());
         }
 
         @Override
