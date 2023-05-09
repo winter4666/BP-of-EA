@@ -13,6 +13,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
@@ -151,7 +152,10 @@ public class Course implements DomainEventPublishable<CourseFullEvent> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Course course = (Course) o;
-        return name.equals(course.name) && teacher.getId().equals(course.teacher.getId());
+        return new EqualsBuilder()
+                .append(name, course.name)
+                .append(teacher.getId(), course.teacher.getId())
+                .isEquals();
     }
 
     @Override
