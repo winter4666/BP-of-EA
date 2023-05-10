@@ -11,7 +11,7 @@
 整体业务非常简单，一句话描述就是：老师创建课程，学生看到老师创建的课程，然后可以选择该课程加入到自己的课程表。
 
 ## 快速开始
-进入本项目的[DockerHub页面](https://hub.docker.com/repository/docker/winter4666/bp-of-ea/general)，查看README。
+进入本项目的[DockerHub页面](https://hub.docker.com/r/winter4666/bp-of-ea)，查看README。
 
 ## 核心理念
 本项目的所有技术选择都将以下面这些原则作为指导方针：
