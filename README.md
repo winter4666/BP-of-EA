@@ -29,7 +29,7 @@
 
 在我看来，六边形架构并非一个足够形象的好名字，我更喜欢将它称之为同心圆架构，它将系统分为三个部分：处于圆心的程序核心逻辑部分，处于圆环的Adapter部分，以及处于圆外面的各种程序外部依赖（譬如数据库，消息队列，web服务等等）。
 
-我们经常使用的[MVC Pattern](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller#cite_note-1)和[DAO Pattern](https://www.oracle.com/java/technologies/dataaccessobject.html)可看作六边形架构在程序入口部分和数据访问部分的实现，Controller类和Dao类都可看作系统的Adapter。
+我们经常使用的[MVC Pattern](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller)和[DAO Pattern](https://www.oracle.com/java/technologies/dataaccessobject.html)可看作六边形架构在程序入口部分和数据访问部分的实现，Controller类和Dao类都可看作系统的Adapter。
 
 浏览本项目的项目结构，首先工程按照业务被划分成几个不一样的module，每一个module是一个文件夹。然后进入任一个module，我们总能看到一个文件夹叫domain，该文件夹里面存放的代码是系统的核心逻辑，也就是六边形架构的圆心部分，而除了domain之外的其它文件夹譬如controller，dao或message，其中的代码都属系统的adapter部分。
 
