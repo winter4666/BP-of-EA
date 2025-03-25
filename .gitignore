@@ -29,6 +29,7 @@ target/
 # IntelliJ IDEA
 .idea/
 demo.iml
+BP-of-EA.iml
 
 # MacOS
 .DS_Store
